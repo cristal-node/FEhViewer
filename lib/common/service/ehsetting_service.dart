@@ -17,6 +17,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_boring_avatars/flutter_boring_avatars.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -38,11 +39,19 @@ class EhSettingService extends ProfileService {
   RxBool isSafeMode = false.obs;
   RxString tagTranslatVer = ''.obs;
   RxBool isFavPicker = false.obs;
-  RxBool isPureDarkTheme = false.obs;
+  // RxBool isPureDarkTheme = false.obs;
   RxBool isClipboardLink = true.obs;
   RxBool commentTrans = false.obs;
-  RxBool blurredInRecentTasks = true.obs;
+  // RxBool blurredInRecentTasks = true.obs;
   Rx<TagIntroImgLv> tagIntroImgLv = TagIntroImgLv.nonh.obs;
+
+  final _isPureDarkTheme = false.obs;
+  bool get isPureDarkTheme => _isPureDarkTheme.value;
+  set isPureDarkTheme(bool val) => _isPureDarkTheme.value = val;
+
+  final _blurredInRecentTasks = false.obs;
+  bool get blurredInRecentTasks => _blurredInRecentTasks.value;
+  set blurredInRecentTasks(bool val) => _blurredInRecentTasks.value = val;
 
   final _viewColumnMode = ViewColumnMode.single.obs;
   ViewColumnMode get viewColumnMode => _viewColumnMode.value;
@@ -581,8 +590,10 @@ class EhSettingService extends ProfileService {
     everProfile<bool>(
         isFavPicker, (value) => ehConfig = ehConfig.copyWith(favPicker: value));
 
-    isPureDarkTheme.value = ehConfig.pureDarkTheme ?? isPureDarkTheme.value;
-    everProfile<bool>(isPureDarkTheme,
+    // TODO isPureDarkTheme 暂时禁用
+    // isPureDarkTheme = ehConfig.pureDarkTheme ?? isPureDarkTheme;
+    isPureDarkTheme = false;
+    everProfile<bool>(_isPureDarkTheme,
         (bool value) => ehConfig = ehConfig.copyWith(pureDarkTheme: value));
 
     isClipboardLink.value = ehConfig.clipboardLink ?? isClipboardLink.value;
@@ -594,8 +605,10 @@ class EhSettingService extends ProfileService {
         (bool value) => ehConfig = ehConfig.copyWith(commentTrans: value));
 
     // blurredInRecentTasks
-    blurredInRecentTasks.value = storageUtil.getBool(BLURRED_IN_RECENT_TASK);
-    everProfile<bool>(blurredInRecentTasks,
+    blurredInRecentTasks =
+        storageUtil.getBool(BLURRED_IN_RECENT_TASK) ?? blurredInRecentTasks;
+    // applyBlurredInRecentTasks(blurredInRecentTasks);
+    everProfile<bool>(_blurredInRecentTasks,
         (bool value) => storageUtil.setBool(BLURRED_IN_RECENT_TASK, value));
 
     // autoLockTimeOut
@@ -841,6 +854,16 @@ class EhSettingService extends ProfileService {
     _initLayoutConfig();
 
     _initBlockConfig();
+  }
+
+  void applyBlurredInRecentTasks() {
+    if (Platform.isAndroid) {
+      if (blurredInRecentTasks) {
+        FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
+      } else {
+        FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+      }
+    }
   }
 
   Future<void> setProxy() async {

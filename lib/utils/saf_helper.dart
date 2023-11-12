@@ -86,11 +86,11 @@ Future<String?> safCreateDocumentFileFromPath(
     throw Exception('safCreateDocumentFileFromPath: $parentUri not primary');
   }
 
-  final parentPath = pathSegments.last.replaceFirst('primary:', '');
+  final treePath = pathSegments.last.replaceFirst('primary:', '');
 
-  logger.d('parentPath: $parentPath, sourceFilePath: $sourceFilePath');
+  logger.d('treePath: $treePath, sourceFilePath: $sourceFilePath');
 
-  final saf = Saf(parentPath);
+  final saf = Saf(treePath);
 
   if (checkPermission) {
     bool? isGranted = await saf.getDirectoryPermission(isDynamic: true);
@@ -176,23 +176,36 @@ String _makeDirectoryPathToName(String path) {
   return path.replaceAll('/', '_').replaceAll(':', '_');
 }
 
-Uri safMakeUri(
-    {String path = '', String device = 'primary', bool isTreeUri = false}) {
-  final fullPath =
+Uri safMakeUri({
+  String path = '',
+  String device = 'primary',
+  String? tree,
+  bool isTreeUri = false,
+}) {
+  final _path =
       path.replaceAll(RegExp(r'^(/storage/emulated/\d+/|/sdcard/)'), '');
-  final directoryPath = fullPath.replaceAll(RegExp(r'[^/]+$'), '');
+  final _tree =
+      tree?.replaceAll(RegExp(r'^(/storage/emulated/\d+/|/sdcard/)'), '');
+
+  final pathSegments = _path.split("/");
+  final treePath =
+      _tree ?? pathSegments.sublist(0, pathSegments.length - 1).join("/");
 
   const scheme = 'content';
   const host = 'com.android.externalstorage.documents';
+
+  final documentPathSegments = [
+    '$device:$treePath',
+    'document',
+    '$device:$_path',
+  ];
 
   Uri uri = Uri(
     scheme: scheme,
     host: host,
     pathSegments: [
       'tree',
-      if (isTreeUri) '$device:$fullPath' else '$device:$directoryPath',
-      if (!isTreeUri) 'document',
-      if (!isTreeUri) '$device:$fullPath',
+      if (isTreeUri) '$device:$_path' else ...documentPathSegments,
     ],
   );
 

@@ -6,6 +6,7 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_store.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:fehviewer/common/service/ehsetting_service.dart';
@@ -44,12 +45,17 @@ class Api {
   static CacheOptions cacheOption = CacheOptions(
     store: BackupCacheStore(
       primary: MemCacheStore(),
-      secondary: HiveCacheStore(Global.appSupportPath),
+      // secondary: HiveCacheStore(Global.tempPath),
+      // secondary: FileCacheStore(Global.tempPath),
+      secondary: BackupCacheStore(
+        primary: HiveCacheStore(Global.tempPath),
+        secondary: FileCacheStore(Global.tempPath),
+      ),
     ),
     // store: MemCacheStore(),
-    policy: CachePolicy.forceCache,
+    policy: CachePolicy.refresh,
     hitCacheOnErrorExcept: [401, 403, 503],
-    maxStale: const Duration(days: 7),
+    maxStale: const Duration(days: 3),
     priority: CachePriority.normal,
     cipher: null,
     keyBuilder: CacheOptions.defaultCacheKeyBuilder,
@@ -539,7 +545,7 @@ class Api {
       await ehDownload(
           progressCallback: progressCallback,
           url: imageUrl,
-          savePath: (Headers headers) {
+          savePathBuilder: (Headers headers) {
             logger.d('headers:\n$headers');
             final contentDisposition = headers.value('content-disposition');
             logger.d('contentDisposition $contentDisposition');

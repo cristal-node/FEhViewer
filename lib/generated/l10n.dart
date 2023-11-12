@@ -2071,10 +2071,10 @@ class L10n {
     );
   }
 
-  /// `rchiver Settings`
+  /// `Archiver Settings`
   String get uc_archiver_set {
     return Intl.message(
-      'rchiver Settings',
+      'Archiver Settings',
       name: 'uc_archiver_set',
       desc: '',
       args: [],
@@ -4472,6 +4472,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<L10n> {
   List<Locale> get supportedLocales {
     return const <Locale>[
       Locale.fromSubtags(languageCode: 'en'),
+      Locale.fromSubtags(languageCode: 'ja'),
       Locale.fromSubtags(languageCode: 'ko', countryCode: 'KR'),
       Locale.fromSubtags(languageCode: 'ru'),
       Locale.fromSubtags(languageCode: 'zh', countryCode: 'CN'),
