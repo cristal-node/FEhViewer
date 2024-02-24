@@ -719,18 +719,18 @@ class ViewExtController extends GetxController {
     }
 
     // android会有抖动
-    if (GetPlatform.isIOS) {
+    //if (GetPlatform.isIOS) {
       if (!vState.showBar) {
         unsetFullscreen();
-        vState.showBar = !vState.showBar;
+        //vState.showBar = !vState.showBar;
       } else {
         // hide
-        vState.showBar = !vState.showBar;
+        //vState.showBar = !vState.showBar;
         400.milliseconds.delay(() => setFullscreen());
       }
-    } else {
+    //} else {
       vState.showBar = !vState.showBar;
-    }
+    //}
 
     update([idViewBar]);
   }
