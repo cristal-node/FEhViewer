@@ -66,8 +66,8 @@ class GalleryProvider {
   final String? url;
   final String? imgUrl;
   final String? imgUrlL;
-  final double? imgHeight;
-  final double? imgWidth;
+  final int? imgHeight;
+  final int? imgWidth;
   final String? japaneseTitle;
   final String? englishTitle;
   final String? category;
@@ -116,8 +116,8 @@ class GalleryProvider {
       url: json['url'] != null ? json['url'] as String : null,
       imgUrl: json['imgUrl'] != null ? json['imgUrl'] as String : null,
       imgUrlL: json['imgUrlL'] != null ? json['imgUrlL'] as String : null,
-      imgHeight: json['imgHeight'] != null ? json['imgHeight'] as double : null,
-      imgWidth: json['imgWidth'] != null ? json['imgWidth'] as double : null,
+      imgHeight: json['imgHeight'] != null ? json['imgHeight'] as int : null,
+      imgWidth: json['imgWidth'] != null ? json['imgWidth'] as int : null,
       japaneseTitle: json['japaneseTitle'] != null
           ? json['japaneseTitle'] as String
           : null,
@@ -314,8 +314,8 @@ class GalleryProvider {
           String? url,
           String? imgUrl,
           String? imgUrlL,
-          double? imgHeight,
-          double? imgWidth,
+          int? imgHeight,
+          int? imgWidth,
           String? japaneseTitle,
           String? englishTitle,
           String? category,

@@ -4,17 +4,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class BlurImage extends StatelessWidget {
-  const BlurImage({required this.child, this.isBlur = true, this.sigma = 5.0});
+  const BlurImage({
+    required this.child,
+    this.isBlur = true,
+    this.sigma = 5.0,
+    this.expand = true,
+  });
 
   final Widget child;
   final bool isBlur;
   final double sigma;
+  final bool expand;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
-      fit: StackFit.loose,
+      fit: expand ? StackFit.expand : StackFit.loose,
       children: <Widget>[
         Container(child: child),
         if (isBlur)

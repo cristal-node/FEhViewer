@@ -9,7 +9,7 @@ const double _kMinHeightWithSubtitle = _kLeadingSize + 2 * 10.0;
 const double _kNotchedMinHeight = _kNotchedLeadingSize + 2 * 12.0;
 const double _kNotchedMinHeightWithoutLeading = _kNotchedLeadingSize + 2 * 10.0;
 const EdgeInsetsDirectional _kPadding =
-    EdgeInsetsDirectional.only(start: 20.0, end: 14.0);
+    EdgeInsetsDirectional.only(start: 20.0, end: 14.0, top: 2.0, bottom: 2.0);
 const EdgeInsetsDirectional _kPaddingWithSubtitle =
     EdgeInsetsDirectional.only(start: 20.0, end: 14.0, top: 8.0, bottom: 8.0);
 const EdgeInsets _kNotchedPadding = EdgeInsets.symmetric(horizontal: 14.0);
@@ -103,6 +103,58 @@ class EhCupertinoListTile extends StatelessWidget {
       padding: _padding,
       leadingSize: leadingSize,
       leadingToTitle: leadingToTitle,
+    );
+  }
+}
+
+class EhCupertinoSwitchListTile extends StatefulWidget {
+  const EhCupertinoSwitchListTile({
+    super.key,
+    required this.title,
+    this.subtitle,
+    this.value = false,
+    this.onChanged,
+  });
+
+  /// A [title] is used to convey the central information. Usually a [Text].
+  final Widget title;
+
+  /// A [subtitle] is used to display additional information. It is located
+  /// below [title]. Usually a [Text] widget.
+  final Widget? subtitle;
+
+  final bool value;
+
+  final ValueChanged<bool>? onChanged;
+
+  @override
+  State<EhCupertinoSwitchListTile> createState() =>
+      _EhCupertinoSwitchListTileState();
+}
+
+class _EhCupertinoSwitchListTileState extends State<EhCupertinoSwitchListTile> {
+  late bool _value;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.value;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return EhCupertinoListTile(
+      title: widget.title,
+      subtitle: widget.subtitle,
+      trailing: CupertinoSwitch(
+        value: _value,
+        onChanged: (bool value) {
+          setState(() {
+            _value = value;
+          });
+          widget.onChanged?.call(value);
+        },
+      ),
     );
   }
 }

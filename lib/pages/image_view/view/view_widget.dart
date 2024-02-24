@@ -4,7 +4,7 @@ import 'dart:math' as math;
 import 'package:archive_async/archive_async.dart';
 import 'package:blur/blur.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:fehviewer/common/controller/image_hide_controller.dart';
+import 'package:fehviewer/common/controller/image_block_controller.dart';
 import 'package:fehviewer/common/service/ehsetting_service.dart';
 import 'package:fehviewer/component/exception/error.dart';
 import 'package:fehviewer/fehviewer.dart';
@@ -563,7 +563,7 @@ class ImageWithHide extends StatefulWidget {
 }
 
 class _ImageWithHideState extends State<ImageWithHide> {
-  final ImageHideController imageHideController = Get.find();
+  final ImageBlockController imageHideController = Get.find();
   late Future<bool> _future;
 
   final ViewExtController viewController = Get.find();
@@ -1634,22 +1634,38 @@ Future<void> showSaveActionSheet(
                 Get.back();
                 if (filePath != null && filePath.isNotEmpty) {
                   logger.d('重采样图片 filePath: $filePath');
-                  await Api.saveLocalImageToPhoto(
-                    filePath,
-                    context: context,
-                    gid: gid,
-                  );
-                  showToast(L10n.of(context).saved_successfully);
+                  try {
+                    await Api.saveLocalImageToPhoto(
+                      filePath,
+                      context: context,
+                      gid: gid,
+                    );
+                    showToast(L10n.of(context).saved_successfully);
+                  } on EhError catch (e) {
+                    logger.e('保存失败', error: e);
+                    showToast(e.message);
+                  } catch (e) {
+                    logger.e('保存失败', error: e);
+                    showToast(e.toString());
+                  }
                 } else if (imageUrl != null && imageUrl.isNotEmpty) {
                   logger.d('重采样图片 imageUrl: $imageUrl');
-                  await Api.saveNetworkImageToPhoto(
-                    imageUrl,
-                    context: context,
-                    gid: gid,
-                    ser: ser,
-                    filename: filename,
-                  );
-                  showToast(L10n.of(context).saved_successfully);
+                  try {
+                    await Api.saveNetworkImageToPhoto(
+                      imageUrl,
+                      context: context,
+                      gid: gid,
+                      ser: ser,
+                      filename: filename,
+                    );
+                    showToast(L10n.of(context).saved_successfully);
+                  } on EhError catch (e) {
+                    logger.e('保存失败', error: e);
+                    showToast(e.message);
+                  } catch (e) {
+                    logger.e('保存失败', error: e);
+                    showToast(e.toString());
+                  }
                 } else {
                   showToast('imageUrl is null or file is null');
                 }
@@ -1669,7 +1685,7 @@ Future<void> showSaveActionSheet(
 
                   SmartDialog.showLoading(
                     builder: (_) => _downloadIndicator(),
-                    backDismiss: false,
+                    backDismiss: true,
                   );
                   try {
                     await Api.saveNetworkImageToPhoto(

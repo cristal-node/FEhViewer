@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fehviewer/common/controller/user_controller.dart';
 import 'package:fehviewer/common/service/controller_tag_service.dart';
 import 'package:fehviewer/fehviewer.dart';
 import 'package:fehviewer/network/api.dart';
@@ -28,6 +29,9 @@ class CommentController extends GetxController {
     logger.t('CommentController -> pageCtrlDepth: $pageCtrlTag');
     return Get.find(tag: pageCtrlTag);
   }
+
+  UserController get userController => Get.find();
+  bool get isLogin => userController.isLogin;
 
   BCDCode get bcdCode => BCDCode(code0: '·', code1: '-');
 
@@ -69,8 +73,14 @@ class CommentController extends GetxController {
 
   @override
   void onClose() {
-    _tgr.forEach((element) => element.dispose());
+    for (final element in _tgr) {
+      element.dispose();
+    }
     super.onClose();
+  }
+
+  Future<void> onRefresh() async {
+    await pageController.handOnRefresh();
   }
 
   final List<TapGestureRecognizer> _tgr = [];
@@ -315,7 +325,7 @@ class CommentController extends GetxController {
         } else if (node is dom.Text) {
           final text = node.text;
           if (text.trim().isNotEmpty) {
-            final translate = await translatorHelper.translateText(text);
+            final translate = await translatorHelper.translateText(text) ?? '';
             node.text = translate;
           }
           translatedTextList.add(node.text);

@@ -42,13 +42,6 @@ extension ExtTabList on TabConfig {
   List<String> get tabNameList {
     return tabItemList.map((TabItem e) => e.name).toList();
   }
-
-  void setItemList(Map<String, bool> map, List<String> nameList) {
-    tabItemList.clear();
-    for (final String name in nameList) {
-      tabItemList.add(TabItem(name: name, enable: map[name] ?? false));
-    }
-  }
 }
 
 extension ExtComment on GalleryComment {
@@ -240,7 +233,6 @@ extension ExtTagTranlat on TagTranslat {
       case TagIntroImgLv.r18:
         // 去除R18g, 把r18的格式修正
         return _fix(regR18And18g, _remove(regR18g, intro));
-        break;
       case TagIntroImgLv.r18g:
         // 把r18和r18g的格式修正
         return _fix(regR18And18g, intro);

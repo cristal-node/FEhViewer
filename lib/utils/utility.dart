@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:cookie_jar/cookie_jar.dart';
@@ -18,6 +20,50 @@ import '../fehviewer.dart';
 const _uuid = Uuid();
 String generateUuidv4() {
   return _uuid.v4();
+}
+
+Future<Iterable<String>> readLastNLines(String filePath, int n) async {
+  final file = File(filePath);
+  final length = await file.length();
+  const blockSize = 1024; // Adjust the block size based on your needs
+
+  RandomAccessFile raf = await file.open(mode: FileMode.read);
+  int position = length - blockSize;
+  int newlineCount = 0;
+  List<int> lines = [];
+
+  while (position >= 0 && newlineCount < n) {
+    final blockSizeToRead =
+        position + blockSize > length ? length - position : blockSize;
+    await raf.setPosition(position);
+    List<int> block = await raf.read(blockSizeToRead);
+
+    for (int i = block.length - 1; i >= 0; i--) {
+      int byte = block[i];
+      if (byte == 10) {
+        // Check for newline character (ASCII 10)
+        newlineCount++;
+        lines.add(byte);
+      } else if (byte != 13) {
+        // Exclude carriage return (ASCII 13)
+        lines.add(byte);
+      }
+    }
+
+    position -= blockSize;
+  }
+
+  // Reverse the list to get the lines in correct order
+  lines = lines.reversed.toList();
+
+  // Convert the list of bytes to a String
+  final lastNLines = utf8.decode(lines);
+
+  // print(lastNLines);
+
+  await raf.close();
+
+  return lastNLines.split('\n');
 }
 
 /// 为 Dart 字符串优化后 FNV-1a 64bit 哈希算法
@@ -125,6 +171,8 @@ Future<bool> requestPhotosPermission({
     final PermissionStatus statusPhotosAdd =
         await Permission.photosAddOnly.status;
 
+    logger.d('statusPhotos $statusPhotos, statusPhotosAdd $statusPhotosAdd');
+
     if (addOnly) {
       // 永久拒绝 直接跳转到设置
       if (statusPhotosAdd.isPermanentlyDenied && context != null) {
@@ -135,10 +183,10 @@ Future<bool> requestPhotosPermission({
       // 拒绝 申请权限
       if (statusPhotosAdd.isDenied) {
         logger.d('photosAddOnly isDenied');
-        if (await Permission.photosAddOnly.request().isGranted ||
-            await Permission.photosAddOnly.request().isLimited) {
-          return await Permission.photosAddOnly.status.isGranted ||
-              await Permission.photosAddOnly.status.isLimited;
+        if (await Permission.photosAddOnly.request().isLimited ||
+            await Permission.photosAddOnly.request().isGranted) {
+          return await Permission.photosAddOnly.status.isLimited ||
+              await Permission.photosAddOnly.status.isGranted;
         } else {
           throw EhError(error: 'Unable to download, please authorize first~');
         }
@@ -456,7 +504,7 @@ class EHUtils {
     return result;
   }
 
-  static String getLangeage(String value) {
+  static String getLanguage(String value) {
     for (final String key in EHConst.iso936.keys) {
       if (key.toUpperCase().trim() == value.toUpperCase().trim()) {
         return EHConst.iso936[key] ?? EHConst.iso936.values.first;

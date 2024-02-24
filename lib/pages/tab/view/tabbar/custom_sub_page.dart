@@ -8,20 +8,20 @@ import 'package:get/get.dart';
 import '../../comm.dart';
 import '../constants.dart';
 import '../gallery_base.dart';
-import '../tab_base.dart';
+import '../list/tab_base.dart';
 
 class SubListView<T extends CustomSubListController> extends StatefulWidget {
   const SubListView({
-    Key? key,
+    super.key,
     required this.profileUuid,
     this.pinned = true,
-  }) : super(key: key);
+  });
 
   final String profileUuid;
   final bool pinned;
 
   @override
-  _SubListViewState createState() => _SubListViewState<T>();
+  State<SubListView> createState() => _SubListViewState<T>();
 }
 
 class _SubListViewState<T extends CustomSubListController>
@@ -57,6 +57,7 @@ class _SubListViewState<T extends CustomSubListController>
   Widget build(BuildContext context) {
     super.build(context);
     return CustomScrollView(
+      cacheExtent: kTabViewCacheExtent,
       physics:
           const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
       slivers: [

@@ -3,7 +3,6 @@ import 'package:fehviewer/const/theme_colors.dart';
 import 'package:fehviewer/fehviewer.dart';
 import 'package:fehviewer/pages/gallery/controller/gallery_fav_controller.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
@@ -56,10 +55,10 @@ class GalleryFavButton extends StatelessWidget {
         Container(
           height: 16,
           padding: const EdgeInsets.only(right: 4),
-          child: Text(
+          child: const Text(
             // L10n.of(context).processing,
             '',
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
             ),
           ),
@@ -82,8 +81,8 @@ class GalleryFavButton extends StatelessWidget {
   }
 }
 
-class FavcatAddListItem extends StatefulWidget {
-  const FavcatAddListItem({
+class FavCatAddListItem extends StatefulWidget {
+  const FavCatAddListItem({
     Key? key,
     required VoidCallback onTap,
     required this.text,
@@ -98,60 +97,60 @@ class FavcatAddListItem extends StatefulWidget {
   final int? totNum;
 
   @override
-  _FavcatAddListItemState createState() => _FavcatAddListItemState();
+  _FavCatAddListItemState createState() => _FavCatAddListItemState();
 }
 
-class _FavcatAddListItemState extends State<FavcatAddListItem> {
+class _FavCatAddListItemState extends State<FavCatAddListItem> {
   Color? _color;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.all(Radius.circular(8)),
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        child: Container(
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        decoration: BoxDecoration(
           color: _color,
-          width: double.infinity,
-          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                FontAwesomeIcons.solidHeart,
-                color: CupertinoDynamicColor.resolve(
-                    ThemeColors.favColor[widget.favcat]!, context),
-                size: 18,
-              ).paddingOnly(left: 8, right: 8, bottom: 4),
-              Text(
-                widget.text,
-                style: const TextStyle(
-                  fontSize: 18,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                '${widget.totNum ?? 0}',
-                style: const TextStyle(
-                  fontSize: 14,
-                ),
-              ).paddingOnly(right: 4),
-            ],
-          ),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
         ),
-        onTap: widget._onTap,
-        onTapDown: (_) {
-          setState(() {
-            _color = CupertinoDynamicColor.resolve(
-                CupertinoColors.systemGrey3, context);
-          });
-        },
-        onTapCancel: () {
-          setState(() {
-            _color = null;
-          });
-        },
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              FontAwesomeIcons.solidHeart,
+              color: CupertinoDynamicColor.resolve(
+                  ThemeColors.favColor[widget.favcat]!, context),
+              size: 18,
+            ).paddingOnly(left: 8, right: 8, bottom: 4),
+            Text(
+              widget.text,
+              style: const TextStyle(
+                fontSize: 18,
+              ),
+            ),
+            const Spacer(),
+            Text(
+              '${widget.totNum ?? 0}',
+              style: const TextStyle(
+                fontSize: 14,
+              ),
+            ).paddingOnly(right: 4),
+          ],
+        ),
       ),
+      onTap: widget._onTap,
+      onTapDown: (_) {
+        setState(() {
+          _color = CupertinoDynamicColor.resolve(
+              CupertinoColors.systemGrey3, context);
+        });
+      },
+      onTapCancel: () {
+        setState(() {
+          _color = null;
+        });
+      },
     );
   }
 }

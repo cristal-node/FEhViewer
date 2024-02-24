@@ -102,7 +102,7 @@ class EhSettingService extends ProfileService {
 
   /// 阅读相关设置
   /// 阅读方向
-  Rx<ViewMode> viewMode = ViewMode.LeftToRight.obs;
+  Rx<ViewMode> viewMode = ViewMode.leftToRight.obs;
 
   /// 自动锁定时间
   RxInt autoLockTimeOut = (-1).obs;
@@ -327,7 +327,18 @@ class EhSettingService extends ProfileService {
   bool get horizontalThumbnails => _horizontalThumbnails.value;
   set horizontalThumbnails(bool val) => _horizontalThumbnails.value = val;
 
+  // pHashThreshold
+  final _pHashThreshold = 10.obs;
+  int get pHashThreshold => _pHashThreshold.value;
+  set pHashThreshold(int val) => _pHashThreshold.value = val;
+
   void _initEhConfig() {
+    // pHashThreshold
+    pHashThreshold = ehConfig.pHashThreshold ?? pHashThreshold;
+    everProfile<int>(_pHashThreshold, (val) {
+      ehConfig = ehConfig.copyWith(pHashThreshold: val);
+    });
+
     // hideGalleryThumbnails
     hideGalleryThumbnails =
         ehConfig.hideGalleryThumbnails ?? hideGalleryThumbnails;

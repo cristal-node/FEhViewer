@@ -35,84 +35,86 @@ class GalleryItemSimpleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Widget containerGallery = Container(
-      color: galleryProviderController.colorTap.value,
-      height: showTag ? kItemHeight + 10 : kItemHeight,
-      padding: const EdgeInsets.fromLTRB(kPaddingLeft, 10, 8, 10),
-      child: Row(children: <Widget>[
-        // 封面图片
-        _buildCoverImage(),
-        const SizedBox(width: 8),
-        // 右侧信息
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              // 标题
-              _buildTitle(),
-              const SizedBox(height: 4),
-              // 上传者
-              Text(
-                galleryProvider.uploader ?? '',
-                style: const TextStyle(
-                    fontSize: 12, color: CupertinoColors.systemGrey),
-              ),
-              // tag
-              const Spacer(),
-              if (showTag)
-                // TagListViewBox(
-                //   simpleTags:
-                //       galleryProviderController.galleryProvider.simpleTags ?? [],
-                // ),
-                TagWaterfallFlowViewBox(
-                  simpleTags: galleryProvider.simpleTags ?? [],
-                  crossAxisCount: 1,
+    final Widget containerGallery = Obx(() {
+      return Container(
+        color: galleryProviderController.colorTap.value,
+        height: showTag ? kItemHeight + 10 : kItemHeight,
+        padding: const EdgeInsets.fromLTRB(kPaddingLeft, 10, 8, 10),
+        child: Row(children: <Widget>[
+          // 封面图片
+          _buildCoverImage(),
+          const SizedBox(width: 8),
+          // 右侧信息
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                // 标题
+                _buildTitle(),
+                const SizedBox(height: 4),
+                // 上传者
+                Text(
+                  galleryProvider.uploader ?? '',
+                  style: const TextStyle(
+                      fontSize: 12, color: CupertinoColors.systemGrey),
                 ),
-              const Spacer(),
-              // 评分行
-              GetBuilder(
-                init: galleryProviderController,
-                tag: galleryProviderController.galleryProvider.gid,
-                builder: (_) => Row(
+                // tag
+                const Spacer(),
+                if (showTag)
+                  // TagListViewBox(
+                  //   simpleTags:
+                  //       galleryProviderController.galleryProvider.simpleTags ?? [],
+                  // ),
+                  TagWaterfallFlowViewBox(
+                    simpleTags: galleryProvider.simpleTags ?? [],
+                    crossAxisCount: 1,
+                  ),
+                const Spacer(),
+                // 评分行
+                GetBuilder(
+                  init: galleryProviderController,
+                  tag: galleryProviderController.galleryProvider.gid,
+                  builder: (_) => Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      // 评分
+                      _buildRating(),
+                      // 占位
+                      const Spacer(),
+                      // 收藏图标
+                      _buildFavcatIcon(),
+                      // 图片数量
+                      _buildFileCountWidget(),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 4,
+                ),
+                // 类型和时间
+                Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
-                    // 评分
-                    _buildRating(),
-                    // 占位
+                    // 类型
+                    _buildCategory(),
                     const Spacer(),
-                    // 收藏图标
-                    _buildFavcatIcon(),
-                    // 图片数量
-                    _buildFilecontWidget(),
+                    // 上传时间
+                    PostTime(
+                      postTime:
+                          galleryProviderController.galleryProvider.postTime ??
+                              '',
+                      expunged:
+                          galleryProviderController.galleryProvider.expunged,
+                      fontSize: 11,
+                    ),
                   ],
                 ),
-              ),
-              Container(
-                height: 4,
-              ),
-              // 类型和时间
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  // 类型
-                  _buildCategory(),
-                  const Spacer(),
-                  // 上传时间
-                  PostTime(
-                    postTime:
-                        galleryProviderController.galleryProvider.postTime ??
-                            '',
-                    expunged:
-                        galleryProviderController.galleryProvider.expunged,
-                    fontSize: 11,
-                  ),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ]),
-    );
+        ]),
+      );
+    });
 
     return GestureDetector(
       child: Column(
@@ -168,15 +170,15 @@ class GalleryItemSimpleWidget extends StatelessWidget {
                   color: CupertinoDynamicColor.resolve(
                       CupertinoColors.systemGrey5, Get.context!),
                   blurRadius: 10,
-                )
+                ),
               ],
             ),
             child: ClipRRect(
               // 圆角
               borderRadius: BorderRadius.circular(6),
               child: CoverImg(
-                  height: _item.imgHeight,
-                  width: _item.imgWidth,
+                  height: _item.imgHeight?.toDouble(),
+                  width: _item.imgWidth?.toDouble(),
                   imgUrl:
                       galleryProviderController.galleryProvider.imgUrl ?? ''),
             ),
@@ -214,7 +216,7 @@ class GalleryItemSimpleWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildFilecontWidget() {
+  Widget _buildFileCountWidget() {
     return Row(
       children: <Widget>[
         Padding(
@@ -274,18 +276,18 @@ class GalleryItemSimpleWidget extends StatelessWidget {
             CupertinoColors.systemBackground,
         Get.context!);
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(4),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 4),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
         color: _colorCategory,
-        child: Text(
-          galleryProviderController.galleryProvider.category ?? '',
-          style: const TextStyle(
-            fontSize: 10,
-            height: 1.1,
-            color: CupertinoColors.white,
-          ),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 4),
+      child: Text(
+        galleryProviderController.galleryProvider.category ?? '',
+        style: const TextStyle(
+          fontSize: 10,
+          height: 1.1,
+          color: CupertinoColors.white,
         ),
       ),
     );
@@ -314,6 +316,7 @@ class CoverImg extends StatelessWidget {
         return LayoutBuilder(
           builder: (context, constraints) {
             return BlurImage(
+              expand: false,
               isBlur: _isBlur,
               child: EhNetworkImage(
                 placeholder: (_, __) {

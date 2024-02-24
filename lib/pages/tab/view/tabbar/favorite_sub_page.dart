@@ -1,7 +1,6 @@
 import 'package:fehviewer/fehviewer.dart';
 import 'package:fehviewer/pages/tab/controller/favorite/favorite_sublist_controller.dart';
 import 'package:fehviewer/pages/tab/controller/favorite/favorite_tabbar_controller.dart';
-import 'package:fehviewer/widget/refresh.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -9,17 +8,16 @@ import 'package:get/get.dart';
 import '../../comm.dart';
 import '../constants.dart';
 import '../gallery_base.dart';
-import '../tab_base.dart';
+import '../list/tab_base.dart';
 
 class FavoriteSubPage extends StatefulWidget {
-  const FavoriteSubPage({Key? key, required this.favcat, this.pinned = true})
-      : super(key: key);
+  const FavoriteSubPage({super.key, required this.favcat, this.pinned = true});
 
   final String favcat;
   final bool pinned;
 
   @override
-  _FavoriteSubPageState createState() => _FavoriteSubPageState();
+  State<FavoriteSubPage> createState() => _FavoriteSubPageState();
 }
 
 class _FavoriteSubPageState extends State<FavoriteSubPage>

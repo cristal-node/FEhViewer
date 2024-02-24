@@ -25,7 +25,8 @@ const Border _kDefaultEditBorder = Border(
 );
 
 class CommentPage extends StatefulWidget {
-  const CommentPage({Key? key}) : super(key: key);
+  const CommentPage({super.key});
+
   @override
   State<CommentPage> createState() => _CommentPageState();
 }
@@ -46,8 +47,8 @@ class _CommentPageState extends State<CommentPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    logger.d('pageCtrlTag $pageCtrlTag');
-    final cps = CupertinoPageScaffold(
+    // logger.d('pageCtrlTag $pageCtrlTag');
+    return CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
         middle: Text(L10n.of(context).gallery_comments),
         previousPageTitle: L10n.of(context).back,
@@ -65,8 +66,6 @@ class _CommentPageState extends State<CommentPage>
         ],
       ),
     );
-
-    return cps;
   }
 
   // 评论列表
@@ -78,70 +77,92 @@ class _CommentPageState extends State<CommentPage>
     return Obx(() {
       logger.t('build commentListView');
 
-      List<GalleryComment>? _comments;
+      List<GalleryComment> comments =
+          _filterComments(controller.comments) ?? [];
 
-      if (_ehSettingService.showOnlyUploaderComment) {
-        final _uploaderId = controller.comments
-            ?.firstWhere((element) => element.score.isEmpty)
-            .memberId;
-
-        if (_uploaderId != null) {
-          _comments = controller.comments
-              ?.where((element) => element.memberId == _uploaderId)
-              .toList();
-        } else {
-          _comments = controller.comments
-              ?.where((element) => element.name == controller.uploader)
-              .toList();
-        }
-      } else {
-        _comments = controller.comments;
-      }
-
-      // 根据屏蔽规则过滤评论
-      _comments = _comments?.where((element) {
-        return !_blockController.matchRule(
-              text: element.text,
-              blockType: BlockType.comment,
-            ) &&
-            !_blockController.matchRule(
-              text: element.name,
-              blockType: BlockType.commentator,
-            );
-      }).toList();
-
-      return Container(
-        padding: const EdgeInsets.symmetric(horizontal: kPadding),
-        child: ListView.builder(
-          padding: EdgeInsets.only(
-            bottom: 60 + context.mediaQueryPadding.bottom,
-            top: context.mediaQueryPadding.top +
-                kMinInteractiveDimensionCupertino,
+      return CustomScrollView(
+        slivers: [
+          SliverSafeArea(
+            bottom: false,
+            sliver: CupertinoSliverRefreshControl(
+              onRefresh: controller.onRefresh,
+            ),
           ),
-          itemBuilder: (context, index) {
-            if (_comments == null || _comments.isEmpty) {
-              return const SizedBox();
-            }
-
-            final comment = _comments[index];
-
-            final hideComment = _ehSettingService.filterCommentsByScore &&
-                (comment.score.isNotEmpty &&
-                    (int.tryParse(comment.score) ?? 0) <=
-                        _ehSettingService.scoreFilteringThreshold);
-
-            if (!hideComment) {
-              return CommentItem(
-                galleryComment: comment,
-              ).autoCompressKeyboard(context);
-            } else {
-              return const SizedBox();
-            }
-          },
-          itemCount: _comments?.length ?? 0,
-        ),
+          if (comments.isEmpty)
+            const SliverFillRemaining()
+          else
+            SliverSafeArea(
+              top: false,
+              minimum: EdgeInsets.only(
+                  left: kPadding,
+                  right: kPadding,
+                  bottom: 64 + context.mediaQueryPadding.bottom),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return _itemBuilder(comments[index]);
+                  },
+                  childCount: comments.length,
+                ),
+              ),
+            ),
+        ],
       );
     });
+  }
+
+  List<GalleryComment>? _filterComments(List<GalleryComment>? comments) {
+    List<GalleryComment>? commentsFilter;
+
+    if (_ehSettingService.showOnlyUploaderComment) {
+      final uploaderId =
+          comments?.firstWhere((element) => element.score.isEmpty).memberId;
+
+      if (uploaderId != null) {
+        commentsFilter = comments
+            ?.where((element) => element.memberId == uploaderId)
+            .toList();
+      } else {
+        commentsFilter = comments
+            ?.where((element) => element.name == controller.uploader)
+            .toList();
+      }
+    } else {
+      commentsFilter = comments;
+    }
+
+    // 根据屏蔽规则过滤评论
+    commentsFilter = commentsFilter?.where((element) {
+      return !_blockController.matchRule(
+            text: element.text,
+            blockType: BlockType.comment,
+          ) &&
+          !_blockController.matchRule(
+            text: element.name,
+            blockType: BlockType.commentator,
+          );
+    }).toList();
+
+    return commentsFilter;
+  }
+
+  Widget _itemBuilder(GalleryComment comment) {
+    if (controller.comments == null || controller.comments!.isEmpty) {
+      return const SizedBox();
+    }
+
+    final hideComment = _ehSettingService.filterCommentsByScore &&
+        (comment.score.isNotEmpty &&
+            (int.tryParse(comment.score) ?? 0) <=
+                _ehSettingService.scoreFilteringThreshold);
+
+    if (!hideComment) {
+      return CommentItem(
+        galleryComment: comment,
+      ).autoCompressKeyboard(context);
+    } else {
+      return const SizedBox();
+    }
   }
 
   // 原始消息
@@ -212,12 +233,12 @@ class _CommentPageState extends State<CommentPage>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 minSize: 0,
+                onPressed: controller.pressCancel,
                 child: const Icon(
                   FontAwesomeIcons.xmark,
                   // FontAwesomeIcons.solidCheckCircle,
                   size: 24,
                 ),
-                onPressed: controller.pressCancel,
               )
             ],
           );
@@ -282,6 +303,7 @@ class _CommentPageState extends State<CommentPage>
                     padding:
                         const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
                     minSize: 0,
+                    onPressed: controller.pressSend,
                     child: Obx(
                       () => AnimatedSwitcher(
                         duration: const Duration(milliseconds: 200),
@@ -290,7 +312,7 @@ class _CommentPageState extends State<CommentPage>
                         transitionBuilder: (child, animation) =>
                             // ScaleTransition(
                             //     scale: animation, child: child),
-                            FadeTransition(child: child, opacity: animation),
+                            FadeTransition(opacity: animation, child: child),
                         child: controller.isEditStat || controller.isReptyStat
                             ? Icon(
                                 FontAwesomeIcons.solidCircleCheck,
@@ -304,7 +326,6 @@ class _CommentPageState extends State<CommentPage>
                               ),
                       ),
                     ),
-                    onPressed: controller.pressSend,
                   ),
                 ),
               ],

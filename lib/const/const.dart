@@ -18,6 +18,10 @@ final urlRegExp = RegExp(
 final commentUrlRegExp = RegExp(
     r'(?<!(">\n?|="))(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]');
 
+const kEnableImpeller = false;
+
+const double kTabViewCacheExtent = 500;
+
 enum ListModeEnum {
   list,
   waterfall,
@@ -47,7 +51,7 @@ enum FavoriteOrder {
 
 enum ViewMode {
   topToBottom,
-  LeftToRight,
+  leftToRight,
   rightToLeft,
 }
 
