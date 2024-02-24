@@ -62,7 +62,7 @@ Future<void> showRateDialog(BuildContext context) {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
-          title: const Text('Rate'),
+          title: const Text(L10n.of(context).p_Rate),
           content: Container(
             child: const RateView(),
           ),
