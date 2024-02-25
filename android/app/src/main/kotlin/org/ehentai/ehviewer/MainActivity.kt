@@ -1,4 +1,4 @@
-package com.honjow.fehviewer
+package org.ehentai.ehviewer
 
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Build
