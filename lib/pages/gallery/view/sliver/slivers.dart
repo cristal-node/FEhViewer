@@ -82,7 +82,7 @@ class GalleryActions extends StatelessWidget {
           FontAwesomeIcons.solidImages,
           title: L10n.of(context).p_Similar,
           onTap: () {
-            final String title = (provider.englishTitle ?? '').shortTitle;
+            final String title = (provider.japaneseTitle ?? '').shortTitle;
             logger.d('处理后标题 "$title"');
             NavigatorUtil.goSearchPageWithParam(simpleSearch: 'title:"$title"');
           },
