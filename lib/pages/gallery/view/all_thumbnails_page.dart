@@ -57,6 +57,7 @@ class _AllThumbnailsPageState extends State<AllThumbnailsPage> {
                           onPressed: () async {
                             // controller.fetchPriviewsPrevious();
                             logic.fetchThumbnailsFromPage(1);
+                            logic.fetchThumbnailsFromPage(2);
                           },
                         ),
                       CupertinoButton(
