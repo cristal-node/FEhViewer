@@ -51,7 +51,7 @@ android {
 
 
     defaultConfig {
-        applicationId "com.honjow.fehviewer"
+        applicationId "org.ehentai.ehviewer"
         minSdkVersion 21
         targetSdkVersion 33
 //        multiDexEnabled true
@@ -103,7 +103,7 @@ android {
             shrinkResources true
         }
     }
-    namespace 'com.honjow.fehviewer'
+    namespace 'org.ehentai.ehviewer'
     lint {
         disable 'InvalidPackage'
     }
