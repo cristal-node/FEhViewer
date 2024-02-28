@@ -634,13 +634,13 @@ class Api {
         // Android 直接使用缓存路径的图片文件, 或者非缓存图片（通常为下载原图）
         result = await ImageGallerySaver.saveFile(
           file.path,
-          name: 'exhentai/$realFileName',
+          name: realFileName,
         );
       } else {
         // iOS 不能直接使用缓存路径的图片文件， 所以需要先读取文件内容
         result = await ImageGallerySaver.saveImage(
           file.readAsBytesSync(),
-          name: 'exhentai/$realFileName',
+          name: realFileName,
           quality: 100,
         );
       }
