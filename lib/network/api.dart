@@ -9,6 +9,7 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_store.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
 import 'package:extended_image/extended_image.dart';
+import 'package:fehviewer/common/controller/download_controller.dart';
 import 'package:fehviewer/common/service/ehsetting_service.dart';
 import 'package:fehviewer/component/exception/error.dart';
 import 'package:fehviewer/fehviewer.dart';
@@ -585,95 +586,12 @@ class Api {
   }) async {
     logger.d('imageUrl $imageUrl');
 
-    // 权限检查
-    final permission =
-        await requestPhotosPermission(context: context, addOnly: true);
-    if (!permission) {
-      throw EhError(error: 'Permission denied');
-    }
+    final DownloadController ctrl = Get.find()
+    final parentPath = await ctrl._getGalleryDownloadPath(dirName: 'single');
 
-    logger.d('开始下载图片');
-
-    io.File? file;
-    late String realFileName;
-    bool isCached = false;
-
-    // 从缓存中获取
-    file = await getCachedImageFile(imageUrl);
-
-    if (file != null) {
-      isCached = true;
-      realFileName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
-    } else {
-      // 无缓存下载
-      logger.d('无缓存下载');
-      final savePath = await _downloadImage(
-        imageUrl,
-        gid: gid,
-        ser: ser,
-        fileName: filename,
-        progressCallback: (count, total) {
-          logger.t('count $count, total $total');
-          progressCallback?.call(count, total);
-        },
-      );
-      file = io.File(savePath);
-      realFileName = path.basename(savePath);
-    }
-
-    realFileName = realFileName.replaceAll('/', '_');
-    if (gid != null) {
-      realFileName = '$gid-$realFileName';
-    }
-    logger.d('^^^^ 保存图片到相册 $realFileName lengthSync:${file.lengthSync()}');
-
-    try {
-      late final dynamic result;
-
-      if (Platform.isAndroid || !isCached) {
-        // Android 直接使用缓存路径的图片文件, 或者非缓存图片（通常为下载原图）
-        result = await ImageGallerySaver.saveFile(
-          file.path,
-          name: realFileName,
-        );
-      } else {
-        // iOS 不能直接使用缓存路径的图片文件， 所以需要先读取文件内容
-        result = await ImageGallerySaver.saveImage(
-          file.readAsBytesSync(),
-          name: realFileName,
-          quality: 100,
-        );
-      }
-
-      logger.d('${result.runtimeType} $result');
-
-      if (result == null || result == '') {
-        throw EhError(error: 'Save image fail');
-      }
-
-      if (result is Map) {
-        final isSuccess = result['isSuccess'] as bool;
-        final errorMessage = result['errorMessage'] as String?;
-        if (!isSuccess) {
-          throw EhError(error: errorMessage ?? 'Save image fail');
-        }
-      }
-
-      // final result = await ImageSave.saveImage(
-      //   file.readAsBytesSync(),
-      //   realFileName,
-      //   albumName: EHConst.appTitle,
-      //   overwriteSameNameFile: false,
-      // );
-      // if (result == null || !result) {
-      //   throw EhError(error: 'Save image fail');
-      // }
-    } on EhError catch (e) {
-      rethrow;
-    } catch (e, s) {
-      logger.e('保存图片到相册失败', error: e, stackTrace: s);
-      throw EhError(error: '保存失败');
-    }
+    final saved = await ctrl._downloadToPath(
+      imageUrl, parentPath, '[$gid][$filename]'
+    );
   }
 
   static Future<void> shareNetworkImage(
