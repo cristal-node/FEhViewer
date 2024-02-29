@@ -586,7 +586,7 @@ class Api {
   }) async {
     logger.d('imageUrl $imageUrl');
 
-    final DownloadController ctrl = Get.find();
+    DownloadController get ctrl => Get.find();
     final parentPath = await ctrl._getGalleryDownloadPath(dirName: 'single');
 
     await ctrl._downloadToPath( imageUrl, parentPath, '[$gid][$filename]' );
