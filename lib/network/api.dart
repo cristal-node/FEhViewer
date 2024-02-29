@@ -586,12 +586,10 @@ class Api {
   }) async {
     logger.d('imageUrl $imageUrl');
 
-    final DownloadController ctrl = Get.find()
+    final DownloadController ctrl = Get.find();
     final parentPath = await ctrl._getGalleryDownloadPath(dirName: 'single');
 
-    final saved = await ctrl._downloadToPath(
-      imageUrl, parentPath, '[$gid][$filename]'
-    );
+    await ctrl._downloadToPath( imageUrl, parentPath, '[$gid][$filename]' );
   }
 
   static Future<void> shareNetworkImage(
