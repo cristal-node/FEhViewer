@@ -37,6 +37,8 @@ enum ProfileOpType {
 class Api {
   static PersistCookieJar? _cookieJar;
 
+  DownloadController get ctrl => Get.find();
+
   static Future<PersistCookieJar> get cookieJar async {
     _cookieJar ??=
         PersistCookieJar(storage: FileStorage(Global.appSupportPath));
@@ -586,7 +588,6 @@ class Api {
   }) async {
     logger.d('imageUrl $imageUrl');
 
-    DownloadController get ctrl => Get.find();
     final parentPath = await ctrl._getGalleryDownloadPath(dirName: 'single');
 
     await ctrl._downloadToPath( imageUrl, parentPath, '[$gid][$filename]' );
