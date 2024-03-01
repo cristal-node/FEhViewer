@@ -1020,12 +1020,15 @@ class DownloadController extends GetxController {
       final uri = Uri.parse(galleryDirUrl);
       final exists = await ss.exists(uri) ?? false;
 
+      logger.d('exists: $exists');
+
       if (exists) {
         return galleryDirUrl;
       }
 
       logger.d('galleryDirUrl $galleryDirUrl');
       final parentUri = Uri.parse(ehSettingService.downloadLocatino);
+      logger.d('parentUri: $parentUri\ndirName: $dirName');
       try {
         final result = await ss.createDirectory(parentUri, dirName);
         if (result != null) {
