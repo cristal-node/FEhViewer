@@ -755,7 +755,7 @@ class ViewExtController extends GetxController {
     bool? animate,
   }) {
     if (vState.pageIndex == vState.fileCount - 1)
-      await handOnTapCent();
+      handOnTapCent().ignore();
 
     final enableAnimate = animate ?? _ehSettingService.turnPageAnimations;
 
