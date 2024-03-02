@@ -755,7 +755,7 @@ class ViewExtController extends GetxController {
     bool? animate,
   }) {
     if (vState.pageIndex == vState.fileCount - 1)
-      unsetFullscreen();
+      await handOnTapCent();
 
     final enableAnimate = animate ?? _ehSettingService.turnPageAnimations;
 
