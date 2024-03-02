@@ -586,11 +586,11 @@ class Api {
   }) async {
     logger.d('imageUrl $imageUrl');
 
-    final DownloadController ctrl = Get.find();
-
-    final parentPath = await ctrl.dpath(dirName: 'single');
-
-    await ctrl.downloadToPath( imageUrl, parentPath, '[$gid][$filename]' );
+    await Get.find<DownloadController>().downloadToPath(
+      imageUrl,
+      path.join(Get.find<EhSettingService>().downloadLocatino, 'single'),
+      '[$gid][$filename]'
+    );
   }
 
   static Future<void> shareNetworkImage(
