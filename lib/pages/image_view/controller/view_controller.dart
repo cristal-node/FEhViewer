@@ -754,6 +754,9 @@ class ViewExtController extends GetxController {
     Duration duration = const Duration(milliseconds: 200),
     bool? animate,
   }) {
+    if (vState.pageIndex == vState.fileCount - 1)
+      unsetFullscreen();
+
     final enableAnimate = animate ?? _ehSettingService.turnPageAnimations;
 
     if (enableAnimate) {
