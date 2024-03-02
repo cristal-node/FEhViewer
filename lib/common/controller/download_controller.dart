@@ -89,7 +89,7 @@ class DownloadController extends GetxController {
   final EhSettingService ehSettingService = Get.find();
   final CacheController cacheController = Get.find();
 
-  Future<String> Function({String dirName}) get dpath=>_getGalleryDownloadPath;
+  Future<String> Function() get dpath => _getGalleryDownloadPath;
   Future Function(String,String,String) get downloadToPath => _downloadToPath;
 
   @override
