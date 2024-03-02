@@ -261,7 +261,7 @@ class ViewExtController extends GetxController {
     vState.sliderValue = vState.currentItemIndex / 1.0;
 
     // setFullscreen();
-    400.milliseconds.delay(() => setFullscreen());
+    setFullscreen();
   }
 
   @override
@@ -281,7 +281,7 @@ class ViewExtController extends GetxController {
     cancelVolumeKeydownListen();
 
     // unsetFullscreen();
-    400.milliseconds.delay(() => unsetFullscreen());
+    unsetFullscreen();
 
     // 恢复系统旋转设置
     logger.t('恢复系统旋转设置');
@@ -726,7 +726,7 @@ class ViewExtController extends GetxController {
       } else {
         // hide
         //vState.showBar = !vState.showBar;
-        400.milliseconds.delay(() => setFullscreen());
+        setFullscreen();
       }
     //} else {
       vState.showBar = !vState.showBar;
