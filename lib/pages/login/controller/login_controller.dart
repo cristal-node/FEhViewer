@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:fehviewer/common/controller/user_controller.dart';
-import 'package:fehviewer/component/exception/error.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/network/api.dart';
-import 'package:fehviewer/network/request.dart';
-import 'package:fehviewer/pages/login/view/login_cookie.dart';
+import 'package:eros_fe/common/controller/user_controller.dart';
+import 'package:eros_fe/component/exception/error.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/network/api.dart';
+import 'package:eros_fe/network/request.dart';
+import 'package:eros_fe/pages/login/view/login_cookie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -77,7 +77,7 @@ class LoginController extends GetxController {
     }
 
     if (user != null && user.cookie.isNotEmpty) {
-      userController.user(user.copyWith(username: usernameController.text));
+      userController.user(user.copyWith(username: usernameController.text.oN));
       Api.selEhProfile();
 
       asyncGetUserInfo(user.memberId!);
@@ -118,12 +118,12 @@ class LoginController extends GetxController {
     // cookieJar.saveFromResponse(Uri.parse(EHConst.EH_BASE_URL), cookies);
 
     final user = userController.user.value.copyWith(
-      username: '${memberId.substring(0, 1)}****',
-      memberId: memberId,
-      passHash: _getCookiesValue(cookies, 'ipb_pass_hash'),
-      igneous: _getCookiesValue(cookies, 'igneous'),
-      hathPerks: _getCookiesValue(cookies, 'hath_perks'),
-      sk: _getCookiesValue(cookies, 'sk'),
+      username: '${memberId.substring(0, 1)}****'.oN,
+      memberId: memberId.oN,
+      passHash: _getCookiesValue(cookies, 'ipb_pass_hash')?.oN,
+      igneous: _getCookiesValue(cookies, 'igneous')?.oN,
+      hathPerks: _getCookiesValue(cookies, 'hath_perks')?.oN,
+      sk: _getCookiesValue(cookies, 'sk')?.oN,
     );
 
     logger.d('user ${user.toJson()}');
@@ -173,15 +173,15 @@ class LoginController extends GetxController {
       }
 
       final user = userController.user.value.copyWith(
-        username: '${memberId.substring(0, 1)}****',
-        memberId: memberId,
-        passHash: _getCookiesValue(cookies, 'ipb_pass_hash'),
-        igneous: _getCookiesValue(cookies, 'igneous'),
-        hathPerks: _getCookiesValue(cookies, 'hath_perks'),
-        sk: _getCookiesValue(cookies, 'sk'),
+        username: '${memberId.substring(0, 1)}****'.oN,
+        memberId: memberId.oN,
+        passHash: _getCookiesValue(cookies, 'ipb_pass_hash')?.oN,
+        igneous: _getCookiesValue(cookies, 'igneous')?.oN,
+        hathPerks: _getCookiesValue(cookies, 'hath_perks')?.oN,
+        sk: _getCookiesValue(cookies, 'sk')?.oN,
       );
 
-      logger.d('user ${user.toJson()}');
+      logger.d('>>>>>>>>>>>>>>>> user ${user.toJson()}');
 
       userController.user(user);
 
@@ -200,7 +200,7 @@ class LoginController extends GetxController {
       return;
     }
     // 异步获取昵称和头像
-    logger.t('异步获取昵称和头像');
+    logger.d('异步获取昵称和头像');
     late User? info;
     try {
       info = await getUserInfo(memberId);
@@ -210,8 +210,8 @@ class LoginController extends GetxController {
     }
 
     userController.user(userController.user.value.copyWith(
-      nickName: info?.nickName,
-      avatarUrl: info?.avatarUrl,
+      nickName: info?.nickName?.oN,
+      avatarUrl: info?.avatarUrl?.oN,
     ));
     userController.update();
   }

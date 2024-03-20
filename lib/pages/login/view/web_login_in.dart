@@ -1,8 +1,8 @@
 import 'dart:io' as io;
 
-import 'package:fehviewer/const/const.dart';
-import 'package:fehviewer/generated/l10n.dart';
-import 'package:fehviewer/utils/logger.dart';
+import 'package:eros_fe/const/const.dart';
+import 'package:eros_fe/generated/l10n.dart';
+import 'package:eros_fe/utils/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
@@ -21,17 +21,11 @@ class WebLoginViewIn extends StatelessWidget {
     InAppWebViewController _controller;
     final WebviewCookieManager cookieManager = WebviewCookieManager();
 
-    InAppWebViewGroupOptions options = InAppWebViewGroupOptions(
-        crossPlatform: InAppWebViewOptions(
-          useShouldOverrideUrlLoading: true,
-          mediaPlaybackRequiresUserGesture: false,
-        ),
-        android: AndroidInAppWebViewOptions(
-          useHybridComposition: true,
-        ),
-        ios: IOSInAppWebViewOptions(
-          allowsInlineMediaPlayback: true,
-        ));
+    final InAppWebViewSettings settings = InAppWebViewSettings(
+        useShouldOverrideUrlLoading: true,
+        mediaPlaybackRequiresUserGesture: false,
+        useHybridComposition: true,
+        allowsInlineMediaPlayback: true);
 
     final CupertinoPageScaffold cpf = CupertinoPageScaffold(
       navigationBar: CupertinoNavigationBar(
@@ -40,15 +34,13 @@ class WebLoginViewIn extends StatelessWidget {
       ),
       child: SafeArea(
         child: InAppWebView(
-          initialUrlRequest: URLRequest(url: Uri.parse(EHConst.URL_SIGN_IN)),
-          initialOptions: options,
+          initialUrlRequest: URLRequest(url: WebUri(EHConst.URL_SIGN_IN)),
+          initialSettings: settings,
           onWebViewCreated: (InAppWebViewController webViewController) {
             _controller = webViewController;
           },
-          androidOnPermissionRequest: (controller, origin, resources) async {
-            return PermissionRequestResponse(
-                resources: resources,
-                action: PermissionRequestResponseAction.GRANT);
+          onPermissionRequest: (controller, permissionRequest) async {
+            return PermissionResponse(action: PermissionResponseAction.GRANT);
           },
           // onLoadStart: (InAppWebViewController controller, Uri? url) {
           //   logger.d('Page started loading: $url');
@@ -88,8 +80,10 @@ class WebLoginViewIn extends StatelessWidget {
             if (uri.path == '/index.php' && uri.queryParameters.isEmpty) {
               // final Map<String, String> cookieMap = <String, String>{};
               // 返回 cookie
-              _cookieManager.getCookies(url: uri).then((List<Cookie> cookies) {
-                logger.d(' $cookies');
+              _cookieManager
+                  .getCookies(url: WebUri.uri(uri))
+                  .then((List<Cookie> cookies) {
+                // logger.d('>>>>>>>>>>>>>>>> cookies $cookies');
                 // value.forEach((Cookie cookie) =>
                 //     cookieMap[cookie.name] = cookie.value as String);
 

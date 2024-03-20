@@ -20,7 +20,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  PACKAGE_NAME: FEhViewer
+  PACKAGE_NAME: Eros-FE
 
 jobs:
   Build_and_upload:
@@ -31,35 +31,35 @@ jobs:
         include:
           - target: android
             os: ubuntu-latest
-            flutter_version: 3.16
+            flutter_version: "3.x"
             flutter_channel: stable
             artifact_name: release-apk
-            artifact_path: build/app/outputs/apk/release/FEhViewer*.apk
+            artifact_path: build/app/outputs/apk/release/Eros-FE*.apk
           - target: ios
-            os: macos-12
-            flutter_version: 3.16
+            os: macos-14
+            flutter_version: "3.x"
             flutter_channel: stable
             artifact_name: release-ios
-            artifact_path: build/**/FEhViewer*.ipa
+            artifact_path: build/**/Eros-FE*.ipa
           - target: ios
             suffix: -impeller
-            os: macos-12
-            flutter_version: x
-            flutter_channel: master
+            os: macos-14
+            flutter_version: "3.x"
+            flutter_channel: stable
             artifact_name: release-ios-impeller
-            artifact_path: build/**/FEhViewer*.ipa
+            artifact_path: build/**/Eros-FE*.ipa
           - target: macos
-            os: macos-12
-            flutter_version: 3.16
+            os: macos-14
+            flutter_version: "3.x"
             flutter_channel: stable
             artifact_name: release-mac
-            artifact_path: build/macos/FEhViewer*.zip
-          - target: windows
-            os: windows-latest
-            flutter_version: 3.16
-            flutter_channel: stable
-            artifact_name: release-windows
-            artifact_path: build/windows/FEhViewer*.zip
+            artifact_path: build/macos/Eros-FE*.zip
+#          - target: windows
+#            os: windows-latest
+#            flutter_version: "3.x"
+#            flutter_channel: stable
+#            artifact_name: release-windows
+#            artifact_path: build/windows/Eros-FE*.zip
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -79,29 +79,29 @@ jobs:
       - name: show version
         run: echo ${{ env.app_version }}
 
-      - name: Cache Pods (build macos)
-        uses: actions/cache@v3
-        if: matrix.target == 'macos'
-        with:
-          path: |
-            macos/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('macos/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-
+#      - name: Cache Pods (build macos)
+#        uses: actions/cache@v3
+#        if: matrix.target == 'macos'
+#        with:
+#          path: |
+#            macos/Pods
+#          key: ${{ runner.os }}-pods-${{ hashFiles('macos/Podfile.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pods-
 
-      - name: Cache Pods (build ios)
-        uses: actions/cache@v3
-        if: matrix.target == 'ios'
-        with:
-          path: |
-            ios/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-            
+#      - name: Cache Pods (build ios)
+#        uses: actions/cache@v3
+#        if: matrix.target == 'ios'
+#        with:
+#          path: |
+#            ios/Pods
+#          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pods-
 
       # git-crypt unlock
       - name: Unlock secrets (MacOS)
-        if: matrix.os == 'macos-12'
+        if: matrix.os == 'macos-14'
         run: |
           brew install git-crypt
           echo $GIT_CRYPT_KEY | base64 -d -o grypt.key
@@ -264,7 +264,7 @@ jobs:
       - name: Upload to release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "/tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios*/*.ipa,/tmp/artifacts/release-mac/*.zip,/tmp/artifacts/release-windows/*.zip"
+          artifacts: "/tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios*/*.ipa,/tmp/artifacts/release-mac/*.zip"
           tag: ${{ github.ref_name }}
           bodyFile: changelog/v${{ env.app_version }}.md
           prerelease: contains(github.ref, 'pre')
@@ -279,6 +279,6 @@ jobs:
 #          --header 'Content-Type: application/x-www-form-urlencoded' \
 #          -d parse_mode=markdown \
 #          -d chat_id=${{ secrets.TELEGRAM_CHANNEL_ID }} \
-#          --data-urlencode text="[FEhViewer_${{ github.ref_name }}](https://github.com/honjow/FEhViewer/releases/tag/${{ github.ref_name }})
+#          --data-urlencode text="[Eros-FE_${{ github.ref_name }}](https://github.com/honjow/FEhViewer/releases/tag/${{ github.ref_name }})
 #          $changelog" \
 #          -d disable_web_page_preview=true

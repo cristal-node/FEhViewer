@@ -5,20 +5,20 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
+import 'package:eros_fe/common/service/controller_tag_service.dart';
+import 'package:eros_fe/common/service/ehsetting_service.dart';
+import 'package:eros_fe/component/exception/error.dart';
+import 'package:eros_fe/component/quene_task/quene_task.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/network/api.dart';
+import 'package:eros_fe/network/app_dio/pdio.dart';
+import 'package:eros_fe/network/request.dart';
+import 'package:eros_fe/pages/gallery/controller/gallery_page_controller.dart';
+import 'package:eros_fe/pages/tab/controller/download_view_controller.dart';
+import 'package:eros_fe/store/db/entity/gallery_image_task.dart';
+import 'package:eros_fe/store/db/entity/gallery_task.dart';
+import 'package:eros_fe/utils/saf_helper.dart';
 import 'package:executor/executor.dart';
-import 'package:fehviewer/common/service/controller_tag_service.dart';
-import 'package:fehviewer/common/service/ehsetting_service.dart';
-import 'package:fehviewer/component/exception/error.dart';
-import 'package:fehviewer/component/quene_task/quene_task.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/network/api.dart';
-import 'package:fehviewer/network/app_dio/pdio.dart';
-import 'package:fehviewer/network/request.dart';
-import 'package:fehviewer/pages/gallery/controller/gallery_page_controller.dart';
-import 'package:fehviewer/pages/tab/controller/download_view_controller.dart';
-import 'package:fehviewer/store/db/entity/gallery_image_task.dart';
-import 'package:fehviewer/store/db/entity/gallery_task.dart';
-import 'package:fehviewer/utils/saf_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -898,13 +898,13 @@ class DownloadController extends GetxController {
     }
 
     final GalleryImage _imageCopyWith = image.copyWith(
-      sourceId: _image.sourceId,
-      imageUrl: _image.imageUrl,
-      imageWidth: _image.imageWidth,
-      imageHeight: _image.imageHeight,
-      originImageUrl: _image.originImageUrl,
-      filename: _image.filename,
-      showKey: _image.showKey,
+      sourceId: _image.sourceId.oN,
+      imageUrl: _image.imageUrl.oN,
+      imageWidth: _image.imageWidth.oN,
+      imageHeight: _image.imageHeight.oN,
+      originImageUrl: _image.originImageUrl.oN,
+      filename: _image.filename.oN,
+      showKey: _image.showKey.oN,
     );
 
     return _imageCopyWith;

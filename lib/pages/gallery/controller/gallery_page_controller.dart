@@ -1,20 +1,20 @@
 import 'package:dio/dio.dart';
-import 'package:fehviewer/common/controller/cache_controller.dart';
-import 'package:fehviewer/common/controller/download_controller.dart';
-import 'package:fehviewer/common/controller/gallerycache_controller.dart';
-import 'package:fehviewer/common/controller/history_controller.dart';
-import 'package:fehviewer/common/controller/localfav_controller.dart';
-import 'package:fehviewer/common/parser/eh_parser.dart';
-import 'package:fehviewer/common/service/controller_tag_service.dart';
-import 'package:fehviewer/common/service/ehsetting_service.dart';
-import 'package:fehviewer/common/service/layout_service.dart';
-import 'package:fehviewer/component/exception/error.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/network/api.dart';
-import 'package:fehviewer/network/app_dio/pdio.dart';
-import 'package:fehviewer/network/request.dart';
-import 'package:fehviewer/pages/gallery/gallery_repository.dart';
-import 'package:fehviewer/pages/gallery/view/const.dart';
+import 'package:eros_fe/common/controller/cache_controller.dart';
+import 'package:eros_fe/common/controller/download_controller.dart';
+import 'package:eros_fe/common/controller/gallerycache_controller.dart';
+import 'package:eros_fe/common/controller/history_controller.dart';
+import 'package:eros_fe/common/controller/localfav_controller.dart';
+import 'package:eros_fe/common/parser/eh_parser.dart';
+import 'package:eros_fe/common/service/controller_tag_service.dart';
+import 'package:eros_fe/common/service/ehsetting_service.dart';
+import 'package:eros_fe/common/service/layout_service.dart';
+import 'package:eros_fe/component/exception/error.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/network/api.dart';
+import 'package:eros_fe/network/app_dio/pdio.dart';
+import 'package:eros_fe/network/request.dart';
+import 'package:eros_fe/pages/gallery/gallery_repository.dart';
+import 'package:eros_fe/pages/gallery/view/const.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
@@ -173,7 +173,7 @@ class GalleryPageController extends GetxController
       // 检查画廊是否包含在本地收藏中
       final bool _localFav = _isInLocalFav(gState.galleryProvider?.gid ?? '0');
       gState.galleryProvider =
-          gState.galleryProvider?.copyWith(localFav: _localFav);
+          gState.galleryProvider?.copyWith(localFav: _localFav.oN);
 
       final String? _oriColorRating = gState.galleryProvider?.colorRating;
       final String? _oriRatingCount = gState.galleryProvider?.ratingCount;
@@ -221,9 +221,11 @@ class GalleryPageController extends GetxController
           // 如果不是refresh情况。 收藏状态 评分状态从Provider中继承
           gState.galleryProvider = gState.galleryProvider?.copyWith(
             ratingFallBack:
-                gState.galleryProvider?.ratingFallBack ?? _oriRatingFallBack,
-            ratingCount: gState.galleryProvider?.ratingCount ?? _oriRatingCount,
-            colorRating: _oriColorRating,
+                (gState.galleryProvider?.ratingFallBack ?? _oriRatingFallBack)
+                    ?.oN,
+            ratingCount:
+                (gState.galleryProvider?.ratingCount ?? _oriRatingCount)?.oN,
+            colorRating: _oriColorRating?.oN,
             // isRatinged: _oriIsRatinged,
           );
 
@@ -239,8 +241,10 @@ class GalleryPageController extends GetxController
       gState.isRatinged = gState.galleryProvider?.isRatinged ?? false;
 
       gState.galleryProvider = gState.galleryProvider?.copyWith(
-          imgUrl: gState.galleryProvider?.imgUrl ??
-              gState.galleryProvider?.imgUrlL);
+        imgUrl:
+            (gState.galleryProvider?.imgUrl ?? gState.galleryProvider?.imgUrlL)
+                ?.oN,
+      );
 
       // 加入历史
       final _galleryProvider = gState.galleryProvider;
@@ -303,11 +307,11 @@ class GalleryPageController extends GetxController
     gState.isRatinged = true;
 
     gState.galleryProvider = gState.galleryProvider?.copyWith(
-      isRatinged: true,
-      ratingFallBack: ratingUsr,
-      rating: ratingAvg,
-      ratingCount: ratingCnt.toString(),
-      colorRating: colorRating,
+      isRatinged: true.oN,
+      ratingFallBack: ratingUsr.oN,
+      rating: ratingAvg.oN,
+      ratingCount: ratingCnt.toString().oN,
+      colorRating: colorRating.oN,
     );
 
     // gState.itemController?.galleryProvider = gState.galleryProvider!;
@@ -339,7 +343,7 @@ class GalleryPageController extends GetxController
           image.showKey != gState.galleryProvider?.showKey) {
         logger.d('update showKey ${image.showKey}');
         gState.galleryProvider = gState.galleryProvider?.copyWith(
-          showKey: image.showKey,
+          showKey: image.showKey?.oN,
         );
       }
 
@@ -609,7 +613,7 @@ class GalleryPageController extends GetxController
           if (_image?.showKey != null && _image?.showKey != _showKey) {
             logger.t('update showKey ${_image?.showKey}');
             gState.galleryProvider = gState.galleryProvider?.copyWith(
-              showKey: _image?.showKey,
+              showKey: _image?.showKey?.oN,
             );
           }
 
@@ -623,17 +627,17 @@ class GalleryPageController extends GetxController
           }
 
           final __image = _curImages.copyWith(
-            sourceId: _image.sourceId,
-            imageUrl: _image.imageUrl,
-            imageWidth: _image.imageWidth,
-            imageHeight: _image.imageHeight,
-            originImageUrl: _image.originImageUrl,
-            filename: _image.filename,
-            changeSource: changeSource,
-            errorInfo: '',
-            tempPath: '',
-            completeCache: false,
-            showKey: _image.showKey,
+            sourceId: _image.sourceId.oN,
+            imageUrl: _image.imageUrl.oN,
+            imageWidth: _image.imageWidth.oN,
+            imageHeight: _image.imageHeight.oN,
+            originImageUrl: _image.originImageUrl.oN,
+            filename: _image.filename.oN,
+            changeSource: changeSource.oN,
+            errorInfo: ''.oN,
+            tempPath: ''.oN,
+            completeCache: false.oN,
+            showKey: _image.showKey.oN,
           );
 
           return uptImageBySer(ser: itemSer, imageCallback: (image) => __image);

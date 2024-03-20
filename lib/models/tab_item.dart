@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:quiver/core.dart';
 
+import 'index.dart';
 
 @immutable
 class TabItem {
-  
+
   const TabItem({
     required this.name,
     this.enable,
@@ -13,8 +15,8 @@ class TabItem {
   final bool? enable;
 
   factory TabItem.fromJson(Map<String,dynamic> json) => TabItem(
-    name: json['name'] as String,
-    enable: json['enable'] != null ? json['enable'] as bool : null
+    name: json['name'].toString(),
+    enable: json['enable'] != null ? bool.tryParse('${json['enable']}', caseSensitive: false) ?? false : null
   );
   
   Map<String, dynamic> toJson() => {
@@ -27,17 +29,17 @@ class TabItem {
     enable: enable
   );
 
-    
+
   TabItem copyWith({
     String? name,
-    bool? enable
+    Optional<bool?>? enable
   }) => TabItem(
     name: name ?? this.name,
-    enable: enable ?? this.enable,
-  );  
+    enable: checkOptional(enable, () => this.enable),
+  );
 
   @override
-  bool operator ==(Object other) => identical(this, other) 
+  bool operator ==(Object other) => identical(this, other)
     || other is TabItem && name == other.name && enable == other.enable;
 
   @override

@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:quiver/core.dart';
 
+import 'index.dart';
 
 @immutable
 class FavConfig {
-  
+
   const FavConfig({
     this.lastIndex,
   });
@@ -11,7 +13,7 @@ class FavConfig {
   final int? lastIndex;
 
   factory FavConfig.fromJson(Map<String,dynamic> json) => FavConfig(
-    lastIndex: json['lastIndex'] != null ? json['lastIndex'] as int : null
+    lastIndex: json['lastIndex'] != null ? int.tryParse('${json['lastIndex']}') ?? 0 : null
   );
   
   Map<String, dynamic> toJson() => {
@@ -22,15 +24,15 @@ class FavConfig {
     lastIndex: lastIndex
   );
 
-    
+
   FavConfig copyWith({
-    int? lastIndex
+    Optional<int?>? lastIndex
   }) => FavConfig(
-    lastIndex: lastIndex ?? this.lastIndex,
-  );  
+    lastIndex: checkOptional(lastIndex, () => this.lastIndex),
+  );
 
   @override
-  bool operator ==(Object other) => identical(this, other) 
+  bool operator ==(Object other) => identical(this, other)
     || other is FavConfig && lastIndex == other.lastIndex;
 
   @override

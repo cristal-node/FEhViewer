@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:quiver/core.dart';
 
+import 'index.dart';
 
 @immutable
 class EhHome {
-  
+
   const EhHome({
     this.currentLimit,
     this.totLimit,
@@ -15,9 +17,9 @@ class EhHome {
   final int? resetCost;
 
   factory EhHome.fromJson(Map<String,dynamic> json) => EhHome(
-    currentLimit: json['currentLimit'] != null ? json['currentLimit'] as int : null,
-    totLimit: json['totLimit'] != null ? json['totLimit'] as int : null,
-    resetCost: json['resetCost'] != null ? json['resetCost'] as int : null
+    currentLimit: json['currentLimit'] != null ? int.tryParse('${json['currentLimit']}') ?? 0 : null,
+    totLimit: json['totLimit'] != null ? int.tryParse('${json['totLimit']}') ?? 0 : null,
+    resetCost: json['resetCost'] != null ? int.tryParse('${json['resetCost']}') ?? 0 : null
   );
   
   Map<String, dynamic> toJson() => {
@@ -32,19 +34,19 @@ class EhHome {
     resetCost: resetCost
   );
 
-    
+
   EhHome copyWith({
-    int? currentLimit,
-    int? totLimit,
-    int? resetCost
+    Optional<int?>? currentLimit,
+    Optional<int?>? totLimit,
+    Optional<int?>? resetCost
   }) => EhHome(
-    currentLimit: currentLimit ?? this.currentLimit,
-    totLimit: totLimit ?? this.totLimit,
-    resetCost: resetCost ?? this.resetCost,
-  );  
+    currentLimit: checkOptional(currentLimit, () => this.currentLimit),
+    totLimit: checkOptional(totLimit, () => this.totLimit),
+    resetCost: checkOptional(resetCost, () => this.resetCost),
+  );
 
   @override
-  bool operator ==(Object other) => identical(this, other) 
+  bool operator ==(Object other) => identical(this, other)
     || other is EhHome && currentLimit == other.currentLimit && totLimit == other.totLimit && resetCost == other.resetCost;
 
   @override

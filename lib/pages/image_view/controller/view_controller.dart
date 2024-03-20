@@ -3,20 +3,20 @@ import 'dart:io';
 
 import 'package:archive_async/archive_async.dart';
 import 'package:collection/collection.dart';
+import 'package:eros_fe/common/controller/archiver_download_controller.dart';
+import 'package:eros_fe/common/controller/download_controller.dart';
+import 'package:eros_fe/common/controller/gallerycache_controller.dart';
+import 'package:eros_fe/common/service/ehsetting_service.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/network/request.dart';
+import 'package:eros_fe/pages/gallery/controller/gallery_page_controller.dart';
+import 'package:eros_fe/pages/gallery/controller/gallery_page_state.dart';
+import 'package:eros_fe/pages/image_view/common.dart';
+import 'package:eros_fe/pages/image_view/view/view_widget.dart';
+import 'package:eros_fe/store/archive_async.dart';
+import 'package:eros_fe/utils/orientation_helper.dart';
+import 'package:eros_fe/utils/saf_helper.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:fehviewer/common/controller/archiver_download_controller.dart';
-import 'package:fehviewer/common/controller/download_controller.dart';
-import 'package:fehviewer/common/controller/gallerycache_controller.dart';
-import 'package:fehviewer/common/service/ehsetting_service.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/network/request.dart';
-import 'package:fehviewer/pages/gallery/controller/gallery_page_controller.dart';
-import 'package:fehviewer/pages/gallery/controller/gallery_page_state.dart';
-import 'package:fehviewer/pages/image_view/common.dart';
-import 'package:fehviewer/pages/image_view/view/view_widget.dart';
-import 'package:fehviewer/store/archive_async.dart';
-import 'package:fehviewer/utils/orientation_helper.dart';
-import 'package:fehviewer/utils/saf_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
@@ -570,14 +570,14 @@ class ViewExtController extends GetxController {
 
       var needShowKey =
           vState.pageState?.galleryProvider?.showKey?.isEmpty ?? true;
-      
+
       if (needShowKey) {
         // fetchAndParserImageInfo() then ehPrecacheImages()
         // make sure showKey is parsed before ehPrecacheImages()
         image = await _galleryPageController?.fetchAndParserImageInfo(
-        itemSer,
-        cancelToken: vState.getMoreCancelToken,
-        changeSource: changeSource,
+          itemSer,
+          cancelToken: vState.getMoreCancelToken,
+          changeSource: changeSource,
         );
       }
 
@@ -599,12 +599,11 @@ class ViewExtController extends GetxController {
         // ehPrecacheImages() then fetchAndParserImageInfo()
         // the original logic
         image = await _galleryPageController?.fetchAndParserImageInfo(
-        itemSer,
-        cancelToken: vState.getMoreCancelToken,
-        changeSource: changeSource,
+          itemSer,
+          cancelToken: vState.getMoreCancelToken,
+          changeSource: changeSource,
         );
       }
-
     }
 
     return image;
@@ -683,9 +682,9 @@ class ViewExtController extends GetxController {
     _galleryPageController?.uptImageBySer(
       ser: itemSer,
       imageCallback: (image) => image.copyWith(
-        imageUrl: '',
-        changeSource: changeSource,
-        completeCache: false,
+        imageUrl: ''.oN,
+        changeSource: changeSource.oN,
+        completeCache: false.oN,
       ),
     );
 
@@ -1471,7 +1470,7 @@ class ViewExtController extends GetxController {
           _galleryPageController?.uptImageBySer(
               ser: ser,
               imageCallback: (image) {
-                return image.copyWith(downloadProcess: process);
+                return image.copyWith(downloadProcess: process.oN);
               });
           update(['${idProcess}_$ser']);
         },
@@ -1479,9 +1478,9 @@ class ViewExtController extends GetxController {
           _galleryPageController?.uptImageBySer(
               ser: ser,
               imageCallback: (image) => image.copyWith(
-                    tempPath: savePath,
-                    completeCache: true,
-                    changeSource: false,
+                    tempPath: savePath.oN,
+                    completeCache: true.oN,
+                    changeSource: false.oN,
                   ));
         },
       );

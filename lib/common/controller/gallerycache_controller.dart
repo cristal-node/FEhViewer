@@ -1,12 +1,12 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:fehviewer/common/controller/mysql_controller.dart';
-import 'package:fehviewer/common/controller/webdav_controller.dart';
-import 'package:fehviewer/common/global.dart';
-import 'package:fehviewer/models/base/eh_models.dart';
-import 'package:fehviewer/pages/image_view/common.dart';
-import 'package:fehviewer/utils/logger.dart';
+import 'package:eros_fe/common/controller/mysql_controller.dart';
+import 'package:eros_fe/common/controller/webdav_controller.dart';
+import 'package:eros_fe/common/global.dart';
+import 'package:eros_fe/models/base/eh_models.dart';
+import 'package:eros_fe/pages/image_view/common.dart';
+import 'package:eros_fe/utils/logger.dart';
 import 'package:get/get.dart';
 import 'package:throttling/throttling.dart';
 
@@ -58,7 +58,7 @@ class GalleryCacheController extends GetxController {
         logger.t('both not null');
         if ((remote.time ?? 0) > (_localCache.time ?? 0)) {
           gCacheMap[gid] = _localCache.copyWith(
-              lastIndex: remote.lastIndex, time: remote.time);
+              lastIndex: remote.lastIndex.oN, time: remote.time.oN);
           yield gCacheMap[gid];
         }
       }
@@ -117,7 +117,8 @@ class GalleryCacheController extends GetxController {
         _uploadRead(_newCache);
       }
     } else {
-      final _newCache = _ori.copyWith(lastIndex: index, time: _time, gid: gid);
+      final _newCache =
+          _ori.copyWith(lastIndex: index.oN, time: _time.oN, gid: gid.oN);
       gCacheMap[gid] = _newCache;
       if (saveToStore) {
         hiveHelper.saveCache(_newCache);

@@ -1,9 +1,9 @@
 import 'dart:io' as io;
 
-import 'package:fehviewer/common/global.dart';
-import 'package:fehviewer/extension.dart';
-import 'package:fehviewer/network/api.dart';
-import 'package:fehviewer/utils/logger.dart';
+import 'package:eros_fe/common/global.dart';
+import 'package:eros_fe/extension.dart';
+import 'package:eros_fe/network/api.dart';
+import 'package:eros_fe/utils/logger.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 
@@ -22,7 +22,7 @@ class WebSettingController extends GetxController {
     for (final io.Cookie cookie in Global.profile.user.cookies) {
       logger.t('name:${cookie.name} value:${cookie.value}');
       _cookieManager.setCookie(
-          url: Uri.parse(Api.getBaseUrl()),
+          url: WebUri(Api.getBaseUrl()),
           name: cookie.name,
           value: cookie.value);
     }
