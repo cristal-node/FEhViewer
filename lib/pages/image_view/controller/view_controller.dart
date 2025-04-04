@@ -72,13 +72,6 @@ const String idProcess = 'Process';
 const int _speedMaxCount = 50;
 const int _speedInv = 10;
 
-enum PageViewType {
-  photoView,
-  preloadPhotoView,
-  preloadPageView,
-  extendedImageGesturePageView,
-}
-
 /// 支持在线以及本地（已下载）阅读的组件
 class ViewExtController extends GetxController {
   ViewExtController();
@@ -105,9 +98,16 @@ class ViewExtController extends GetxController {
   late final ArchiverDownloadController archiverDownloadController;
 
   // 使用 PhotoView
-  PageViewType get pageViewType => _ehSettingService.readViewCompatibleMode
-      ? PageViewType.extendedImageGesturePageView
-      : PageViewType.preloadPageView;
+  // PageViewType get pageViewType => _ehSettingService.readViewCompatibleMode
+  //     ? PageViewType.extendedImageGesturePageView
+  //     : PageViewType.preloadPageView;
+  PageViewType get pageViewType => _ehSettingService.pageViewType;
+  set pageViewType(PageViewType val) => _ehSettingService.pageViewType = val;
+
+  // enableSlideOutPage
+  bool get enableSlideOutPage => _ehSettingService.enableSlideOutPage;
+  set enableSlideOutPage(bool val) =>
+      _ehSettingService.enableSlideOutPage = val;
 
   Map<String, DownloadArchiverTaskInfo> get archiverTaskMap =>
       archiverDownloadController.archiverTaskMap;
@@ -155,7 +155,7 @@ class ViewExtController extends GetxController {
       archiverDownloadController = Get.find();
     }
 
-    // 横屏模式pageview控制器初始化
+    // 横屏模式 pageView 控制器初始化
     pageController = PageController(
       initialPage: vState.pageIndex,
       viewportFraction: vState.showPageInterval ? 1.1 : 1.0,
@@ -250,15 +250,16 @@ class ViewExtController extends GetxController {
     }
 
     logger.t('旋转设置');
-    final ReadOrientation? _orientation = _ehSettingService.orientation.value;
+    final ReadOrientation? orientation = _ehSettingService.orientation.value;
     // logger.d(' $_orientation');
-    if (_orientation != ReadOrientation.system &&
-        _orientation != ReadOrientation.auto) {
+    if (orientation != ReadOrientation.system &&
+        orientation != ReadOrientation.auto) {
       OrientationHelper.setPreferredOrientations(
-          [orientationMap[_orientation] ?? DeviceOrientation.portraitUp]);
+          [orientationMap[orientation] ?? DeviceOrientation.portraitUp]);
     }
 
-    vState.sliderValue = vState.currentItemIndex / 1.0;
+    // vState.sliderValue = vState.currentItemIndex / 1.0;
+    _setPageSliderValue(updateSlider: true);
 
     // setFullscreen();
     400.milliseconds.delay(() => setFullscreen());
@@ -396,6 +397,24 @@ class ViewExtController extends GetxController {
       });
     }
 
+    // if (vState.currentItemIndex >= vState.fileCount - 1) {
+    //   vState.sliderValue = (vState.fileCount - 1).toDouble();
+    // } else if (vState.currentItemIndex < 0) {
+    //   vState.sliderValue = 1.0;
+    // } else {
+    //   vState.sliderValue = vState.currentItemIndex.toDouble();
+    // }
+    _setPageSliderValue();
+
+    update([idViewTopBar, idViewPageSlider]);
+    if (vState.syncThumbList) {
+      thumbScrollTo();
+    }
+  }
+
+  void _setPageSliderValue({bool updateSlider = false}) {
+    logger.d(
+        '>>> _setPageSliderValue currentItemIndex ${vState.currentItemIndex}');
     if (vState.currentItemIndex >= vState.fileCount - 1) {
       vState.sliderValue = (vState.fileCount - 1).toDouble();
     } else if (vState.currentItemIndex < 0) {
@@ -403,9 +422,9 @@ class ViewExtController extends GetxController {
     } else {
       vState.sliderValue = vState.currentItemIndex.toDouble();
     }
-    update([idViewTopBar, idViewPageSlider]);
-    if (vState.syncThumbList) {
-      thumbScrollTo();
+    logger.d('>>> _setPageSliderValue ${vState.sliderValue}');
+    if (updateSlider) {
+      update([idViewTopBar, idViewPageSlider]);
     }
   }
 
@@ -413,26 +432,26 @@ class ViewExtController extends GetxController {
   Future<void> switchColumnMode() async {
     vibrateUtil.light();
     logger.t('切换单页双页模式');
-    late final int _toIndex;
+    late final int toIndex;
     switch (vState.columnMode) {
       case ViewColumnMode.single:
         logger.d('单页 => 双页1. itemIndex:${vState.currentItemIndex},');
         vState.columnMode = ViewColumnMode.oddLeft;
-        _toIndex = vState.pageIndex;
+        toIndex = vState.pageIndex;
         break;
       case ViewColumnMode.oddLeft:
         logger.d('双页1 => 双页2, itemIndex:${vState.currentItemIndex}');
         vState.columnMode = ViewColumnMode.evenLeft;
-        _toIndex = vState.pageIndex;
+        toIndex = vState.pageIndex;
         break;
       case ViewColumnMode.evenLeft:
         logger.d('双页2 => 单页, itemIndex:${vState.currentItemIndex}');
         vState.columnMode = ViewColumnMode.single;
-        _toIndex = vState.pageIndex;
+        toIndex = vState.pageIndex;
         break;
     }
 
-    logger.d('_toIndex $_toIndex  ');
+    logger.d('_toIndex $toIndex  ');
     update([idViewColumnModeIcon, idSlidePage]);
     await Future.delayed(const Duration(milliseconds: 50));
 
@@ -443,7 +462,7 @@ class ViewExtController extends GetxController {
 
     // pageControllerCallBack(() => pageController.jumpToPage(_toIndex),
     //     () => extendedPageController.jumpToPage(_toIndex));
-    changePage(_toIndex, animate: false);
+    changePage(toIndex, animate: false);
   }
 
   Future<void> switchShowThumbList() async {
@@ -514,7 +533,7 @@ class ViewExtController extends GetxController {
   }
 
   Future<String?> _getTaskDirPath(int gid) async {
-    logger.d('vState.realDirPath ${vState.realDirPath} gid:${vState.gid} $gid');
+    logger.t('vState.realDirPath ${vState.realDirPath} gid:${vState.gid} $gid');
     if (vState.gid == gid.toString() &&
         vState.realDirPath != null &&
         vState.realDirPath!.isNotEmpty) {
@@ -536,7 +555,7 @@ class ViewExtController extends GetxController {
     int itemSer, {
     bool changeSource = false,
   }) async {
-    logger.d('fetchImage ser:$itemSer');
+    logger.t('fetchImage ser:$itemSer');
 
     // 首先检查下载记录中是否有记录
     vState.dirPath ??=
@@ -629,18 +648,17 @@ class ViewExtController extends GetxController {
         return null;
       }
 
-      // final filePath = path.join(task.savedDir ?? '', task.fileName);
       late final String? filePath;
       if (task.savedDir?.isContentUri ?? false) {
-        final _uri = task.safUri ??
+        final uri = task.safUri ??
             '${task.savedDir}%2F${Uri.encodeComponent(task.fileName ?? '')}';
-        final result = await safCacheSingle(Uri.parse(_uri));
+        final result = await safCacheSingle(Uri.parse(uri));
         filePath = result.cachePath;
         safCacheDirectory = result.parentPath;
       } else {
         filePath = path.join(task.savedDir ?? '', task.fileName);
       }
-      // logger.d('filePath $filePath');
+      logger.d('filePath $filePath');
       if (filePath == null) {
         throw Exception('filePath is null');
       }
@@ -1052,12 +1070,11 @@ class ViewExtController extends GetxController {
 
   Future<int?> _showAutoReadInvPicker(BuildContext context, List<int> invList,
       {int? initIndex}) async {
-    int _selIndex = initIndex ?? 0;
+    int selIndex = initIndex ?? 0;
 
-    final _scrollController =
-        FixedExtentScrollController(initialItem: _selIndex);
+    final scrollController = FixedExtentScrollController(initialItem: selIndex);
 
-    final List<Widget> _favPickerList =
+    final List<Widget> favPickerList =
         List<Widget>.from(invList.map((int e) => Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1075,15 +1092,15 @@ class ViewExtController extends GetxController {
           content: Container(
             child: Column(
               children: <Widget>[
-                Container(
+                SizedBox(
                   height: 150,
                   child: CupertinoPicker(
-                    scrollController: _scrollController,
+                    scrollController: scrollController,
                     itemExtent: 30,
                     onSelectedItemChanged: (int index) {
-                      _selIndex = index;
+                      selIndex = index;
                     },
-                    children: _favPickerList,
+                    children: favPickerList,
                   ),
                 ),
               ],
@@ -1100,7 +1117,7 @@ class ViewExtController extends GetxController {
               child: Text(L10n.of(context).ok),
               onPressed: () {
                 // 返回数据
-                Get.back(result: invList[_selIndex]);
+                Get.back(result: invList[selIndex]);
               },
             ),
           ],
@@ -1230,19 +1247,19 @@ class ViewExtController extends GetxController {
       if (vState.viewMode == ViewMode.topToBottom &&
           itemScrollController.isAttached) {
         logger.d('t2d minImageIndex:${vState.minImageIndex + 1}');
-        final _minIndex = vState.minImageIndex;
-        final _minImageSer = _minIndex + 1;
-        if (!(vState.loadCompleMap[_minImageSer] ?? false)) {
+        final minIndex = vState.minImageIndex;
+        final minImageSer = minIndex + 1;
+        if (!(vState.loadCompleMap[minImageSer] ?? false)) {
           autoNextTimer?.cancel();
         }
 
-        vState.lastAutoNextSer = _minImageSer + 1;
+        vState.lastAutoNextSer = minImageSer + 1;
         if (!(vState.loadCompleMap[vState.lastAutoNextSer] ?? false)) {
           autoNextTimer?.cancel();
         }
 
-        if (vState.loadCompleMap[_minImageSer] ?? false) {
-          changePage(_minIndex + 1);
+        if (vState.loadCompleMap[minImageSer] ?? false) {
+          changePage(minIndex + 1);
         }
       } else {
         changePage(vState.pageIndex + 1);

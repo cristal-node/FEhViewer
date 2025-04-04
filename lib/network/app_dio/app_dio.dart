@@ -7,7 +7,6 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:eros_fe/common/global.dart';
 import 'package:eros_fe/common/service/dns_service.dart';
 import 'package:eros_fe/common/service/ehsetting_service.dart';
@@ -15,6 +14,8 @@ import 'package:eros_fe/const/const.dart';
 import 'package:eros_fe/network/app_dio/proxy.dart';
 import 'package:eros_fe/network/dio_interceptor/domain_fronting/domain_fronting.dart';
 import 'package:eros_fe/network/dio_interceptor/eh_cookie_interceptor/eh_cookie_interceptor.dart';
+import 'package:eros_fe/network/dio_interceptor/rate_limit/rate_limit_interceptor.dart';
+import 'package:eros_fe/network/dio_interceptor/rate_limit/token_bucket_interceptor.dart';
 import 'package:eros_fe/utils/logger.dart';
 import 'package:firebase_performance_dio/firebase_performance_dio.dart';
 import 'package:get/get.dart' hide Response;
@@ -90,6 +91,66 @@ class AppDio with DioMixin implements Dio {
 
     interceptors.add(EhCookieInterceptor());
 
+    // 限频 普通
+    interceptors.add(RateLimitInterceptor(
+      rateLimitInterval: const Duration(milliseconds: 200),
+      globalLimit: false,
+    ));
+
+    // 缩略图请求的限频配置
+    final thumbRateLimitConfig = RateLimitConfig(
+      maxTokens: 20,
+      refillDuration: const Duration(milliseconds: 400),
+    );
+
+    // 限频 桶令牌
+    interceptors.add(
+      TokenBucketInterceptor(
+        defaultMaxTokens: 10, // 默认令牌桶最大容量
+        defaultRefillDuration: const Duration(milliseconds: 500), // 默认令牌补充间隔时间
+        globalLimit: false, // 是否全局限制
+        hostConfig: {
+          // 缩略图 详情页
+          r'^(?!-)[a-zA-Z0-9-]{1,63}(?<!-).hath.network$': thumbRateLimitConfig,
+          // 缩略图
+          'ehgt.org': thumbRateLimitConfig,
+          // 缩略图 (封面?)
+          's.exhentai.org': thumbRateLimitConfig,
+          'e-hentai.org': RateLimitConfig(
+            maxTokens: 5,
+            refillDuration: const Duration(milliseconds: 800),
+          ),
+          'exhentai.org': RateLimitConfig(
+            maxTokens: 5,
+            refillDuration: const Duration(milliseconds: 800),
+          ),
+        },
+      ),
+    );
+
+    // 限频 滑动窗口
+    // interceptors.add(
+    //   SlidingWindowInterceptor(
+    //     defaultMaxRequests: 3, // 默认时间窗口内最大请求数
+    //     defaultWindowDuration: const Duration(seconds: 2), // 默认时间窗口时长
+    //     globalLimit: true, // false表示按主机限流
+    //     hostConfig: {
+    //       'ehgt.org': SlidingWindowConfig(
+    //         maxRequests: 4,
+    //         windowDuration: const Duration(milliseconds: 800),
+    //       ),
+    //       'e-hentai.org': SlidingWindowConfig(
+    //         maxRequests: 3,
+    //         windowDuration: const Duration(seconds: 1),
+    //       ),
+    //       'exhentai.org': SlidingWindowConfig(
+    //         maxRequests: 3,
+    //         windowDuration: const Duration(seconds: 1),
+    //       ),
+    //     },
+    //   ),
+    // );
+
     // if (kDebugMode) {
     //   interceptors.add(LogInterceptor(
     //       responseBody: false,
@@ -111,17 +172,17 @@ class AppDio with DioMixin implements Dio {
     ));
 
     // RetryInterceptor
-    interceptors.add(RetryInterceptor(
-      dio: this,
-      logPrint: logger.t, // specify log function (optional)
-      retries: 3, // retry count (optional)
-      retryDelays: const [
-        // set delays between retries (optional)
-        Duration(seconds: 1), // wait 1 sec before first retry
-        Duration(seconds: 2), // wait 2 sec before second retry
-        Duration(seconds: 3), // wait 3 sec before third retry
-      ],
-    ));
+    // interceptors.add(RetryInterceptor(
+    //   dio: this,
+    //   logPrint: logger.t, // specify log function (optional)
+    //   retries: 3, // retry count (optional)
+    //   retryDelays: const [
+    //     // set delays between retries (optional)
+    //     Duration(seconds: 1), // wait 1 sec before first retry
+    //     Duration(seconds: 2), // wait 2 sec before second retry
+    //     Duration(seconds: 3), // wait 3 sec before third retry
+    //   ],
+    // ));
 
     if (dioConfig?.interceptors?.isNotEmpty ?? false) {
       interceptors.addAll(interceptors);
@@ -171,54 +232,53 @@ class AppDio with DioMixin implements Dio {
     Object? data,
     Options? options,
   }) async {
-    // We set the `responseType` to [ResponseType.STREAM] to retrieve the
-    // response stream.
     options ??= DioMixin.checkOptions('GET', options);
-
-    // Receive data with stream.
-    options.responseType = ResponseType.stream;
-    Response<ResponseBody> response;
+    // Manually set the `responseType` to [ResponseType.stream]
+    // to retrieve the response stream.
+    // Do not modify previous options.
+    options = options.copyWith(responseType: ResponseType.stream);
+    final Response<ResponseBody> response;
     try {
       response = await request<ResponseBody>(
         urlPath,
         data: data,
         options: options,
         queryParameters: queryParameters,
-        cancelToken: cancelToken ?? CancelToken(),
+        cancelToken: cancelToken,
       );
     } on DioException catch (e) {
       if (e.type == DioExceptionType.badResponse) {
-        if (e.response!.requestOptions.receiveDataWhenStatusError == true) {
+        final response = e.response!;
+        if (response.requestOptions.receiveDataWhenStatusError == true) {
+          final ResponseType implyResponseType;
+          final contentType = response.headers.value(Headers.contentTypeHeader);
+          if (contentType != null && contentType.startsWith('text/')) {
+            implyResponseType = ResponseType.plain;
+          } else {
+            implyResponseType = ResponseType.json;
+          }
           final res = await transformer.transformResponse(
-            e.response!.requestOptions..responseType = ResponseType.json,
-            e.response!.data as ResponseBody,
+            response.requestOptions.copyWith(responseType: implyResponseType),
+            response.data as ResponseBody,
           );
-          e.response!.data = res;
+          response.data = res;
         } else {
-          e.response!.data = null;
+          response.data = null;
         }
       }
       rethrow;
     }
     final File file;
-
-    // if (savePath is FutureOr<String> Function(Headers)) {
-    //   // Add real Uri and redirect information to headers.
-    //   response.headers
-    //     ..add('redirects', response.redirects.length.toString())
-    //     ..add('uri', response.realUri.toString());
-    //   file = File(await savePath(response.headers));
-    // } else if (savePath is String) {
-    //   file = File(savePath);
-    // } else {
-    //   throw ArgumentError.value(
-    //     savePath.runtimeType,
-    //     'savePath',
-    //     'The type must be `String` or `FutureOr<String> Function(Headers)`.',
-    //   );
-    // }
-
-    if (savePath is DioSavePath) {
+    if (savePath is FutureOr<String> Function(Headers)) {
+      // Add real Uri and redirect information to headers.
+      response.headers
+        ..add('redirects', response.redirects.length.toString())
+        ..add('uri', response.realUri.toString());
+      file = File(await savePath(response.headers));
+    } else if (savePath is String) {
+      file = File(savePath);
+    } else if (savePath is DioSavePath) {
+      // Add for fe
       response.headers
         ..add('redirects', response.redirects.length.toString())
         ..add('uri', response.realUri.toString());
@@ -227,11 +287,11 @@ class AppDio with DioMixin implements Dio {
       throw ArgumentError.value(
         savePath.runtimeType,
         'savePath',
-        'The type must be `DioSavePath`.',
+        'The type must be `String` or `FutureOr<String> Function(Headers)`.',
       );
     }
 
-    // If the directory (or file) doesn't exist yet, the entire method fails.
+    // If the file already exists, the method fails.
     file.createSync(recursive: true);
 
     // Shouldn't call file.writeAsBytesSync(list, flush: flush),
@@ -241,7 +301,6 @@ class AppDio with DioMixin implements Dio {
 
     // Create a Completer to notify the success/error state.
     final completer = Completer<Response>();
-    Future<Response> future = completer.future;
     int received = 0;
 
     // Stream<Uint8List>
@@ -266,9 +325,9 @@ class AppDio with DioMixin implements Dio {
       if (!closed) {
         closed = true;
         await asyncWrite;
-        await raf.close();
+        await raf.close().catchError((_) => raf);
         if (deleteOnError && file.existsSync()) {
-          await file.delete();
+          await file.delete().catchError((_) => file);
         }
       }
     }
@@ -288,7 +347,12 @@ class AppDio with DioMixin implements Dio {
           }
         }).catchError((Object e) async {
           try {
-            await subscription.cancel();
+            await subscription.cancel().catchError((_) {});
+            closed = true;
+            await raf.close().catchError((_) => raf);
+            if (deleteOnError && file.existsSync()) {
+              await file.delete().catchError((_) => file);
+            }
           } finally {
             completer.completeError(
               DioMixin.assureDioException(e, response.requestOptions),
@@ -300,7 +364,7 @@ class AppDio with DioMixin implements Dio {
         try {
           await asyncWrite;
           closed = true;
-          await raf.close();
+          await raf.close().catchError((_) => raf);
           completer.complete(response);
         } catch (e) {
           completer.completeError(
@@ -313,7 +377,7 @@ class AppDio with DioMixin implements Dio {
           await closeAndDelete();
         } finally {
           completer.completeError(
-            DioMixin.assureDioException(e as Object, response.requestOptions),
+            DioMixin.assureDioException(e, response.requestOptions),
           );
         }
       },
@@ -323,25 +387,6 @@ class AppDio with DioMixin implements Dio {
       await subscription.cancel();
       await closeAndDelete();
     });
-
-    final timeout = response.requestOptions.receiveTimeout;
-    if (timeout != null) {
-      future = future.timeout(timeout).catchError(
-        (dynamic e, StackTrace s) async {
-          await subscription.cancel();
-          await closeAndDelete();
-          if (e is TimeoutException) {
-            throw DioException.receiveTimeout(
-              timeout: timeout,
-              requestOptions: response.requestOptions,
-              error: e,
-            );
-          } else {
-            throw e as Object;
-          }
-        },
-      );
-    }
-    return DioMixin.listenCancelForAsyncTask(cancelToken, future);
+    return DioMixin.listenCancelForAsyncTask(cancelToken, completer.future);
   }
 }

@@ -117,7 +117,7 @@ abstract class TabViewController extends GetxController {
 
   // 请求一批画廊数据
   Future<GalleryList?> fetchData({bool refresh = false}) async {
-    logger.d('super fetchData ....');
+    // logger.d('super fetchData ....');
     cancelToken = CancelToken();
     return null;
   }
@@ -386,10 +386,10 @@ abstract class TabViewController extends GetxController {
     change(state, status: RxStatus.success());
     logger.d('prevGid: $prevGid, prevPage $prevPage,  afterJump: $afterJump');
     if ((prevGid.isNotEmpty || prevPage >= 0) && afterJump) {
-      logger.t('loadPrevious');
+      logger.d('>>>>> loadPrevious');
       await loadPrevious();
     } else {
-      logger.t('reloadData');
+      logger.d('>>>>> reloadData');
       await reloadData();
     }
   }

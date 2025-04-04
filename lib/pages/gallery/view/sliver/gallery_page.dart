@@ -21,7 +21,7 @@ import 'header_sliver.dart';
 import 'slivers.dart';
 
 class GalleryPage extends StatefulWidget {
-  const GalleryPage({Key? key}) : super(key: key);
+  const GalleryPage({super.key});
 
   @override
   State<GalleryPage> createState() => _GalleryPageState();
@@ -36,7 +36,13 @@ class _GalleryPageState extends State<GalleryPage> {
   @override
   void initState() {
     super.initState();
-    _controller = Get.put(GalleryPageController(), tag: _tag);
+    // _controller = Get.put(GalleryPageController(), tag: _tag);
+    Get.lazyPut<GalleryPageController>(
+      () => GalleryPageController(),
+      tag: _tag,
+      fenix: true,
+    );
+    _controller = Get.find(tag: _tag);
     initPageController(tag: _tag);
   }
 
@@ -88,9 +94,9 @@ class _GalleryPageState extends State<GalleryPage> {
 
 class GalleryNavigationBar extends StatelessWidget {
   const GalleryNavigationBar({
-    Key? key,
+    super.key,
     required this.controller,
-  }) : super(key: key);
+  });
   final GalleryPageController controller;
 
   GalleryPageState get pageState => controller.gState;
@@ -125,6 +131,7 @@ class GalleryNavigationBar extends StatelessWidget {
           Widget coverOpacity = AnimatedOpacity(
             opacity: pageState.hideNavigationBtn ? 0.0 : 1.0,
             duration: 300.milliseconds,
+            curve: Curves.ease,
             child: GetBuilder<GalleryPageController>(
               id: GetIds.PAGE_VIEW_HEADER,
               tag: pageCtrlTag,
@@ -135,7 +142,6 @@ class GalleryNavigationBar extends StatelessWidget {
                 );
               },
             ),
-            curve: Curves.ease,
           );
 
           return coverOpacity;
@@ -262,7 +268,7 @@ class GalleryHeadTile extends StatelessWidget {
 }
 
 class GalleryBody extends StatelessWidget {
-  const GalleryBody({Key? key, required this.controller}) : super(key: key);
+  const GalleryBody({super.key, required this.controller});
 
   final GalleryPageController controller;
 
@@ -299,8 +305,7 @@ class GalleryBody extends StatelessWidget {
 }
 
 class TagTile extends StatelessWidget {
-  const TagTile({Key? key, required this.provider, this.pageController})
-      : super(key: key);
+  const TagTile({super.key, required this.provider, this.pageController});
   final GalleryProvider provider;
   final GalleryPageController? pageController;
 
@@ -330,10 +335,10 @@ class TagTile extends StatelessWidget {
 
 class ChapterTile extends StatelessWidget {
   const ChapterTile({
-    Key? key,
+    super.key,
     required this.provider,
     required this.controller,
-  }) : super(key: key);
+  });
 
   final GalleryProvider provider;
   final GalleryPageController controller;
@@ -358,10 +363,10 @@ class ChapterTile extends StatelessWidget {
 
 class CommentTile extends StatelessWidget {
   const CommentTile({
-    Key? key,
+    super.key,
     required this.provider,
     required this.controller,
-  }) : super(key: key);
+  });
   final GalleryProvider provider;
   final GalleryPageController controller;
 
@@ -407,11 +412,11 @@ class CommentTile extends StatelessWidget {
 
 class ThumbTile extends StatelessWidget {
   const ThumbTile({
-    Key? key,
+    super.key,
     required this.provider,
     required this.controller,
     this.horizontal = false,
-  }) : super(key: key);
+  });
   final GalleryProvider provider;
   final GalleryPageController controller;
   final bool horizontal;

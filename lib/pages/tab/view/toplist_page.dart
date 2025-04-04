@@ -98,10 +98,10 @@ class _ToplistTabState extends State<ToplistTab> {
           CupertinoButton(
             padding: const EdgeInsets.all(0.0),
             minSize: 40,
-            child: Stack(
+            child: const Stack(
               alignment: Alignment.centerRight,
               // mainAxisSize: MainAxisSize.min,
-              children: const <Widget>[
+              children: <Widget>[
                 Icon(
                   CupertinoIcons.sort_down,
                   size: 28,
@@ -244,7 +244,7 @@ class _ToplistTabState extends State<ToplistTab> {
             lastComplete: controller.lastComplete,
             centerKey: centerKey,
             key: controller.sliverAnimatedListKey,
-            lastTopitemIndex: controller.lastTopitemIndex,
+            lastTopItemIndex: controller.lastTopitemIndex,
           );
         }
 

@@ -27,7 +27,7 @@ import '../controller/view_controller.dart';
 const double kPageViewPadding = 4.0;
 
 class ViewErr509 extends StatelessWidget {
-  const ViewErr509({Key? key, required this.ser}) : super(key: key);
+  const ViewErr509({super.key, required this.ser});
   final int ser;
 
   @override
@@ -76,7 +76,7 @@ class ViewErr509 extends StatelessWidget {
 }
 
 class ViewErr429 extends StatelessWidget {
-  const ViewErr429({Key? key, required this.ser}) : super(key: key);
+  const ViewErr429({super.key, required this.ser});
   final int ser;
 
   @override
@@ -125,7 +125,7 @@ class ViewErr429 extends StatelessWidget {
 }
 
 class ViewAD extends StatelessWidget {
-  const ViewAD({Key? key, required this.ser}) : super(key: key);
+  const ViewAD({super.key, required this.ser});
   final int ser;
 
   @override
@@ -175,8 +175,7 @@ class ViewAD extends StatelessWidget {
 }
 
 class ViewError extends StatelessWidget {
-  const ViewError({Key? key, required this.ser, this.errInfo})
-      : super(key: key);
+  const ViewError({super.key, required this.ser, this.errInfo});
   final int ser;
   final String? errInfo;
 
@@ -214,38 +213,38 @@ class ViewError extends StatelessWidget {
 
 class ViewLoading extends StatelessWidget {
   const ViewLoading({
-    Key? key,
+    super.key,
     this.ser,
     this.duration,
     this.progress,
     this.animationEnabled,
-    this.debugLable,
-  }) : super(key: key);
+    this.debugLabel,
+  });
   final int? ser;
   final Duration? duration;
   final double? progress;
   final bool? animationEnabled;
-  final String? debugLable;
+  final String? debugLabel;
 
   @override
   Widget build(BuildContext context) {
-    if (debugLable != null && kDebugMode) {
-      logger.t('build ViewLoading $debugLable');
+    if (debugLabel != null && kDebugMode) {
+      logger.t('build ViewLoading $debugLabel');
     }
-    final _loadWidget = _ViewLoadingCupertion(
+    final loadWidget = _ViewLoading(
       ser: ser,
       progress: progress,
       animationEnabled: animationEnabled ?? true,
     );
 
     if (duration == null) {
-      return _loadWidget;
+      return loadWidget;
     } else {
       return FutureBuilder<void>(
           future: Future.delayed(duration ?? const Duration(milliseconds: 100)),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return _loadWidget;
+              return loadWidget;
             } else {
               return const SizedBox.shrink();
             }
@@ -256,7 +255,7 @@ class ViewLoading extends StatelessWidget {
 
 class ImageExt extends GetView<ViewExtController> {
   ImageExt({
-    Key? key,
+    super.key,
     required this.url,
     required this.ser,
     required this.fadeAnimationController,
@@ -269,7 +268,7 @@ class ImageExt extends GetView<ViewExtController> {
     required this.onDoubleTap,
     this.mode = ExtendedImageMode.none,
     this.enableSlideOutPage = false,
-  }) : super(key: key);
+  });
 
   final String url;
   final int ser;
@@ -314,7 +313,7 @@ class ImageExt extends GetView<ViewExtController> {
                     (loadingProgress?.expectedTotalBytes ?? 1)
                 : null;
 
-            return _ViewLoadingCupertion(progress: progress, ser: ser);
+            return _ViewLoading(progress: progress, ser: ser);
 
           ///if you don't want override completed widget
           ///please return null or state.completedWidget
@@ -333,10 +332,10 @@ class ImageExt extends GetView<ViewExtController> {
             if (checkPHashHide || checkQRCodeHide) {
               image = ImageWithHide(
                 url: url,
-                child: image,
                 ser: ser,
                 checkPHashHide: checkPHashHide,
                 checkQRCodeHide: checkQRCodeHide,
+                child: image,
               );
             }
 
@@ -358,7 +357,7 @@ class ImageExt extends GetView<ViewExtController> {
 
             if (reload) {
               // return const SizedBox.shrink();
-              return _ViewLoadingCupertion(ser: ser);
+              return _ViewLoading(ser: ser);
             } else {
               return Container(
                 alignment: Alignment.center,
@@ -406,7 +405,7 @@ class ImageExt extends GetView<ViewExtController> {
 
 class ImageExtProvider extends GetView<ViewExtController> {
   ImageExtProvider({
-    Key? key,
+    super.key,
     required this.image,
     required this.ser,
     required this.fadeAnimationController,
@@ -419,7 +418,7 @@ class ImageExtProvider extends GetView<ViewExtController> {
     required this.onDoubleTap,
     this.mode = ExtendedImageMode.none,
     this.enableSlideOutPage = false,
-  }) : super(key: key);
+  });
 
   final ImageProvider image;
   final int ser;
@@ -457,7 +456,7 @@ class ImageExtProvider extends GetView<ViewExtController> {
                     (loadingProgress?.expectedTotalBytes ?? 1)
                 : null;
 
-            return _ViewLoadingCupertion(progress: progress, ser: ser);
+            return _ViewLoading(progress: progress, ser: ser);
 
           case LoadState.completed:
             fadeAnimationController.forward();
@@ -496,7 +495,7 @@ class ImageExtProvider extends GetView<ViewExtController> {
 
             if (reload) {
               // return const SizedBox.shrink();
-              return _ViewLoadingCupertion(ser: ser);
+              return _ViewLoading(ser: ser);
             } else {
               return Container(
                 alignment: Alignment.center,
@@ -544,19 +543,22 @@ class ImageExtProvider extends GetView<ViewExtController> {
 
 class ImageWithHide extends StatefulWidget {
   const ImageWithHide({
-    Key? key,
+    super.key,
     required this.url,
     required this.child,
     required this.ser,
     this.checkPHashHide = false,
     this.checkQRCodeHide = false,
-  }) : super(key: key);
+    this.sourceRect,
+  });
   final String url;
   final Widget child;
   final int ser;
 
   final bool checkPHashHide;
   final bool checkQRCodeHide;
+
+  final Rect? sourceRect;
 
   @override
   State<ImageWithHide> createState() => _ImageWithHideState();
@@ -619,13 +621,129 @@ class _ImageWithHideState extends State<ImageWithHide> {
   }
 }
 
-class _ViewLoadingCupertion extends StatelessWidget {
-  const _ViewLoadingCupertion({
-    Key? key,
+class _ViewLoading extends StatelessWidget {
+  const _ViewLoading({
+    super.key,
     this.progress,
     this.ser,
     this.animationEnabled = true,
-  }) : super(key: key);
+  });
+
+  final double? progress;
+  final int? ser;
+  final bool animationEnabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return _ViewLoadingLine(
+      progress: progress,
+      ser: ser,
+      animationEnabled: animationEnabled,
+    );
+
+    // return _ViewLoadingCupertino(
+    //   progress: progress,
+    //   ser: ser,
+    //   animationEnabled: animationEnabled,
+    // );
+  }
+}
+
+class _ViewLoadingLine extends StatelessWidget {
+  const _ViewLoadingLine({
+    super.key,
+    this.progress,
+    this.ser,
+    this.animationEnabled = true,
+  });
+
+  final double? progress;
+  final int? ser;
+  final bool animationEnabled;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(
+        maxHeight: context.mediaQueryShortestSide,
+        minWidth: context.width / 2 - kPageViewPadding,
+      ),
+      alignment: Alignment.center,
+      child: SizedBox(
+        width: (context.width * 0.5) + 100 - kPageViewPadding,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 60,
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 50,
+                  ),
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: LinearProgressIndicator(
+                        value: progress,
+                        backgroundColor: CupertinoDynamicColor.resolve(
+                            CupertinoColors.secondarySystemFill, context),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          CupertinoDynamicColor.resolve(
+                              CupertinoColors.systemGrey, context),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 50,
+                    padding: const EdgeInsets.all(8.0),
+                    alignment: Alignment.center,
+                    child: Text(
+                      '${((progress ?? 0) * 100).round()} %',
+                      style: const TextStyle(
+                        color: CupertinoColors.systemGrey6,
+                        height: 1,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: Text(
+                      '${ser ?? ''}',
+                      style: const TextStyle(
+                        color: CupertinoColors.systemGrey6,
+                        height: 1,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ViewLoadingCupertino extends StatelessWidget {
+  const _ViewLoadingCupertino({
+    super.key,
+    this.progress,
+    this.ser,
+    this.animationEnabled = true,
+  });
 
   final double? progress;
   final int? ser;
@@ -686,13 +804,13 @@ class _ViewLoadingCupertion extends StatelessWidget {
   }
 }
 
-class _ViewLoading extends StatelessWidget {
-  const _ViewLoading({
-    Key? key,
+class _ViewLoadingOld extends StatelessWidget {
+  const _ViewLoadingOld({
+    super.key,
     this.progress,
     required this.ser,
     this.animationEnabled = true,
-  }) : super(key: key);
+  });
 
   final double? progress;
   final int ser;
@@ -757,11 +875,11 @@ class _ViewLoading extends StatelessWidget {
 }
 
 class ViewTopBar extends GetView<ViewExtController> {
-  const ViewTopBar({Key? key}) : super(key: key);
+  const ViewTopBar({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: context.mediaQueryPadding.top + kTopBarHeight,
       width: context.mediaQuery.size.width,
       child: Padding(
@@ -783,7 +901,7 @@ class ViewTopBar extends GetView<ViewExtController> {
                         onTap: () {
                           Get.back();
                         },
-                        child: Container(
+                        child: SizedBox(
                           width: 40,
                           height: kTopBarButtonHeight,
                           child: const Icon(
@@ -827,10 +945,10 @@ class ViewTopBar extends GetView<ViewExtController> {
                             onTap: () {
                               controller.tapShare(context);
                             },
-                            child: Container(
+                            child: const SizedBox(
                               width: 40,
                               height: kBottomBarButtonHeight,
-                              child: const Icon(
+                              child: Icon(
                                 FontAwesomeIcons.share,
                                 color: CupertinoColors.systemGrey6,
                                 size: 22,
@@ -895,7 +1013,7 @@ class ViewTopBar extends GetView<ViewExtController> {
 const _kBottomTextStyle = TextStyle(color: Colors.white, fontSize: 10);
 
 class ViewBottomBar extends GetView<ViewExtController> {
-  const ViewBottomBar({Key? key}) : super(key: key);
+  const ViewBottomBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -917,9 +1035,9 @@ class ViewBottomBar extends GetView<ViewExtController> {
               // 缩略图栏
               AnimatedContainer(
                 height: logic.vState.showThumbList ? kThumbListViewHeight : 0,
-                child: const ThumbnailListView(),
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeOut,
+                child: const ThumbnailListView(),
               ),
               // 控制栏
               const BottomBarControlWidget(),
@@ -942,8 +1060,8 @@ class ViewBottomBar extends GetView<ViewExtController> {
 
 class BottomBarControlWidget extends GetView<ViewExtController> {
   const BottomBarControlWidget({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -955,21 +1073,30 @@ class BottomBarControlWidget extends GetView<ViewExtController> {
               horizontal: context.mediaQueryPadding.horizontal / 2 + 10),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // 滑动控件
               GetBuilder<ViewExtController>(
                 id: idViewPageSlider,
                 builder: (logic) {
                   return SizedBox(
-                    height: kSliderBarHeight,
-                    child: ViewPageSlider(
-                      max: logic.vState.fileCount - 1.0,
-                      sliderValue: math.min(logic.vState.sliderValue,
-                          logic.vState.fileCount - 1.0),
-                      onChangedEnd: logic.handOnSliderChangedEnd,
-                      onChanged: logic.handOnSliderChanged,
-                      reverse: logic.vState.viewMode == ViewMode.rightToLeft,
-                    ).paddingSymmetric(vertical: 8),
+                    height: logic.vState.fileCount > 1
+                        ? kSliderBarHeight
+                        : kSliderBarHeight / 2,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: logic.vState.fileCount > 1
+                          ? ViewPageSlider(
+                              max: logic.vState.fileCount - 1.0,
+                              sliderValue: math.min(logic.vState.sliderValue,
+                                  logic.vState.fileCount - 1.0),
+                              onChangedEnd: logic.handOnSliderChangedEnd,
+                              onChanged: logic.handOnSliderChanged,
+                              reverse:
+                                  logic.vState.viewMode == ViewMode.rightToLeft,
+                            )
+                          : const SizedBox.shrink(),
+                    ),
                   );
                 },
               ),
@@ -991,12 +1118,12 @@ class BottomBarControlWidget extends GetView<ViewExtController> {
 
 class ControllerButtonBar extends StatelessWidget {
   const ControllerButtonBar({
-    Key? key,
+    super.key,
     required this.controller,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.mainAxisSize = MainAxisSize.max,
     this.showLable = false,
-  }) : super(key: key);
+  });
 
   final ViewExtController controller;
   final MainAxisAlignment mainAxisAlignment;
@@ -1018,7 +1145,7 @@ class ControllerButtonBar extends StatelessWidget {
             onTap: () {
               controller.tapSave(context);
             },
-            child: Container(
+            child: SizedBox(
               width: buttonWidth,
               height: kBottomBarButtonHeight,
               child: Column(
@@ -1055,7 +1182,7 @@ class ControllerButtonBar extends StatelessWidget {
                 controller.switchColumnMode();
               }
             },
-            child: Container(
+            child: SizedBox(
               width: buttonWidth,
               height: kBottomBarButtonHeight,
               child: Column(
@@ -1116,7 +1243,7 @@ class ControllerButtonBar extends StatelessWidget {
             child: GetBuilder<ViewExtController>(
               id: idAutoReadIcon,
               builder: (logic) {
-                return Container(
+                return SizedBox(
                   width: buttonWidth,
                   height: kBottomBarButtonHeight,
                   child: Column(
@@ -1167,7 +1294,7 @@ class ControllerButtonBar extends StatelessWidget {
                 vibrateUtil.light();
                 controller.thumbScrollTo();
               },
-              child: Container(
+              child: SizedBox(
                 width: buttonWidth,
                 height: kBottomBarButtonHeight,
                 child: Column(
@@ -1206,7 +1333,7 @@ class ControllerButtonBar extends StatelessWidget {
 }
 
 class ThumbnailListView extends GetView<ViewExtController> {
-  const ThumbnailListView({Key? key}) : super(key: key);
+  const ThumbnailListView({super.key});
 
   GalleryPageController? get galleryPageController =>
       controller.vState.galleryPageController;
@@ -1221,7 +1348,7 @@ class ThumbnailListView extends GetView<ViewExtController> {
       builder: (logic) {
         return Stack(
           children: [
-            Container(
+            SizedBox(
               height: kThumbListViewHeight,
               child: ScrollablePositionedList.builder(
                 itemScrollController: logic.thumbScrollController,
@@ -1349,9 +1476,7 @@ class ThumbnailListView extends GetView<ViewExtController> {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(kRadius),
-        child: Container(
-          child: MouseRegionClick(child: thumb),
-        ),
+        child: MouseRegionClick(child: thumb),
       ),
     );
   }
@@ -1359,8 +1484,7 @@ class ThumbnailListView extends GetView<ViewExtController> {
 
 class FutureThumblArchive extends StatefulWidget {
   const FutureThumblArchive(
-      {Key? key, required this.asyncArchiveFile, this.gid})
-      : super(key: key);
+      {super.key, required this.asyncArchiveFile, this.gid});
   final AsyncArchiveFile asyncArchiveFile;
   final String? gid;
 
@@ -1425,9 +1549,9 @@ class _FutureThumblArchiveState extends State<FutureThumblArchive> {
 
 class FutureThumbl extends StatefulWidget {
   const FutureThumbl({
-    Key? key,
+    super.key,
     required this.itemSer,
-  }) : super(key: key);
+  });
 
   final int itemSer;
 
@@ -1456,15 +1580,15 @@ class _FutureThumblState extends State<FutureThumbl> {
               return builderrorWidget();
             }
 
-            final _image = snapshot.data;
-            if (_image != null &&
-                _image.thumbUrl != null &&
-                _image.thumbUrl!.isNotEmpty) {
-              logger.t('${_image.ser}  ${_image.thumbUrl}');
+            final image = snapshot.data;
+            if (image != null &&
+                image.thumbUrl != null &&
+                image.thumbUrl!.isNotEmpty) {
+              logger.t('${image.ser}  ${image.thumbUrl}');
 
-              if (_image.largeThumb ?? false) {
+              if (image.largeThumb ?? false) {
                 return EhNetworkImage(
-                  imageUrl: _image.thumbUrl ?? '',
+                  imageUrl: image.thumbUrl ?? '',
                   placeholder: (_, __) {
                     return buildPlaceholder();
                   },
@@ -1475,8 +1599,7 @@ class _FutureThumblState extends State<FutureThumbl> {
               } else {
                 return LayoutBuilder(builder:
                     (BuildContext context, BoxConstraints constraints) {
-                  final imageSize =
-                      Size(_image.thumbWidth!, _image.thumbHeight!);
+                  final imageSize = Size(image.thumbWidth!, image.thumbHeight!);
                   final size =
                       Size(constraints.maxWidth, constraints.maxHeight);
                   final FittedSizes fittedSizes =
@@ -1486,23 +1609,23 @@ class _FutureThumblState extends State<FutureThumbl> {
                   //     '${fittedSizes.source} ${fittedSizes.destination} $_subWidth $_subHeight');
 
                   return ExtendedImageRect(
-                    url: _image.thumbUrl!,
+                    url: image.thumbUrl!,
                     height: fittedSizes.destination.height,
                     width: fittedSizes.destination.width,
                     sourceRect: Rect.fromLTWH(
-                      _image.offSet! + 1,
+                      image.offSet! + 1,
                       1.0,
-                      _image.thumbWidth! - 2,
-                      _image.thumbHeight! - 2,
+                      image.thumbWidth! - 2,
+                      image.thumbHeight! - 2,
                     ),
-                    onLoadComplet: () =>
+                    onLoadComplete: () =>
                         logic.handOnLoadCompletExtendedImageRect(
-                            url: _image.thumbUrl!),
+                            url: image.thumbUrl!),
                   );
                 });
               }
             } else {
-              logger.d('error ${_image?.ser}');
+              logger.d('error ${image?.ser}');
               return builderrorWidget();
             }
           } else {
@@ -1531,13 +1654,13 @@ class _FutureThumblState extends State<FutureThumbl> {
 /// 页面滑条
 class ViewPageSlider extends StatefulWidget {
   const ViewPageSlider({
-    Key? key,
+    super.key,
     required this.max,
     required this.sliderValue,
     required this.onChangedEnd,
     required this.onChanged,
     this.reverse = false,
-  }) : super(key: key);
+  });
 
   final double max;
   final double sliderValue;
@@ -1546,7 +1669,7 @@ class ViewPageSlider extends StatefulWidget {
   final bool reverse;
 
   @override
-  _ViewPageSliderState createState() => _ViewPageSliderState();
+  State<ViewPageSlider> createState() => _ViewPageSliderState();
 }
 
 class _ViewPageSliderState extends State<ViewPageSlider> {
@@ -1566,42 +1689,46 @@ class _ViewPageSliderState extends State<ViewPageSlider> {
 
   @override
   Widget build(BuildContext context) {
-    final minText = Text(
-      '${widget.sliderValue.round() + 1}',
-      style: const TextStyle(color: CupertinoColors.systemGrey6),
-    ).paddingSymmetric(horizontal: 4);
+    final minText = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Text(
+        '${widget.sliderValue.round() + 1}',
+        style: const TextStyle(color: CupertinoColors.systemGrey6),
+      ),
+    );
 
-    final maxText = Text(
-      '${widget.max.round() + 1}',
-      style: const TextStyle(color: CupertinoColors.systemGrey6),
-    ).paddingSymmetric(horizontal: 4);
+    final maxText = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Text(
+        '${widget.max.round() + 1}',
+        style: const TextStyle(color: CupertinoColors.systemGrey6),
+      ),
+    );
 
-    return Container(
-      child: Row(
-        children: <Widget>[
-          if (widget.reverse) maxText else minText,
-          Expanded(
-            child: Transform.rotate(
-              angle: widget.reverse ? math.pi : 0.0,
-              child: CupertinoSlider(
-                min: 0,
-                max: widget.max,
-                value: widget.sliderValue,
-                onChanged: (double newValue) {
-                  setState(() {
-                    _value = newValue;
-                  });
-                  widget.onChanged(newValue);
-                },
-                onChangeEnd: (double newValue) {
-                  widget.onChangedEnd(newValue);
-                },
-              ),
+    return Row(
+      children: <Widget>[
+        if (widget.reverse) maxText else minText,
+        Expanded(
+          child: Transform.rotate(
+            angle: widget.reverse ? math.pi : 0.0,
+            child: CupertinoSlider(
+              min: 0,
+              max: widget.max,
+              value: widget.sliderValue,
+              onChanged: (double newValue) {
+                setState(() {
+                  _value = newValue;
+                });
+                widget.onChanged(newValue);
+              },
+              onChangeEnd: (double newValue) {
+                widget.onChangedEnd(newValue);
+              },
             ),
           ),
-          if (widget.reverse) minText else maxText,
-        ],
-      ),
+        ),
+        if (widget.reverse) minText else maxText,
+      ],
     );
   }
 }

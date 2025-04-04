@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:eros_fe/common/controller/block_controller.dart';
 import 'package:eros_fe/common/service/controller_tag_service.dart';
 import 'package:eros_fe/common/service/ehsetting_service.dart';
@@ -226,9 +227,9 @@ class GalleryUploader extends StatelessWidget {
 
 class ReadButton extends StatelessWidget {
   ReadButton({
-    Key? key,
+    super.key,
     required this.gid,
-  }) : super(key: key);
+  });
   final String gid;
 
   final GalleryPageController _pageController = Get.find(tag: pageCtrlTag);
@@ -238,21 +239,20 @@ class ReadButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => MouseRegionClick(
-        child: CupertinoButton(
-            child: Text(
-              (_pageState.lastIndex > 0)
-                  ? '${L10n.of(context).read.toUpperCase()} ${_pageState.lastIndex + 1}'
-                  : L10n.of(context).read.toUpperCase(),
-              style: const TextStyle(fontSize: 15, height: 1.2),
-            ),
+        child: CupertinoButton.filled(
             minSize: 24,
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
             borderRadius: BorderRadius.circular(20),
-            color: CupertinoColors.activeBlue,
+            // color: CupertinoColors.activeBlue,
             onPressed: _pageState.enableRead
                 ? () => _toViewPage(_pageState.galleryProvider?.gid ?? '0',
                     _pageState.lastIndex)
-                : null),
+                : null,
+            child: Text(
+                (_pageState.lastIndex > 0)
+                    ? '${L10n.of(context).read.toUpperCase()} ${_pageState.lastIndex + 1}'
+                    : L10n.of(context).read.toUpperCase(),
+                style: const TextStyle(fontSize: 15, height: 1.2))),
       ),
     );
   }
@@ -356,32 +356,33 @@ class TopCommentEx extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 显示最前面两条
-    List<Widget> _topComment(List<GalleryComment>? comments, {int max = 2}) {
-      Iterable<GalleryComment> _comments = comments ?? [];
+    List<Widget> topComment(List<GalleryComment>? comments, {int max = 2}) {
+      Iterable<GalleryComment> commentsToShow = comments ?? [];
 
       // 如果启用了仅显示上传者评论 则只显示上传者的评论，并且忽略评分筛选
       if (_ehSettingService.showOnlyUploaderComment) {
-        final _uploaderId =
-            _comments.firstWhere((element) => element.score.isEmpty).memberId;
-        logger.d('_uploaderId $_uploaderId');
-        if (_uploaderId != null) {
-          _comments =
-              _comments.where((element) => element.memberId == _uploaderId);
+        final uploaderId = commentsToShow
+            .firstWhereOrNull((element) => element.score.isEmpty)
+            ?.memberId;
+        logger.d('_uploaderId $uploaderId');
+        if (uploaderId != null) {
+          commentsToShow =
+              commentsToShow.where((element) => element.memberId == uploaderId);
         } else {
-          _comments =
-              _comments.where((element) => element.name == uploader?.trim());
+          commentsToShow = commentsToShow
+              .where((element) => element.name == uploader?.trim());
         }
 
-        logger.d('_comments.length ${_comments.length}');
+        logger.d('commentsToShow.length ${commentsToShow.length}');
       } else if (_ehSettingService.filterCommentsByScore) {
-        _comments = _comments.where((comment) =>
+        commentsToShow = commentsToShow.where((comment) =>
             comment.score.isEmpty ||
             (int.tryParse(comment.score) ?? 0) >
                 _ehSettingService.scoreFilteringThreshold);
       }
 
       // 根据屏蔽规则过滤评论
-      _comments = _comments.where((element) {
+      commentsToShow = commentsToShow.where((element) {
         return !_blockController.matchRule(
               text: element.text,
               blockType: BlockType.comment,
@@ -392,9 +393,9 @@ class TopCommentEx extends StatelessWidget {
             );
       });
 
-      _comments = _comments.take(max);
+      commentsToShow = commentsToShow.take(max);
 
-      return _comments
+      return commentsToShow
           .map((GalleryComment comment) => CommentItem(
                 galleryComment: comment,
                 simple: true,
@@ -404,7 +405,7 @@ class TopCommentEx extends StatelessWidget {
 
     return Column(
       children: [
-        ..._topComment(comments, max: max),
+        ...topComment(comments, max: max),
         if ((comments?.length ?? 0) > max)
           const Padding(
             padding: EdgeInsets.only(top: 8.0),
@@ -706,33 +707,31 @@ class TextBtn extends StatelessWidget {
           CupertinoThemeData(primaryColor: color ?? CupertinoColors.systemGrey),
       child: GestureDetector(
         // behavior: HitTestBehavior.opaque,
-        child: Container(
-          // padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Container(
-                padding: iconPadding,
-                child: MouseRegionClick(
-                  disable: onTap == null && onLongPress == null,
-                  child: CupertinoButton(
-                    padding: const EdgeInsets.only(bottom: 8.0),
-                    child: Icon(
-                      iconData,
-                      size: iconSize ?? 28,
-                      // color: CupertinoColors.systemGrey3,
-                    ),
-                    onPressed: onTap,
+        onLongPress: onLongPress,
+        // behavior: HitTestBehavior.opaque,
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: iconPadding,
+              child: MouseRegionClick(
+                disable: onTap == null && onLongPress == null,
+                child: CupertinoButton(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  onPressed: onTap,
+                  child: Icon(
+                    iconData,
+                    size: iconSize ?? 28,
+                    // color: CupertinoColors.systemGrey3,
                   ),
                 ),
               ),
-              Text(
-                title ?? '',
-                style: const TextStyle(fontSize: 12, height: 1),
-              ),
-            ],
-          ),
+            ),
+            Text(
+              title ?? '',
+              style: const TextStyle(fontSize: 12, height: 1),
+            ),
+          ],
         ),
-        onLongPress: onLongPress,
       ),
     );
   }

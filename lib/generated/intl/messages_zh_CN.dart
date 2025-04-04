@@ -103,7 +103,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "dark_mode_effect": MessageLookupByLibrary.simpleMessage("深色模式效果"),
         "date_or_offset": MessageLookupByLibrary.simpleMessage("日期或偏移量"),
         "default_avatar_style": MessageLookupByLibrary.simpleMessage("默认头像样式"),
-        "default_favorites": MessageLookupByLibrary.simpleMessage("默认收藏夹设置"),
         "delete": MessageLookupByLibrary.simpleMessage("删除"),
         "delete_task": MessageLookupByLibrary.simpleMessage("删除任务"),
         "delete_task_and_content":
@@ -133,6 +132,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "enter_date_or_offset_or_gid":
             MessageLookupByLibrary.simpleMessage("输入具体日期或偏移量 / GID"),
         "expand": MessageLookupByLibrary.simpleMessage("展开"),
+        "experimental_feature": MessageLookupByLibrary.simpleMessage("实验性功能"),
         "export": MessageLookupByLibrary.simpleMessage("导出"),
         "export_app_data": MessageLookupByLibrary.simpleMessage("导出应用数据"),
         "export_app_data_summary":
@@ -164,6 +164,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "hide_thumbnails": MessageLookupByLibrary.simpleMessage("隐藏缩略图"),
         "hide_top_bar_on_scroll":
             MessageLookupByLibrary.simpleMessage("滚动时隐藏顶栏"),
+        "high_resolution_images_limited":
+            MessageLookupByLibrary.simpleMessage("高分辨率图片限制"),
         "horizontal_thumbnails": MessageLookupByLibrary.simpleMessage("水平缩略图"),
         "host": MessageLookupByLibrary.simpleMessage("地址"),
         "hours": MessageLookupByLibrary.simpleMessage("小时"),
@@ -208,7 +210,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "local_favorite": MessageLookupByLibrary.simpleMessage("本地收藏"),
         "login": MessageLookupByLibrary.simpleMessage("登录"),
         "login_web": MessageLookupByLibrary.simpleMessage("通过网页登录"),
-        "manually_sel_favorites": MessageLookupByLibrary.simpleMessage("手动选择"),
         "max_history": MessageLookupByLibrary.simpleMessage("最大历史记录"),
         "min": MessageLookupByLibrary.simpleMessage("分钟"),
         "model": m1,
@@ -229,6 +230,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "off": MessageLookupByLibrary.simpleMessage("关闭"),
         "ok": MessageLookupByLibrary.simpleMessage("确定"),
         "on": MessageLookupByLibrary.simpleMessage("打开"),
+        "one_step_favorite": MessageLookupByLibrary.simpleMessage("单点收藏"),
+        "one_step_favorite_desc": MessageLookupByLibrary.simpleMessage(
+            "快速将画廊添加到收藏夹，短按保存到上次选择的收藏夹，长按显示收藏夹对话框"),
         "open_supported_links": MessageLookupByLibrary.simpleMessage("打开支持的链接"),
         "open_supported_links_summary": MessageLookupByLibrary.simpleMessage(
             "从 Android 12 开始, 应用只有在获得批准的情况下，才能作为网络链接的处理应用。否则会使用默认浏览器处理。您可以在此手动批准"),
@@ -248,6 +252,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "p_Torrent": MessageLookupByLibrary.simpleMessage("种子"),
         "page_range": MessageLookupByLibrary.simpleMessage("跳转范围"),
         "page_range_error": MessageLookupByLibrary.simpleMessage("输入范围有误"),
+        "page_view_type": MessageLookupByLibrary.simpleMessage("页面视图类型"),
         "passwd": MessageLookupByLibrary.simpleMessage("密码"),
         "paused": MessageLookupByLibrary.simpleMessage("已暂停"),
         "phash_block_list": MessageLookupByLibrary.simpleMessage("感知哈希屏蔽列表"),
@@ -272,6 +277,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "redirect_thumb_link_summary":
             MessageLookupByLibrary.simpleMessage("重定向缩略图链接为ehgt.org"),
         "redownload": MessageLookupByLibrary.simpleMessage("重新下载"),
+        "refresh_igneous": MessageLookupByLibrary.simpleMessage("刷新Igneous"),
         "regex": MessageLookupByLibrary.simpleMessage("正则表达式"),
         "regex_format_error": MessageLookupByLibrary.simpleMessage("正则表达式格式错误"),
         "reload_image": MessageLookupByLibrary.simpleMessage("重新载入图片"),
@@ -331,6 +337,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("仅显示上传者评论"),
         "show_page_interval": MessageLookupByLibrary.simpleMessage("显示页面间隔"),
         "skip": MessageLookupByLibrary.simpleMessage("跳过"),
+        "slide_out_page": MessageLookupByLibrary.simpleMessage("拖动返回"),
         "sync_group": MessageLookupByLibrary.simpleMessage("同步分组"),
         "sync_history": MessageLookupByLibrary.simpleMessage("同步历史记录"),
         "sync_quick_search": MessageLookupByLibrary.simpleMessage("同步快速搜索"),
@@ -412,11 +419,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "uc_cs_1": MessageLookupByLibrary.simpleMessage("最新的评论"),
         "uc_cs_2": MessageLookupByLibrary.simpleMessage("最高分的评论"),
         "uc_del_profile": MessageLookupByLibrary.simpleMessage("删除配置"),
-        "uc_dm_0": MessageLookupByLibrary.simpleMessage("紧凑"),
+        "uc_dm_0": MessageLookupByLibrary.simpleMessage("紧凑 + 标签"),
         "uc_dm_1": MessageLookupByLibrary.simpleMessage("缩略图"),
         "uc_dm_2": MessageLookupByLibrary.simpleMessage("扩展"),
         "uc_dm_3": MessageLookupByLibrary.simpleMessage("最小化"),
-        "uc_dm_4": MessageLookupByLibrary.simpleMessage("最小化+订阅标签"),
+        "uc_dm_4": MessageLookupByLibrary.simpleMessage("最小化 + 关注标签"),
         "uc_exc_lang": MessageLookupByLibrary.simpleMessage("排除语言"),
         "uc_exc_lang_desc": MessageLookupByLibrary.simpleMessage(
             "如果您希望以图库列表中的某些语言隐藏图库并进行搜索，请从下面的列表中选择它们。\n请注意，无论搜索查询如何，匹配的图库都不会出现。"),
@@ -475,8 +482,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "使用原始图像而不是重采样版本？如果您选择的水平分辨率不同于上述的 \"自动\"，且相关图像较宽，或者原始图像大于 10MB（一年以上的图库为 4MB），则仍将使用重采样图像。"),
         "uc_parody": MessageLookupByLibrary.simpleMessage("原作"),
         "uc_pixels": MessageLookupByLibrary.simpleMessage("像素"),
-        "uc_pn_0": MessageLookupByLibrary.simpleMessage("否"),
-        "uc_pn_1": MessageLookupByLibrary.simpleMessage("是"),
+        "uc_pn_0": MessageLookupByLibrary.simpleMessage("无"),
+        "uc_pn_1": MessageLookupByLibrary.simpleMessage("仅页码"),
+        "uc_pn_2": MessageLookupByLibrary.simpleMessage("页码 + 名称"),
         "uc_profile": MessageLookupByLibrary.simpleMessage("配置"),
         "uc_qb_0": MessageLookupByLibrary.simpleMessage("否"),
         "uc_qb_1": MessageLookupByLibrary.simpleMessage("是"),
@@ -495,7 +503,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "主页/搜索页面每页显示多少条数据？（Hath Perk：需要「页面扩大」）"),
         "uc_selected": MessageLookupByLibrary.simpleMessage("当前"),
         "uc_set_as_def": MessageLookupByLibrary.simpleMessage("设为默认"),
-        "uc_show_page_num": MessageLookupByLibrary.simpleMessage("显示图库页码"),
+        "uc_show_page_num": MessageLookupByLibrary.simpleMessage("缩略图标签"),
         "uc_tag": MessageLookupByLibrary.simpleMessage("图库标签"),
         "uc_tag_ft": MessageLookupByLibrary.simpleMessage("标签筛选阈值"),
         "uc_tag_ft_desc": MessageLookupByLibrary.simpleMessage(
@@ -516,18 +524,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "uc_thumb_size": MessageLookupByLibrary.simpleMessage("大小"),
         "uc_tl_0": MessageLookupByLibrary.simpleMessage("默认标题"),
         "uc_tl_1": MessageLookupByLibrary.simpleMessage("日文标题（如果有）"),
-        "uc_ts_0": MessageLookupByLibrary.simpleMessage("普通"),
-        "uc_ts_1": MessageLookupByLibrary.simpleMessage("大图"),
-        "uc_uh_0": MessageLookupByLibrary.simpleMessage("所有客户端（推荐）"),
-        "uc_uh_0_s": MessageLookupByLibrary.simpleMessage("所有客户端"),
+        "uc_ts_0": MessageLookupByLibrary.simpleMessage("自动"),
+        "uc_ts_1": MessageLookupByLibrary.simpleMessage("普通"),
+        "uc_ts_2": MessageLookupByLibrary.simpleMessage("小图"),
+        "uc_uh_0": MessageLookupByLibrary.simpleMessage("任意客户端（推荐）"),
+        "uc_uh_0_s": MessageLookupByLibrary.simpleMessage("任意客户端"),
         "uc_uh_1": MessageLookupByLibrary.simpleMessage(
             "仅使用默认端口的客户端（可能稍慢。当防火墙或代理阻止非标准接口的流量时启用此项。）"),
         "uc_uh_1_s": MessageLookupByLibrary.simpleMessage("仅使用默认端口的客户端"),
         "uc_uh_2": MessageLookupByLibrary.simpleMessage(
-            "否 [现代/HTTPS]（仅限赞助者。配额消耗会加快，只有出现严重的问题时才启用。）"),
+            "否 [现代/HTTPS]（仅限捐赠者。配额消耗会加快，只有出现严重的问题时才启用。）"),
         "uc_uh_2_s": MessageLookupByLibrary.simpleMessage("否 [传统/HTTP]"),
         "uc_uh_3": MessageLookupByLibrary.simpleMessage(
-            "否 [传统/HTTP]（仅限赞助者。可能无法在现代浏览器中使用，只推荐在过时的浏览器中启用。）"),
+            "否 [传统/HTTP]（仅限捐赠者。可能无法在现代浏览器中使用，只推荐在过时的浏览器中启用。）"),
         "uc_uh_3_s": MessageLookupByLibrary.simpleMessage("否 [传统/HTTP]"),
         "uc_viewport_or": MessageLookupByLibrary.simpleMessage("移动端虚拟宽度"),
         "uc_viewport_or_desc": MessageLookupByLibrary.simpleMessage(

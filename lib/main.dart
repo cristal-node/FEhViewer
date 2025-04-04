@@ -76,10 +76,10 @@ Future<void> main() async {
           // ..debug = kDebugMode
           ..diagnosticLevel = SentryLevel.warning;
       },
-      appRunner: () => runApp(MyApp()),
+      appRunner: () => runApp(const MyApp()),
     );
   } else {
-    runApp(MyApp());
+    runApp(const MyApp());
   }
 
   if (GetPlatform.isDesktop) {
@@ -180,6 +180,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _listener.dispose();
     super.dispose();
   }
 
