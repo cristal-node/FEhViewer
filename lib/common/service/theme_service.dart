@@ -1,8 +1,8 @@
 import 'package:enum_to_string/enum_to_string.dart';
-import 'package:fehviewer/common/colors.dart';
-import 'package:fehviewer/common/global.dart';
-import 'package:fehviewer/common/service/base_service.dart';
-import 'package:fehviewer/const/theme_colors.dart';
+import 'package:eros_fe/common/colors.dart';
+import 'package:eros_fe/common/global.dart';
+import 'package:eros_fe/common/service/base_service.dart';
+import 'package:eros_fe/const/theme_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -31,13 +31,11 @@ class ThemeService extends ProfileService {
       case ThemesModeEnum.system:
         return platformBrightness.value == Brightness.dark
             ? _getDarkTheme
-            : ThemeColors.ligthTheme;
+            : ThemeColors.lightTheme;
       case ThemesModeEnum.lightMode:
-        return ThemeColors.ligthTheme;
+        return ThemeColors.lightTheme;
       case ThemesModeEnum.darkMode:
         return _getDarkTheme;
-      default:
-        return null;
     }
   }
 

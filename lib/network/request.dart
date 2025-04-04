@@ -3,13 +3,13 @@ import 'dart:convert';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:fehviewer/common/controller/advance_search_controller.dart';
-import 'package:fehviewer/common/parser/eh_parser.dart';
-import 'package:fehviewer/component/exception/error.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/gallery/controller/archiver_controller.dart';
-import 'package:fehviewer/pages/gallery/controller/torrent_controller.dart';
-import 'package:fehviewer/pages/tab/fetch_list.dart';
+import 'package:eros_fe/common/controller/advance_search_controller.dart';
+import 'package:eros_fe/common/parser/eh_parser.dart';
+import 'package:eros_fe/component/exception/error.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/gallery/controller/archiver_controller.dart';
+import 'package:eros_fe/pages/gallery/controller/torrent_controller.dart';
+import 'package:eros_fe/pages/tab/fetch_list.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart' hide FormData, Response, MultipartFile;
 import 'package:http_parser/http_parser.dart' as http_parser;
@@ -44,7 +44,7 @@ Future<GalleryList?> getGallery({
   AdvanceSearch? advanceSearch,
   bool globalSearch = false,
 }) async {
-  final AdvanceSearchController _searchController = Get.find();
+  final AdvanceSearchController searchController = Get.find();
   DioHttpClient dioHttpClient = DioHttpClient(dioConfig: globalDioConfig);
 
   logger.t('globalSearch $globalSearch');
@@ -106,13 +106,13 @@ Future<GalleryList?> getGallery({
       _params['advsearch'] = 1;
       _params.addAll(advanceSearch.param);
     }
-  } else if (globalSearch && _searchController.enableAdvance) {
+  } else if (globalSearch && searchController.enableAdvance) {
     _params['advsearch'] = 1;
-    _params.addAll(_searchController.advanceSearchMap);
+    _params.addAll(searchController.advanceSearchMap);
   }
 
   if (search != null && isFav) {
-    _params.addAll(_searchController.favSearchMap);
+    _params.addAll(searchController.favSearchMap);
   }
 
   logger.t('url:$_url $_params');
@@ -327,7 +327,7 @@ Future<GalleryImage?> _fetchImageInfo(
   );
 
   if (httpResponse.ok && httpResponse.data is GalleryImage) {
-    return (httpResponse.data as GalleryImage).copyWith(href: href);
+    return (httpResponse.data as GalleryImage).copyWith(href: href.oN);
   } else {
     // logger.d('error.runtimeType: ${httpResponse.error.runtimeType}');
     throw httpResponse.error ?? EhError(error: 'fetchImageInfo error');

@@ -1,9 +1,9 @@
 import 'dart:math';
 
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/image_view/view/view_page.dart';
+import 'package:eros_fe/widget/preload_photo_view_gallery.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:fehviewer/pages/image_view/view/view_page.dart';
-import 'package:fehviewer/utils/logger.dart';
-import 'package:fehviewer/widget/preload_photo_view_gallery.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -16,7 +16,7 @@ import '../controller/view_controller.dart';
 import 'view_image.dart';
 
 class ImagePageView extends GetView<ViewExtController> {
-  const ImagePageView({Key? key, this.reverse = false}) : super(key: key);
+  const ImagePageView({super.key, this.reverse = false});
   final bool reverse;
 
   @override
@@ -36,9 +36,8 @@ class ImagePageView extends GetView<ViewExtController> {
 
     // return imageView;
 
-    // 上下滑动图片 返回
+    // 上下滑动手势 返回
     return ExtendedImageSlidePage(
-      child: imageView,
       slideAxis: SlideAxis.vertical,
       slideType: SlideType.wholePage,
       resetPageDuration: const Duration(milliseconds: 300),
@@ -55,6 +54,7 @@ class ImagePageView extends GetView<ViewExtController> {
           controller.update([idViewBar]);
         }
       },
+      child: imageView,
     );
   }
 
@@ -117,7 +117,7 @@ class ImagePageView extends GetView<ViewExtController> {
                   imageSer: pageIndex + 1,
                   mode: ExtendedImageMode.none,
                   // enableSlideOutPage: !GetPlatform.isAndroid,
-                  enableSlideOutPage: false,
+                  enableSlideOutPage: logic.enableSlideOutPage,
                 ),
               );
             });
@@ -149,7 +149,7 @@ class ImagePageView extends GetView<ViewExtController> {
                   imageSer: index + 1,
                   mode: ExtendedImageMode.gesture,
                   // enableSlideOutPage: !GetPlatform.isAndroid,
-                  enableSlideOutPage: false,
+                  enableSlideOutPage: logic.enableSlideOutPage,
                 ),
               );
             });
@@ -158,8 +158,7 @@ class ImagePageView extends GetView<ViewExtController> {
       case PageViewType.extendedImageGesturePageView:
 
         /// ExtendedImageGesturePageView 的看图功能
-        /// 存在问题。更新 flutter3 后，Android系统下手势操作异常，不能正常进行滑动
-        /// 6.2.1 好像可以滑动了
+        /// 20241031 测试
         return ExtendedImageGesturePageView.builder(
           controller: logic.extendedPageController,
           itemCount: logic.vState.pageCount,
@@ -171,11 +170,6 @@ class ImagePageView extends GetView<ViewExtController> {
             logger.t('pageIndex $index ser ${index + 1}');
 
             /// 单页
-            ///
-            ///  20220519 initialScale 设置默认超过1的比例，暂时能解决手势不能滑动的问题
-            /// 但是 enableSlideOutPage 的效果会丢失
-            ///
-            /// 更新：extended_image 6.2.1 好像已经解决  不设置超过 1.0 的 initialScale也能滑动了
             return ViewImage(
               imageSer: index + 1,
               // enableDoubleTap: false,
@@ -184,7 +178,7 @@ class ImagePageView extends GetView<ViewExtController> {
               // initialScale: GetPlatform.isAndroid ? 1.000001 : 1.0,
               mode: ExtendedImageMode.gesture,
               // enableSlideOutPage: !GetPlatform.isAndroid,
-              enableSlideOutPage: false,
+              enableSlideOutPage: logic.enableSlideOutPage,
             );
           },
         );
@@ -230,7 +224,7 @@ class ImagePageView extends GetView<ViewExtController> {
                 initialScale: PhotoViewComputedScale.contained * 1.0,
                 minScale: PhotoViewComputedScale.contained * 1.0,
                 maxScale: PhotoViewComputedScale.contained * 2.0,
-                scaleStateCycle: lisviewScaleStateCycle,
+                scaleStateCycle: listViewScaleStateCycle,
                 child: DoublePageView(
                   pageIndex: pageIndex,
                   key: ValueKey(controller.vState.columnMode),

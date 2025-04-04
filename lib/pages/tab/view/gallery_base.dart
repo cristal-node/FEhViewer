@@ -1,6 +1,5 @@
-import 'package:fehviewer/utils/utility.dart';
+import 'package:eros_fe/utils/utility.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 /// 列表加载异常时的默认页面
@@ -30,7 +29,7 @@ class GalleryErrorPage extends StatelessWidget {
         ),
         Text(
           error ?? '',
-          textScaleFactor: 0.9,
+          textScaler: const TextScaler.linear(0.9),
         ),
       ],
     );

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../fehviewer.dart';
+import '../../../index.dart';
 
 const BorderSide _kDefaultRoundedBorderSide = BorderSide(
   color: CupertinoDynamicColor.withBrightness(
@@ -237,10 +237,10 @@ class _EhUserTagEditDialogState extends State<EhUserTagEditDialog> {
           child: Text(L10n.of(context).done),
           onPressed: () => Get.back(
             result: widget.usertag.copyWith(
-              hide: _hide,
-              watch: _watch,
-              colorCode: _defaultColor ? '' : screenPickerColor.hex,
-              tagWeight: tagWeightTextEditingController.text.trim(),
+              hide: _hide.oN,
+              watch: _watch.oN,
+              colorCode: (_defaultColor ? '' : screenPickerColor.hex).oN,
+              tagWeight: tagWeightTextEditingController.text.trim().oN,
             ),
           ),
         ),

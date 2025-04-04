@@ -1,9 +1,10 @@
 import 'dart:convert';
 
-import 'package:fehviewer/component/exception/error.dart';
-import 'package:fehviewer/const/const.dart';
-import 'package:fehviewer/models/index.dart';
-import 'package:fehviewer/utils/logger.dart';
+import 'package:eros_fe/component/exception/error.dart';
+import 'package:eros_fe/const/const.dart';
+import 'package:eros_fe/extension.dart';
+import 'package:eros_fe/models/index.dart';
+import 'package:eros_fe/utils/logger.dart';
 import 'package:html_unescape/html_unescape.dart';
 
 GalleryImage paraShowPage(String jsonString) {
@@ -23,8 +24,8 @@ GalleryImage paraShowPage(String jsonString) {
 
   // final double? width = _xy != null ? double.parse(_xy.group(2)!) : null;
   // final double? height = _xy != null ? double.parse(_xy.group(3)!) : null;
-  final double? width = double.parse('${jsonMap['x']}');
-  final double? height = double.parse('${jsonMap['y']}');
+  final double? width = double.tryParse('${jsonMap['x']}');
+  final double? height = double.tryParse('${jsonMap['y']}');
 
   if (width == null || height == null) {
     throw EhError(type: EhErrorType.parse, error: 'width or height is null');
@@ -53,15 +54,15 @@ GalleryImage paraShowPage(String jsonString) {
       RegExp(r"nl\('(.*?)'\)").firstMatch('${jsonMap['i6']}')?.group(1) ?? '';
 
   final GalleryImage _reImage = kDefGalleryImage.copyWith(
-    imageUrl: imageUrl,
-    sourceId: _sourceId,
-    imageWidth: width,
-    imageHeight: height,
-    gid: gid,
-    token: token,
+    imageUrl: imageUrl.oN,
+    sourceId: _sourceId.oN,
+    imageWidth: width.oN,
+    imageHeight: height.oN,
+    gid: gid.oN,
+    token: token.oN,
     ser: ser,
-    originImageUrl: originImageUrl,
-    filename: filename,
+    originImageUrl: originImageUrl.oN,
+    filename: filename.oN,
   );
 
   return _reImage;

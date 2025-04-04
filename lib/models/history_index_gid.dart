@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:quiver/core.dart';
 
+import 'index.dart';
 
 @immutable
 class HistoryIndexGid {
-  
+
   const HistoryIndexGid({
     this.t,
     this.g,
@@ -13,8 +15,8 @@ class HistoryIndexGid {
   final String? g;
 
   factory HistoryIndexGid.fromJson(Map<String,dynamic> json) => HistoryIndexGid(
-    t: json['t'] != null ? json['t'] as int : null,
-    g: json['g'] != null ? json['g'] as String : null
+    t: json['t'] != null ? int.tryParse('${json['t']}') ?? 0 : null,
+    g: json['g']?.toString()
   );
   
   Map<String, dynamic> toJson() => {
@@ -27,17 +29,17 @@ class HistoryIndexGid {
     g: g
   );
 
-    
+
   HistoryIndexGid copyWith({
-    int? t,
-    String? g
+    Optional<int?>? t,
+    Optional<String?>? g
   }) => HistoryIndexGid(
-    t: t ?? this.t,
-    g: g ?? this.g,
-  );  
+    t: checkOptional(t, () => this.t),
+    g: checkOptional(g, () => this.g),
+  );
 
   @override
-  bool operator ==(Object other) => identical(this, other) 
+  bool operator ==(Object other) => identical(this, other)
     || other is HistoryIndexGid && t == other.t && g == other.g;
 
   @override

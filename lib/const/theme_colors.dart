@@ -1,13 +1,14 @@
-import 'package:fehviewer/common/colors.dart';
+import 'package:chinese_font_library/chinese_font_library.dart';
+import 'package:eros_fe/common/colors.dart';
 import 'package:flutter/cupertino.dart';
-
-import 'const.dart';
+import 'package:flutter_boring_avatars/flutter_boring_avatars.dart';
 
 final ehTextTheme = const CupertinoTextThemeData().copyWith(
-  textStyle: const CupertinoTextThemeData().textStyle.copyWith(
-        // fontFamily: EHConst.fontFamily,
-        fontFamilyFallback: EHConst.fontFamilyFallback,
-      ),
+  // textStyle: const CupertinoTextThemeData().textStyle.copyWith(
+  //       // fontFamily: EHConst.fontFamily,
+  //       fontFamilyFallback: EHConst.fontFamilyFallback,
+  //     ),
+  textStyle: const CupertinoTextThemeData().textStyle.useSystemChineseFont(),
 );
 
 enum ThemesModeEnum {
@@ -16,7 +17,7 @@ enum ThemesModeEnum {
   darkMode,
 }
 
-class CustTheme {
+class CustomTheme {
   late CupertinoThemeData themeData;
 }
 
@@ -177,15 +178,16 @@ class ThemeColors {
 
   /// 主题配置
   /// 浅色主题
-  static CupertinoThemeData ligthTheme = CupertinoThemeData(
+  static CupertinoThemeData lightTheme = CupertinoThemeData(
     brightness: Brightness.light,
     barBackgroundColor: navigationBarBackground,
     textTheme: ehTextTheme,
+    primaryColor: CupertinoColors.systemBlue,
     // scaffoldBackgroundColor: CupertinoColors.secondarySystemBackground,
   );
 
   /// 浅色主题
-  static CupertinoThemeData ligthThemeSecondary = CupertinoThemeData(
+  static CupertinoThemeData lightThemeSecondary = CupertinoThemeData(
     brightness: Brightness.light,
     barBackgroundColor: navigationBarBackground,
     scaffoldBackgroundColor: CupertinoColors.secondarySystemBackground,
@@ -212,6 +214,66 @@ class ThemeColors {
       .where((e) => e.key != 'default')
       .map((e) => e.value)
       .toList();
+
+  static BoringAvatarPalette boringAvatarPalette = BoringAvatarPalette(
+    richAvatarColorList,
+  );
+
+  static List<Color> avatarColorFromCatList = catColor.entries
+      .where((e) => e.key != 'default')
+      .map((e) => e.value)
+      .toList()
+    ..shuffle();
+
+  static List<Color> avatarColorList = <Color>[
+    CupertinoColors.systemRed,
+    CupertinoColors.systemOrange,
+    CupertinoColors.systemYellow,
+    CupertinoColors.systemGreen,
+    CupertinoColors.systemTeal,
+    CupertinoColors.systemBlue,
+    CupertinoColors.systemIndigo,
+    CupertinoColors.systemPurple,
+    CupertinoColors.systemPink,
+  ]..shuffle();
+
+  static List<Color> richAvatarColorList = <Color>[
+    Color(0xFFFF5252), // Red
+    Color(0xFFFF4081), // Pink
+    Color(0xFFE040FB), // Purple
+    Color(0xFF7C4DFF), // Deep Purple
+    Color(0xFF536DFE), // Indigo
+    Color(0xFF448AFF), // Blue
+    Color(0xFF40C4FF), // Light Blue
+    Color(0xFF18FFFF), // Cyan
+    Color(0xFF64FFDA), // Teal
+    Color(0xFF69F0AE), // Green
+    Color(0xFFB2FF59), // Light Green
+    Color(0xFFFFEB3B), // Yellow
+    Color(0xFFFFC107), // Amber
+    Color(0xFFFF9800), // Orange
+    Color(0xFFFF5722), // Deep Orange
+    Color(0xFF000000), // Black
+    Color(0xFFFFFFFF), // White
+    Color(0xFF9E9E9E), // Gray
+    Color(0xFF795548), // Brown
+    Color(0xFF607D8B), // Blue Grey
+    Color(0xFFD32F2F), // Dark Red
+    Color(0xFFC2185B), // Dark Pink
+    Color(0xFF7B1FA2), // Dark Purple
+    Color(0xFF512DA8), // Dark Deep Purple
+    Color(0xFF303F9F), // Dark Indigo
+    Color(0xFF1976D2), // Dark Blue
+    Color(0xFF0288D1), // Dark Light Blue
+    Color(0xFF0097A7), // Dark Cyan
+    Color(0xFF00796B), // Dark Teal
+    Color(0xFF388E3C), // Dark Green
+    Color(0xFF689F38), // Dark Light Green
+    Color(0xFFFBC02D), // Dark Yellow
+    Color(0xFFFFA000), // Dark Amber
+    Color(0xFFF57C00), // Dark Orange
+    Color(0xFFE64A19), // Dark Deep Orange
+  ]..shuffle();
 
   // 画廊类型主题色
   static const Map<String, Color> catColor = <String, Color>{

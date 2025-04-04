@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:quiver/core.dart';
 
+import 'index.dart';
 
 @immutable
 class AdvanceSearch {
-  
+
   const AdvanceSearch({
     this.requireGalleryTorrent,
     this.browseExpungedGalleries,
@@ -29,16 +31,16 @@ class AdvanceSearch {
   final bool? disableCustomFilterTags;
 
   factory AdvanceSearch.fromJson(Map<String,dynamic> json) => AdvanceSearch(
-    requireGalleryTorrent: json['requireGalleryTorrent'] != null ? json['requireGalleryTorrent'] as bool : null,
-    browseExpungedGalleries: json['browseExpungedGalleries'] != null ? json['browseExpungedGalleries'] as bool : null,
-    searchWithMinRating: json['searchWithMinRating'] != null ? json['searchWithMinRating'] as bool : null,
-    minRating: json['minRating'] != null ? json['minRating'] as int : null,
-    searchBetweenPage: json['searchBetweenPage'] != null ? json['searchBetweenPage'] as bool : null,
-    startPage: json['startPage'] != null ? json['startPage'] as String : null,
-    endPage: json['endPage'] != null ? json['endPage'] as String : null,
-    disableCustomFilterLanguage: json['disableCustomFilterLanguage'] != null ? json['disableCustomFilterLanguage'] as bool : null,
-    disableCustomFilterUploader: json['disableCustomFilterUploader'] != null ? json['disableCustomFilterUploader'] as bool : null,
-    disableCustomFilterTags: json['disableCustomFilterTags'] != null ? json['disableCustomFilterTags'] as bool : null
+    requireGalleryTorrent: json['requireGalleryTorrent'] != null ? bool.tryParse('${json['requireGalleryTorrent']}', caseSensitive: false) ?? false : null,
+    browseExpungedGalleries: json['browseExpungedGalleries'] != null ? bool.tryParse('${json['browseExpungedGalleries']}', caseSensitive: false) ?? false : null,
+    searchWithMinRating: json['searchWithMinRating'] != null ? bool.tryParse('${json['searchWithMinRating']}', caseSensitive: false) ?? false : null,
+    minRating: json['minRating'] != null ? int.tryParse('${json['minRating']}') ?? 0 : null,
+    searchBetweenPage: json['searchBetweenPage'] != null ? bool.tryParse('${json['searchBetweenPage']}', caseSensitive: false) ?? false : null,
+    startPage: json['startPage']?.toString(),
+    endPage: json['endPage']?.toString(),
+    disableCustomFilterLanguage: json['disableCustomFilterLanguage'] != null ? bool.tryParse('${json['disableCustomFilterLanguage']}', caseSensitive: false) ?? false : null,
+    disableCustomFilterUploader: json['disableCustomFilterUploader'] != null ? bool.tryParse('${json['disableCustomFilterUploader']}', caseSensitive: false) ?? false : null,
+    disableCustomFilterTags: json['disableCustomFilterTags'] != null ? bool.tryParse('${json['disableCustomFilterTags']}', caseSensitive: false) ?? false : null
   );
   
   Map<String, dynamic> toJson() => {
@@ -67,33 +69,33 @@ class AdvanceSearch {
     disableCustomFilterTags: disableCustomFilterTags
   );
 
-    
+
   AdvanceSearch copyWith({
-    bool? requireGalleryTorrent,
-    bool? browseExpungedGalleries,
-    bool? searchWithMinRating,
-    int? minRating,
-    bool? searchBetweenPage,
-    String? startPage,
-    String? endPage,
-    bool? disableCustomFilterLanguage,
-    bool? disableCustomFilterUploader,
-    bool? disableCustomFilterTags
+    Optional<bool?>? requireGalleryTorrent,
+    Optional<bool?>? browseExpungedGalleries,
+    Optional<bool?>? searchWithMinRating,
+    Optional<int?>? minRating,
+    Optional<bool?>? searchBetweenPage,
+    Optional<String?>? startPage,
+    Optional<String?>? endPage,
+    Optional<bool?>? disableCustomFilterLanguage,
+    Optional<bool?>? disableCustomFilterUploader,
+    Optional<bool?>? disableCustomFilterTags
   }) => AdvanceSearch(
-    requireGalleryTorrent: requireGalleryTorrent ?? this.requireGalleryTorrent,
-    browseExpungedGalleries: browseExpungedGalleries ?? this.browseExpungedGalleries,
-    searchWithMinRating: searchWithMinRating ?? this.searchWithMinRating,
-    minRating: minRating ?? this.minRating,
-    searchBetweenPage: searchBetweenPage ?? this.searchBetweenPage,
-    startPage: startPage ?? this.startPage,
-    endPage: endPage ?? this.endPage,
-    disableCustomFilterLanguage: disableCustomFilterLanguage ?? this.disableCustomFilterLanguage,
-    disableCustomFilterUploader: disableCustomFilterUploader ?? this.disableCustomFilterUploader,
-    disableCustomFilterTags: disableCustomFilterTags ?? this.disableCustomFilterTags,
-  );  
+    requireGalleryTorrent: checkOptional(requireGalleryTorrent, () => this.requireGalleryTorrent),
+    browseExpungedGalleries: checkOptional(browseExpungedGalleries, () => this.browseExpungedGalleries),
+    searchWithMinRating: checkOptional(searchWithMinRating, () => this.searchWithMinRating),
+    minRating: checkOptional(minRating, () => this.minRating),
+    searchBetweenPage: checkOptional(searchBetweenPage, () => this.searchBetweenPage),
+    startPage: checkOptional(startPage, () => this.startPage),
+    endPage: checkOptional(endPage, () => this.endPage),
+    disableCustomFilterLanguage: checkOptional(disableCustomFilterLanguage, () => this.disableCustomFilterLanguage),
+    disableCustomFilterUploader: checkOptional(disableCustomFilterUploader, () => this.disableCustomFilterUploader),
+    disableCustomFilterTags: checkOptional(disableCustomFilterTags, () => this.disableCustomFilterTags),
+  );
 
   @override
-  bool operator ==(Object other) => identical(this, other) 
+  bool operator ==(Object other) => identical(this, other)
     || other is AdvanceSearch && requireGalleryTorrent == other.requireGalleryTorrent && browseExpungedGalleries == other.browseExpungedGalleries && searchWithMinRating == other.searchWithMinRating && minRating == other.minRating && searchBetweenPage == other.searchBetweenPage && startPage == other.startPage && endPage == other.endPage && disableCustomFilterLanguage == other.disableCustomFilterLanguage && disableCustomFilterUploader == other.disableCustomFilterUploader && disableCustomFilterTags == other.disableCustomFilterTags;
 
   @override

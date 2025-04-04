@@ -1,13 +1,13 @@
-import 'package:fehviewer/common/controller/user_controller.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/controller/favorite_sel_controller.dart';
+import 'package:eros_fe/common/controller/user_controller.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/controller/favorite_sel_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../default_tabview_controller.dart';
 import 'favorite_sublist_controller.dart';
 
-class FavoriteTabberController extends DefaultTabViewController {
+class FavoriteTabBarController extends DefaultTabViewController {
   final FavoriteSelectorController favoriteSelectorController = Get.find();
   final UserController userController = Get.find();
 
@@ -19,7 +19,7 @@ class FavoriteTabberController extends DefaultTabViewController {
 
   FavConfig? get favConfig => Global.profile.favConfig;
   set favConfig(FavConfig? val) =>
-      Global.profile = Global.profile.copyWith(favConfig: val);
+      Global.profile = Global.profile.copyWith(favConfig: val.oN);
 
   final _currFavcat = 'a'.obs;
   String get currFavcat => _currFavcat.value;
@@ -48,8 +48,8 @@ class FavoriteTabberController extends DefaultTabViewController {
     // index
     index = favConfig?.lastIndex ?? 0;
     ever<int>(_index, (value) {
-      favConfig =
-          favConfig?.copyWith(lastIndex: value) ?? FavConfig(lastIndex: value);
+      favConfig = favConfig?.copyWith(lastIndex: value.oN) ??
+          FavConfig(lastIndex: value);
       Global.saveProfile();
     });
   }

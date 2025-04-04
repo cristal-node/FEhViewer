@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'dns_cache.dart';
-import 'dns_cache.dart';
+import 'package:quiver/core.dart';
+
+import 'index.dart';
 
 @immutable
 class DnsConfig {
-  
+
   const DnsConfig({
     this.enableDoH,
     this.enableCustomHosts,
@@ -20,9 +21,9 @@ class DnsConfig {
   final List<DnsCache>? dohCache;
 
   factory DnsConfig.fromJson(Map<String,dynamic> json) => DnsConfig(
-    enableDoH: json['enableDoH'] != null ? json['enableDoH'] as bool : null,
-    enableCustomHosts: json['enableCustomHosts'] != null ? json['enableCustomHosts'] as bool : null,
-    enableDomainFronting: json['enableDomainFronting'] != null ? json['enableDomainFronting'] as bool : null,
+    enableDoH: json['enableDoH'] != null ? bool.tryParse('${json['enableDoH']}', caseSensitive: false) ?? false : null,
+    enableCustomHosts: json['enableCustomHosts'] != null ? bool.tryParse('${json['enableCustomHosts']}', caseSensitive: false) ?? false : null,
+    enableDomainFronting: json['enableDomainFronting'] != null ? bool.tryParse('${json['enableDomainFronting']}', caseSensitive: false) ?? false : null,
     hosts: json['hosts'] != null ? (json['hosts'] as List? ?? []).map((e) => DnsCache.fromJson(e as Map<String, dynamic>)).toList() : null,
     dohCache: json['dohCache'] != null ? (json['dohCache'] as List? ?? []).map((e) => DnsCache.fromJson(e as Map<String, dynamic>)).toList() : null
   );
@@ -43,23 +44,23 @@ class DnsConfig {
     dohCache: dohCache?.map((e) => e.clone()).toList()
   );
 
-    
+
   DnsConfig copyWith({
-    bool? enableDoH,
-    bool? enableCustomHosts,
-    bool? enableDomainFronting,
-    List<DnsCache>? hosts,
-    List<DnsCache>? dohCache
+    Optional<bool?>? enableDoH,
+    Optional<bool?>? enableCustomHosts,
+    Optional<bool?>? enableDomainFronting,
+    Optional<List<DnsCache>?>? hosts,
+    Optional<List<DnsCache>?>? dohCache
   }) => DnsConfig(
-    enableDoH: enableDoH ?? this.enableDoH,
-    enableCustomHosts: enableCustomHosts ?? this.enableCustomHosts,
-    enableDomainFronting: enableDomainFronting ?? this.enableDomainFronting,
-    hosts: hosts ?? this.hosts,
-    dohCache: dohCache ?? this.dohCache,
-  );  
+    enableDoH: checkOptional(enableDoH, () => this.enableDoH),
+    enableCustomHosts: checkOptional(enableCustomHosts, () => this.enableCustomHosts),
+    enableDomainFronting: checkOptional(enableDomainFronting, () => this.enableDomainFronting),
+    hosts: checkOptional(hosts, () => this.hosts),
+    dohCache: checkOptional(dohCache, () => this.dohCache),
+  );
 
   @override
-  bool operator ==(Object other) => identical(this, other) 
+  bool operator ==(Object other) => identical(this, other)
     || other is DnsConfig && enableDoH == other.enableDoH && enableCustomHosts == other.enableCustomHosts && enableDomainFronting == other.enableDomainFronting && hosts == other.hosts && dohCache == other.dohCache;
 
   @override

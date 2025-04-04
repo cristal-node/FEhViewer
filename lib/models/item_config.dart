@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:quiver/core.dart';
 
+import 'index.dart';
 
 @immutable
 class ItemConfig {
-  
+
   const ItemConfig({
     required this.type,
     this.enableCustomWidth,
@@ -15,9 +17,9 @@ class ItemConfig {
   final int? customWidth;
 
   factory ItemConfig.fromJson(Map<String,dynamic> json) => ItemConfig(
-    type: json['type'] as String,
-    enableCustomWidth: json['enableCustomWidth'] != null ? json['enableCustomWidth'] as bool : null,
-    customWidth: json['customWidth'] != null ? json['customWidth'] as int : null
+    type: json['type'].toString(),
+    enableCustomWidth: json['enableCustomWidth'] != null ? bool.tryParse('${json['enableCustomWidth']}', caseSensitive: false) ?? false : null,
+    customWidth: json['customWidth'] != null ? int.tryParse('${json['customWidth']}') ?? 0 : null
   );
   
   Map<String, dynamic> toJson() => {
@@ -32,19 +34,19 @@ class ItemConfig {
     customWidth: customWidth
   );
 
-    
+
   ItemConfig copyWith({
     String? type,
-    bool? enableCustomWidth,
-    int? customWidth
+    Optional<bool?>? enableCustomWidth,
+    Optional<int?>? customWidth
   }) => ItemConfig(
     type: type ?? this.type,
-    enableCustomWidth: enableCustomWidth ?? this.enableCustomWidth,
-    customWidth: customWidth ?? this.customWidth,
-  );  
+    enableCustomWidth: checkOptional(enableCustomWidth, () => this.enableCustomWidth),
+    customWidth: checkOptional(customWidth, () => this.customWidth),
+  );
 
   @override
-  bool operator ==(Object other) => identical(this, other) 
+  bool operator ==(Object other) => identical(this, other)
     || other is ItemConfig && type == other.type && enableCustomWidth == other.enableCustomWidth && customWidth == other.customWidth;
 
   @override

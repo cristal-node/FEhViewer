@@ -1,10 +1,11 @@
+import 'package:eros_fe/utils/logger.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:fehviewer/utils/logger.dart';
 import 'package:flutter/material.dart';
 
 /// make hero better when slide out
 class HeroWidget extends StatefulWidget {
   const HeroWidget({
+    super.key,
     required this.child,
     required this.tag,
     required this.slidePagekey,
@@ -15,7 +16,7 @@ class HeroWidget extends StatefulWidget {
   final Object tag;
   final GlobalKey<ExtendedImageSlidePageState> slidePagekey;
   @override
-  _HeroWidgetState createState() => _HeroWidgetState();
+  State<HeroWidget> createState() => _HeroWidgetState();
 }
 
 class _HeroWidgetState extends State<HeroWidget> {

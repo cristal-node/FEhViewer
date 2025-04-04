@@ -1,13 +1,13 @@
-import 'package:fehviewer/common/controller/tag_trans_controller.dart';
-import 'package:fehviewer/common/controller/user_controller.dart';
-import 'package:fehviewer/common/service/ehsetting_service.dart';
-import 'package:fehviewer/common/service/layout_service.dart';
-import 'package:fehviewer/common/service/locale_service.dart';
-import 'package:fehviewer/common/service/theme_service.dart';
-import 'package:fehviewer/const/theme_colors.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/login/controller/login_controller.dart';
-import 'package:fehviewer/pages/setting/setting_items/selector_Item.dart';
+import 'package:eros_fe/common/controller/tag_trans_controller.dart';
+import 'package:eros_fe/common/controller/user_controller.dart';
+import 'package:eros_fe/common/service/ehsetting_service.dart';
+import 'package:eros_fe/common/service/layout_service.dart';
+import 'package:eros_fe/common/service/locale_service.dart';
+import 'package:eros_fe/common/service/theme_service.dart';
+import 'package:eros_fe/const/theme_colors.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/login/controller/login_controller.dart';
+import 'package:eros_fe/pages/setting/setting_items/selector_Item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -53,9 +53,10 @@ class LayoutSettingList extends StatelessWidget {
               return CupertinoSlidingSegmentedControl<bool>(
                 groupValue: _ehSettingService.isPureDarkTheme,
                 children: {
-                  false:
-                      Text(L10n.of(context).gray_black, textScaleFactor: 0.8),
-                  true: Text(L10n.of(context).pure_black, textScaleFactor: 0.8)
+                  false: Text(L10n.of(context).gray_black,
+                      textScaler: const TextScaler.linear(0.8)),
+                  true: Text(L10n.of(context).pure_black,
+                      textScaler: const TextScaler.linear(0.8))
                 },
                 onValueChanged: (bool? val) {
                   if (val != null) {

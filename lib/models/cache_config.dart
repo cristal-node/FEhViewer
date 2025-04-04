@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:quiver/core.dart';
 
+import 'index.dart';
 
 @immutable
 class CacheConfig {
-  
+
   const CacheConfig({
     this.enable,
     this.maxAge,
@@ -15,9 +17,9 @@ class CacheConfig {
   final int? maxCount;
 
   factory CacheConfig.fromJson(Map<String,dynamic> json) => CacheConfig(
-    enable: json['enable'] != null ? json['enable'] as bool : null,
-    maxAge: json['maxAge'] != null ? json['maxAge'] as int : null,
-    maxCount: json['maxCount'] != null ? json['maxCount'] as int : null
+    enable: json['enable'] != null ? bool.tryParse('${json['enable']}', caseSensitive: false) ?? false : null,
+    maxAge: json['maxAge'] != null ? int.tryParse('${json['maxAge']}') ?? 0 : null,
+    maxCount: json['maxCount'] != null ? int.tryParse('${json['maxCount']}') ?? 0 : null
   );
   
   Map<String, dynamic> toJson() => {
@@ -32,19 +34,19 @@ class CacheConfig {
     maxCount: maxCount
   );
 
-    
+
   CacheConfig copyWith({
-    bool? enable,
-    int? maxAge,
-    int? maxCount
+    Optional<bool?>? enable,
+    Optional<int?>? maxAge,
+    Optional<int?>? maxCount
   }) => CacheConfig(
-    enable: enable ?? this.enable,
-    maxAge: maxAge ?? this.maxAge,
-    maxCount: maxCount ?? this.maxCount,
-  );  
+    enable: checkOptional(enable, () => this.enable),
+    maxAge: checkOptional(maxAge, () => this.maxAge),
+    maxCount: checkOptional(maxCount, () => this.maxCount),
+  );
 
   @override
-  bool operator ==(Object other) => identical(this, other) 
+  bool operator ==(Object other) => identical(this, other)
     || other is CacheConfig && enable == other.enable && maxAge == other.maxAge && maxCount == other.maxCount;
 
   @override

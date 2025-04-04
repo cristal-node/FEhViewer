@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:quiver/core.dart';
 
+import 'index.dart';
 
 @immutable
 class CommitVoteRes {
-  
+
   const CommitVoteRes({
     this.commentId,
     this.commentScore,
@@ -15,9 +17,9 @@ class CommitVoteRes {
   final int? commentVote;
 
   factory CommitVoteRes.fromJson(Map<String,dynamic> json) => CommitVoteRes(
-    commentId: json['comment_id'] != null ? json['comment_id'] as int : null,
-    commentScore: json['comment_score'] != null ? json['comment_score'] as int : null,
-    commentVote: json['comment_vote'] != null ? json['comment_vote'] as int : null
+    commentId: json['comment_id'] != null ? int.tryParse('${json['comment_id']}') ?? 0 : null,
+    commentScore: json['comment_score'] != null ? int.tryParse('${json['comment_score']}') ?? 0 : null,
+    commentVote: json['comment_vote'] != null ? int.tryParse('${json['comment_vote']}') ?? 0 : null
   );
   
   Map<String, dynamic> toJson() => {
@@ -32,19 +34,19 @@ class CommitVoteRes {
     commentVote: commentVote
   );
 
-    
+
   CommitVoteRes copyWith({
-    int? commentId,
-    int? commentScore,
-    int? commentVote
+    Optional<int?>? commentId,
+    Optional<int?>? commentScore,
+    Optional<int?>? commentVote
   }) => CommitVoteRes(
-    commentId: commentId ?? this.commentId,
-    commentScore: commentScore ?? this.commentScore,
-    commentVote: commentVote ?? this.commentVote,
-  );  
+    commentId: checkOptional(commentId, () => this.commentId),
+    commentScore: checkOptional(commentScore, () => this.commentScore),
+    commentVote: checkOptional(commentVote, () => this.commentVote),
+  );
 
   @override
-  bool operator ==(Object other) => identical(this, other) 
+  bool operator ==(Object other) => identical(this, other)
     || other is CommitVoteRes && commentId == other.commentId && commentScore == other.commentScore && commentVote == other.commentVote;
 
   @override

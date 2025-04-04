@@ -1,6 +1,6 @@
-import 'package:fehviewer/common/controller/mysql_controller.dart';
-import 'package:fehviewer/common/service/layout_service.dart';
-import 'package:fehviewer/fehviewer.dart';
+import 'package:eros_fe/common/controller/mysql_controller.dart';
+import 'package:eros_fe/common/service/layout_service.dart';
+import 'package:eros_fe/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -137,9 +137,6 @@ class _MysqlLoginState extends State<MysqlLogin> {
                             const BorderRadius.all(Radius.circular(30.0)),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 30, vertical: 10),
-                        child: _loadingLogin
-                            ? const CupertinoActivityIndicator()
-                            : Text(L10n.of(context).login),
                         color: CupertinoColors.activeBlue,
                         onPressed: _loadingLogin
                             ? null
@@ -191,6 +188,9 @@ class _MysqlLoginState extends State<MysqlLogin> {
                                   });
                                 }
                               },
+                        child: _loadingLogin
+                            ? const CupertinoActivityIndicator()
+                            : Text(L10n.of(context).login),
                       ),
                     ],
                   ),

@@ -1,20 +1,20 @@
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/gallery/controller/all_thumbnails_controller.dart';
-import 'package:fehviewer/pages/gallery/view/thumb_box.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/gallery/controller/all_thumbnails_controller.dart';
+import 'package:eros_fe/pages/gallery/view/thumb_box.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import 'const.dart';
 
 class AllThumbnailsPage extends StatefulWidget {
-  const AllThumbnailsPage();
+  const AllThumbnailsPage({super.key});
 
   @override
-  _AllThumbnailsPageState createState() => _AllThumbnailsPageState();
+  State<AllThumbnailsPage> createState() => _AllThumbnailsPageState();
 }
 
 class _AllThumbnailsPageState extends State<AllThumbnailsPage> {
-  final Map<String, bool> _loadComplets = {};
+  final Map<String, bool> _loadCompletes = {};
 
   GlobalKey centerKey = GlobalKey();
 
@@ -126,7 +126,7 @@ class _AllThumbnailsPageState extends State<AllThumbnailsPage> {
                                   galleryImageList: previewPreviousList,
                                   index: index,
                                   gid: controller.gid,
-                                  onLoadComplet: () {
+                                  onLoadComplete: () {
                                     final thumbUrl =
                                         previewPreviousList[index].thumbUrl ??
                                             '';
@@ -134,13 +134,13 @@ class _AllThumbnailsPageState extends State<AllThumbnailsPage> {
                                             const Duration(milliseconds: 50))
                                         .then(
                                       (_) {
-                                        if (!(_loadComplets[thumbUrl] ??
+                                        if (!(_loadCompletes[thumbUrl] ??
                                                 false) &&
                                             mounted) {
-                                          logger.d('onLoadComplet $thumbUrl');
+                                          logger.d('onLoadComplete $thumbUrl');
                                           setState(
                                             () {
-                                              _loadComplets[thumbUrl] = true;
+                                              _loadCompletes[thumbUrl] = true;
                                             },
                                           );
                                         }
@@ -189,19 +189,20 @@ class _AllThumbnailsPageState extends State<AllThumbnailsPage> {
                                 galleryImageList: previewList,
                                 index: index,
                                 gid: controller.gid,
-                                onLoadComplet: () {
+                                onLoadComplete: () {
                                   final thumbUrl =
                                       previewList[index].thumbUrl ?? '';
                                   Future.delayed(
                                           const Duration(milliseconds: 50))
                                       .then(
                                     (_) {
-                                      if (!(_loadComplets[thumbUrl] ?? false) &&
+                                      if (!(_loadCompletes[thumbUrl] ??
+                                              false) &&
                                           mounted) {
-                                        logger.d('onLoadComplet $thumbUrl');
+                                        logger.d('onLoadComplete $thumbUrl');
                                         setState(
                                           () {
-                                            _loadComplets[thumbUrl] = true;
+                                            _loadCompletes[thumbUrl] = true;
                                           },
                                         );
                                       }

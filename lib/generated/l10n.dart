@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -51,10 +50,10 @@ class L10n {
     return Localizations.of<L10n>(context, L10n);
   }
 
-  /// `FEhViewer`
+  /// `Eros-FE`
   String get app_title {
     return Intl.message(
-      'FEhViewer',
+      'Eros-FE',
       name: 'app_title',
       desc: '',
       args: [],
@@ -1601,21 +1600,21 @@ class L10n {
     );
   }
 
-  /// `Default Favorites`
-  String get default_favorites {
+  /// `One Step Favorite`
+  String get one_step_favorite {
     return Intl.message(
-      'Default Favorites',
-      name: 'default_favorites',
+      'One Step Favorite',
+      name: 'one_step_favorite',
       desc: '',
       args: [],
     );
   }
 
-  /// `Manually select favorites`
-  String get manually_sel_favorites {
+  /// `Quickly add gallery to favorite, short press to save to the last selected favorite, long press to display the favorite dialog.`
+  String get one_step_favorite_desc {
     return Intl.message(
-      'Manually select favorites',
-      name: 'manually_sel_favorites',
+      'Quickly add gallery to favorite, short press to save to the last selected favorite, long press to display the favorite dialog.',
+      name: 'one_step_favorite_desc',
       desc: '',
       args: [],
     );
@@ -2491,10 +2490,10 @@ class L10n {
     );
   }
 
-  /// `Show Page Numbers`
+  /// `Thumbnail Labeling`
   String get uc_show_page_num {
     return Intl.message(
-      'Show Page Numbers',
+      'Thumbnail Labeling',
       name: 'uc_show_page_num',
       desc: '',
       args: [],
@@ -3081,21 +3080,31 @@ class L10n {
     );
   }
 
-  /// `Normal`
+  /// `Auto`
   String get uc_ts_0 {
     return Intl.message(
-      'Normal',
+      'Auto',
       name: 'uc_ts_0',
       desc: '',
       args: [],
     );
   }
 
-  /// `Large`
+  /// `Normal`
   String get uc_ts_1 {
     return Intl.message(
-      'Large',
+      'Normal',
       name: 'uc_ts_1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Small`
+  String get uc_ts_2 {
+    return Intl.message(
+      'Small',
+      name: 'uc_ts_2',
       desc: '',
       args: [],
     );
@@ -3171,21 +3180,31 @@ class L10n {
     );
   }
 
-  /// `No`
+  /// `None`
   String get uc_pn_0 {
     return Intl.message(
-      'No',
+      'None',
       name: 'uc_pn_0',
       desc: '',
       args: [],
     );
   }
 
-  /// `Yes`
+  /// `Page Number Only`
   String get uc_pn_1 {
     return Intl.message(
-      'Yes',
+      'Page Number Only',
       name: 'uc_pn_1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Page Number + Name`
+  String get uc_pn_2 {
+    return Intl.message(
+      'Page Number + Name',
+      name: 'uc_pn_2',
       desc: '',
       args: [],
     );
@@ -4460,6 +4479,56 @@ class L10n {
     return Intl.message(
       'Regex format error',
       name: 'regex_format_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Experimental feature`
+  String get experimental_feature {
+    return Intl.message(
+      'Experimental feature',
+      name: 'experimental_feature',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Page View Type`
+  String get page_view_type {
+    return Intl.message(
+      'Page View Type',
+      name: 'page_view_type',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Slide Out Page`
+  String get slide_out_page {
+    return Intl.message(
+      'Slide Out Page',
+      name: 'slide_out_page',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `High Resolution Images Limited`
+  String get high_resolution_images_limited {
+    return Intl.message(
+      'High Resolution Images Limited',
+      name: 'high_resolution_images_limited',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Refresh Igneous`
+  String get refresh_igneous {
+    return Intl.message(
+      'Refresh Igneous',
+      name: 'refresh_igneous',
       desc: '',
       args: [],
     );

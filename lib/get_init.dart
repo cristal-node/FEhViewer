@@ -1,6 +1,6 @@
-import 'package:fehviewer/common/controller/block_controller.dart';
-import 'package:fehviewer/common/controller/image_block_controller.dart';
-import 'package:fehviewer/common/controller/mysql_controller.dart';
+import 'package:eros_fe/common/controller/block_controller.dart';
+import 'package:eros_fe/common/controller/image_block_controller.dart';
+import 'package:eros_fe/common/controller/mysql_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -77,7 +77,7 @@ void getinit() {
   Get.lazyPut(() => DownloadViewController(), fenix: true);
   // Get.lazyPut(() => FavoriteViewController(), fenix: true);
   Get.lazyPut(() => TopListViewController(), fenix: true);
-  Get.lazyPut(() => FavoriteTabberController(), fenix: true);
+  Get.lazyPut(() => FavoriteTabBarController(), fenix: true);
   Get.lazyPut(() => CustomTabbarController(), fenix: true);
   Get.lazyPut(() => SettingViewController(), fenix: true);
   Get.lazyPut(() => FavoriteSelectorController(), fenix: true);

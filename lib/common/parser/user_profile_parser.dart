@@ -1,5 +1,5 @@
-import 'package:fehviewer/const/const.dart';
-import 'package:fehviewer/models/base/eh_models.dart';
+import 'package:eros_fe/const/const.dart';
+import 'package:eros_fe/models/base/eh_models.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
 
@@ -22,7 +22,7 @@ User parseUserProfile(String html) {
   }
 
   return kDefUser.copyWith(
-    avatarUrl: _avatarUrl,
-    nickName: nickName,
+    avatarUrl: _avatarUrl.oN,
+    nickName: nickName.oN,
   );
 }

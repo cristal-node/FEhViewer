@@ -6,13 +6,18 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import 'package:path/path.dart' as path;
 
-import '../../fehviewer.dart';
+import '../../index.dart';
 
 const _kMaxTime = Duration(days: 7);
 const _kSuffix = '.log';
 
 class LogService extends GetxController {
   final logFiles = <File>[].obs;
+
+  // 添加自动滚动控制
+  final _autoScroll = true.obs;
+  bool get autoScroll => _autoScroll.value;
+  set autoScroll(bool val) => _autoScroll.value = val;
 
   final _curFileName = 'eh.log'.obs;
   String get curFileName => _curFileName.value;
@@ -52,6 +57,7 @@ class LogService extends GetxController {
     isLoading = true;
     logFiles.value = await compute(loadFilesIsolate, logPath);
     isLoading = false;
+    logger.d('loadFiles');
   }
 
   Future<void> refreshFiles() async {
