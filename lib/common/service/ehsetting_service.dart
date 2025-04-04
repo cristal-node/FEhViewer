@@ -897,8 +897,11 @@ class EhSettingService extends ProfileService {
 
   void applyBlurredInRecentTasks() {
     if (Platform.isAndroid) {
-      blurredInRecentTasks ? await ScreenProtector.protectDataLeakageOn()
-        : await ScreenProtector.protectDataLeakageOff();
+      if (blurredInRecentTasks) {
+        await ScreenProtector.protectDataLeakageOn();
+      } else {
+        await ScreenProtector.protectDataLeakageOff();
+      }
     } else if (Platform.isIOS) {
       if (blurredInRecentTasks) {
         await ScreenProtector.protectDataLeakageWithBlur();
