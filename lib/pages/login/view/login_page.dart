@@ -1,5 +1,5 @@
-import 'package:fehviewer/common/service/theme_service.dart';
-import 'package:fehviewer/generated/l10n.dart';
+import 'package:eros_fe/common/service/theme_service.dart';
+import 'package:eros_fe/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,11 +8,11 @@ import 'package:get/get.dart';
 import '../controller/login_controller.dart';
 
 class LoginPage extends GetView<LoginController> {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final _placeholderStyle = kTextStyle.copyWith(
+    final placeholderStyle = kTextStyle.copyWith(
       fontWeight: FontWeight.w400,
       color: CupertinoColors.placeholderText,
     );
@@ -47,7 +47,7 @@ class LoginPage extends GetView<LoginController> {
                       CupertinoTextFormFieldRow(
                         controller: controller.usernameController,
                         style: kTextStyle,
-                        placeholderStyle: _placeholderStyle,
+                        placeholderStyle: placeholderStyle,
                         prefix: Row(
                           children: [
                             const Icon(
@@ -69,17 +69,17 @@ class LoginPage extends GetView<LoginController> {
                           return CupertinoTextFormFieldRow(
                             controller: controller.passwdController,
                             style: kTextStyle,
-                            placeholderStyle: _placeholderStyle,
+                            placeholderStyle: placeholderStyle,
                             prefix: Row(
                               children: [
                                 GestureDetector(
+                                  onTap: logic.switchObscure,
                                   child: Icon(
                                     logic.obscurePasswd
                                         ? FontAwesomeIcons.eyeSlash
                                         : FontAwesomeIcons.eye,
                                     size: 20,
                                   ).paddingOnly(right: 12.0),
-                                  onTap: logic.switchObscure,
                                 ),
                                 Text(L10n.of(context).passwd),
                               ],
@@ -97,13 +97,16 @@ class LoginPage extends GetView<LoginController> {
                     height: 50,
                     child: GetBuilder<LoginController>(
                       builder: (logic) {
-                        return CupertinoButton(
-                          child: logic.loadingLogin
-                              ? const CupertinoActivityIndicator()
-                              : Text(L10n.of(context).login),
-                          color: CupertinoColors.activeBlue,
+                        return CupertinoButton.filled(
+                          // color: CupertinoColors.activeBlue,
                           onPressed:
                               logic.loadingLogin ? null : logic.pressLogin,
+                          child: logic.loadingLogin
+                              ? const CupertinoActivityIndicator()
+                              : Text(
+                                  L10n.of(context).login,
+                                  style: const TextStyle(height: 1.2),
+                                ),
                         );
                       },
                     ),
@@ -117,31 +120,33 @@ class LoginPage extends GetView<LoginController> {
                         CupertinoButton(
                           minSize: 50,
                           padding: const EdgeInsets.all(20),
-                          child: Column(
-                            children: const [
+                          onPressed: controller.handOnWeblogin,
+                          child: const Column(
+                            children: [
                               Icon(
                                 FontAwesomeIcons.earthAmericas,
                                 size: 30,
                               ),
-                              Text('Web', textScaleFactor: 0.8),
+                              Text('Web',
+                                  textScaler: const TextScaler.linear(0.8)),
                             ],
                           ),
-                          onPressed: controller.handOnWeblogin,
                         ),
                       // cookie登陆
                       CupertinoButton(
                         minSize: 50,
                         padding: const EdgeInsets.all(20),
-                        child: Column(
-                          children: const [
+                        onPressed: controller.hanOnCookieLogin,
+                        child: const Column(
+                          children: [
                             Icon(
                               FontAwesomeIcons.cookieBite,
                               size: 30,
                             ),
-                            Text('Cookie', textScaleFactor: 0.8),
+                            Text('Cookie',
+                                textScaler: const TextScaler.linear(0.8)),
                           ],
                         ),
-                        onPressed: controller.hanOnCookieLogin,
                       ),
                     ],
                   ).paddingSymmetric(vertical: 30),

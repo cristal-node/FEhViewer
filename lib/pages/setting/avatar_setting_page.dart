@@ -1,9 +1,9 @@
 import 'package:english_words/english_words.dart';
-import 'package:fehviewer/common/controller/user_controller.dart';
-import 'package:fehviewer/common/service/ehsetting_service.dart';
-import 'package:fehviewer/const/theme_colors.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/widget/text_avatar.dart';
+import 'package:eros_fe/common/controller/user_controller.dart';
+import 'package:eros_fe/common/service/ehsetting_service.dart';
+import 'package:eros_fe/const/theme_colors.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/widget/text_avatar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_boring_avatars/flutter_boring_avatars.dart';
 import 'package:get/get.dart';
@@ -104,43 +104,43 @@ class AvatarSettingPage extends StatelessWidget {
                         .listInsetGrouped(children: [
                       EhCupertinoListTile(
                         title:
-                            CupertinoSlidingSegmentedControl<BoringAvatarsType>(
-                          children: <BoringAvatarsType, Widget>{
-                            BoringAvatarsType.beam: _BoringAvatar(
-                              BoringAvatarsType.beam,
+                            CupertinoSlidingSegmentedControl<BoringAvatarType>(
+                          children: <BoringAvatarType, Widget>{
+                            BoringAvatarType.beam: _BoringAvatar(
+                              BoringAvatarType.beam,
                               borderRadiusType:
                                   _ehSettingService.avatarBorderRadiusType,
                             ),
-                            BoringAvatarsType.bauhaus: _BoringAvatar(
-                              BoringAvatarsType.bauhaus,
+                            BoringAvatarType.bauhaus: _BoringAvatar(
+                              BoringAvatarType.bauhaus,
                               borderRadiusType:
                                   _ehSettingService.avatarBorderRadiusType,
                             ),
-                            BoringAvatarsType.sunset: _BoringAvatar(
-                              BoringAvatarsType.sunset,
+                            BoringAvatarType.sunset: _BoringAvatar(
+                              BoringAvatarType.sunset,
                               borderRadiusType:
                                   _ehSettingService.avatarBorderRadiusType,
                             ),
-                            BoringAvatarsType.marble: _BoringAvatar(
-                              BoringAvatarsType.marble,
+                            BoringAvatarType.marble: _BoringAvatar(
+                              BoringAvatarType.marble,
                               borderRadiusType:
                                   _ehSettingService.avatarBorderRadiusType,
                             ),
-                            BoringAvatarsType.pixel: _BoringAvatar(
-                              BoringAvatarsType.pixel,
+                            BoringAvatarType.pixel: _BoringAvatar(
+                              BoringAvatarType.pixel,
                               borderRadiusType:
                                   _ehSettingService.avatarBorderRadiusType,
                             ),
-                            BoringAvatarsType.ring: _BoringAvatar(
-                              BoringAvatarsType.ring,
+                            BoringAvatarType.ring: _BoringAvatar(
+                              BoringAvatarType.ring,
                               borderRadiusType:
                                   _ehSettingService.avatarBorderRadiusType,
                             ),
                           },
                           groupValue: _ehSettingService.boringAvatarsType,
-                          onValueChanged: (BoringAvatarsType? value) {
+                          onValueChanged: (BoringAvatarType? value) {
                             _ehSettingService.boringAvatarsType =
-                                value ?? BoringAvatarsType.beam;
+                                value ?? BoringAvatarType.beam;
                           },
                         ),
                       ),
@@ -247,7 +247,7 @@ class _BoringAvatar extends StatelessWidget {
     super.key,
   });
 
-  final BoringAvatarsType type;
+  final BoringAvatarType type;
   final String? name;
   final AvatarBorderRadiusType? borderRadiusType;
 
@@ -272,12 +272,13 @@ class _BoringAvatar extends StatelessWidget {
       child: AnimatedClipRRect(
         borderRadius: borderRadius,
         duration: const Duration(milliseconds: 300),
-        child: AnimatedBoringAvatars(
+        child: AnimatedBoringAvatar(
           duration: const Duration(milliseconds: 300),
           name: _username,
-          colors: ThemeColors.catColorList,
+          // colors: ThemeColors.catColorList,
+          palette: ThemeColors.boringAvatarPalette,
           type: type,
-          square: true,
+          // square: true,
         ),
       ),
       // child: SizedBox.shrink(),
@@ -320,7 +321,7 @@ class _TextAvatar extends StatelessWidget {
         duration: const Duration(milliseconds: 300),
         child: TextAvatar(
           name: _username,
-          colors: ThemeColors.catColorList,
+          colors: ThemeColors.richAvatarColorList,
           type: type,
           radius: radius,
         ),

@@ -4,13 +4,13 @@ import 'dart:ui';
 import 'package:archive_async/archive_async.dart';
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
-import 'package:fehviewer/common/controller/gallerycache_controller.dart';
-import 'package:fehviewer/common/service/controller_tag_service.dart';
-import 'package:fehviewer/common/service/ehsetting_service.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/gallery/controller/gallery_page_controller.dart';
-import 'package:fehviewer/pages/gallery/controller/gallery_page_state.dart';
-import 'package:fehviewer/store/db/entity/gallery_image_task.dart';
+import 'package:eros_fe/common/controller/gallerycache_controller.dart';
+import 'package:eros_fe/common/service/controller_tag_service.dart';
+import 'package:eros_fe/common/service/ehsetting_service.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/gallery/controller/gallery_page_controller.dart';
+import 'package:eros_fe/pages/gallery/controller/gallery_page_state.dart';
+import 'package:eros_fe/store/db/entity/gallery_image_task.dart';
 import 'package:get/get.dart';
 
 import '../common.dart';
@@ -102,7 +102,7 @@ class ViewExtState {
     ehSettingService.viewColumnMode = val;
   }
 
-  /// pageview下实际的index
+  /// pageView下实际的index
   int get pageIndex {
     switch (columnMode) {
       case ViewColumnMode.single:
@@ -116,7 +116,7 @@ class ViewExtState {
     }
   }
 
-  /// pageview下实际能翻页的总数
+  /// pageView下实际能翻页的总数
   int get pageCount {
     final int imageCount = fileCount;
     switch (columnMode) {
@@ -178,13 +178,13 @@ class ViewExtState {
 
   /// 顶栏偏移
   double get topBarOffset {
-    final _paddingTop = Get.context!.mediaQueryPadding.top;
+    final paddingTop = Get.context!.mediaQueryPadding.top;
 
-    final double _offsetTopHide = kTopBarHeight + _paddingTop;
+    final double offsetTopHide = kTopBarHeight + paddingTop;
     if (showBar) {
       return 0;
     } else {
-      return -_offsetTopHide - 10;
+      return -offsetTopHide - 10;
     }
   }
 
@@ -227,8 +227,8 @@ class ViewExtState {
   int maxImageIndex = 0;
 
   bool get isScrolling {
-    final _first = speedList.firstOrNull ?? 0.00;
-    return speedList.any((element) => element != _first);
+    final first = speedList.firstOrNull ?? 0.00;
+    return speedList.any((element) => element != first);
   }
 
   Map<String, AsyncArchive> asyncArchiveMap = {};

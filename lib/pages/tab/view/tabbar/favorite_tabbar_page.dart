@@ -1,12 +1,12 @@
 import 'package:blur/blur.dart';
+import 'package:eros_fe/common/service/ehsetting_service.dart';
+import 'package:eros_fe/common/service/layout_service.dart';
+import 'package:eros_fe/common/service/theme_service.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/tab/controller/favorite/favorite_tabbar_controller.dart';
+import 'package:eros_fe/pages/tab/controller/search_page_controller.dart';
+import 'package:eros_fe/pages/tab/controller/tabhome_controller.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
-import 'package:fehviewer/common/service/ehsetting_service.dart';
-import 'package:fehviewer/common/service/layout_service.dart';
-import 'package:fehviewer/common/service/theme_service.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/tab/controller/favorite/favorite_tabbar_controller.dart';
-import 'package:fehviewer/pages/tab/controller/search_page_controller.dart';
-import 'package:fehviewer/pages/tab/controller/tabhome_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -27,7 +27,7 @@ class _FavoriteTabTabBarPageState extends State<FavoriteTabTabBarPage> {
   final EhTabController ehTabController = EhTabController();
   final LinkScrollBarController linkScrollBarController =
       LinkScrollBarController();
-  final controller = Get.find<FavoriteTabberController>();
+  final controller = Get.find<FavoriteTabBarController>();
   late PageController pageController;
 
   final EhSettingService _ehSettingService = Get.find();
@@ -292,7 +292,7 @@ class FavoriteTabBar extends StatelessWidget {
 
   final PageController pageController;
   final LinkScrollBarController linkScrollBarController;
-  final FavoriteTabberController controller;
+  final FavoriteTabBarController controller;
 
   @override
   Widget build(BuildContext context) {

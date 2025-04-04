@@ -1,5 +1,5 @@
-import 'package:fehviewer/common/controller/image_block_controller.dart';
-import 'package:fehviewer/fehviewer.dart';
+import 'package:eros_fe/common/controller/image_block_controller.dart';
+import 'package:eros_fe/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -49,10 +49,24 @@ class PHashImageListPage extends GetView<ImageBlockController> {
 }
 
 class ImageHideItem extends StatelessWidget {
-  const ImageHideItem({Key? key, required this.imageHide, this.onDelete})
-      : super(key: key);
+  ImageHideItem({
+    super.key,
+    required this.imageHide,
+    this.onDelete,
+  }) : sourceRect = (imageHide.left != null &&
+                imageHide.top != null &&
+                imageHide.width != null &&
+                imageHide.height != null)
+            ? Rect.fromLTWH(
+                imageHide.left!.toDouble(),
+                imageHide.top!.toDouble(),
+                imageHide.width!.toDouble(),
+                imageHide.height!.toDouble(),
+              )
+            : null;
   final ImageHide imageHide;
   final VoidCallback? onDelete;
+  final Rect? sourceRect;
 
   @override
   Widget build(BuildContext context) {
@@ -68,11 +82,14 @@ class ImageHideItem extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 12),
                   child: ClipRRect(
-                    child: Container(
-                      width: 50,
-                      child: EhNetworkImage(imageUrl: imageHide.imageUrl ?? ''),
-                    ),
                     borderRadius: BorderRadius.circular(8.0),
+                    child: SizedBox(
+                      width: 50,
+                      child: EhNetworkImage(
+                        imageUrl: imageHide.imageUrl ?? '',
+                        sourceRect: sourceRect,
+                      ),
+                    ),
                   ),
                 ),
                 Text(
@@ -83,12 +100,13 @@ class ImageHideItem extends StatelessWidget {
           ),
           CupertinoButton(
             // 清除按钮
+            onPressed: onDelete,
+            // 清除按钮
             child: const Icon(
               CupertinoIcons.xmark_circle,
               color: CupertinoColors.systemRed,
               size: 26,
             ),
-            onPressed: onDelete,
           ),
         ],
       ),

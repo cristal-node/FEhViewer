@@ -1,5 +1,5 @@
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/network/request.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/network/request.dart';
 import 'package:get/get.dart';
 
 const Duration kMaxStale = Duration(days: 1);
@@ -37,8 +37,8 @@ class AvatarController extends GetxController {
     final user = await getUserInfo(userId, forceRefresh: true);
     if (user != null) {
       _addUser(user.copyWith(
-        memberId: userId,
-        lastUptTime: DateTime.now().millisecondsSinceEpoch,
+        memberId: userId.oN,
+        lastUptTime: DateTime.now().millisecondsSinceEpoch.oN,
       ));
     }
 

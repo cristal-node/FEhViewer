@@ -11,7 +11,6 @@ on:
       - '!v*apk'
       - '!v*mac'
       - '!v*win'
-      - '!v*.flutter2'
       - '!v*.bot'
       - '!v*.linux'
 
@@ -20,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  PACKAGE_NAME: FEhViewer
+  PACKAGE_NAME: Eros-FE
 
 jobs:
   Build_and_upload:
@@ -28,38 +27,30 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        target: ["android", "ios", "macos", "windows"]
+#        flutter_version: ["3.22.x"]
+        flutter_channel: ["stable"]
         include:
           - target: android
             os: ubuntu-latest
-            flutter_version: 3.16
-            flutter_channel: stable
+            flutter_version: "3.x"
             artifact_name: release-apk
-            artifact_path: build/app/outputs/apk/release/FEhViewer*.apk
+            artifact_path: build/app/outputs/apk/release/Eros-FE*.apk
           - target: ios
-            os: macos-12
-            flutter_version: 3.16
-            flutter_channel: stable
+            os: macos-14
+            flutter_version: "3.x"
             artifact_name: release-ios
-            artifact_path: build/**/FEhViewer*.ipa
-          - target: ios
-            suffix: -impeller
-            os: macos-12
-            flutter_version: x
-            flutter_channel: master
-            artifact_name: release-ios-impeller
-            artifact_path: build/**/FEhViewer*.ipa
+            artifact_path: build/**/Eros-FE*.ipa
           - target: macos
-            os: macos-12
-            flutter_version: 3.16
-            flutter_channel: stable
+            os: macos-14
+            flutter_version: "3.x"
             artifact_name: release-mac
-            artifact_path: build/macos/FEhViewer*.zip
+            artifact_path: build/macos/Eros-FE*.zip
           - target: windows
             os: windows-latest
-            flutter_version: 3.16
-            flutter_channel: stable
+            flutter_version: "3.x"
             artifact_name: release-windows
-            artifact_path: build/windows/FEhViewer*.zip
+            artifact_path: build/windows/Eros-FE*.zip
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -79,25 +70,25 @@ jobs:
       - name: show version
         run: echo ${{ env.app_version }}
 
-      - name: Cache Pods (build macos)
-        uses: actions/cache@v3
-        if: matrix.target == 'macos'
-        with:
-          path: |
-            macos/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('macos/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-
+#      - name: Cache Pods (build macos)
+#        uses: actions/cache@v3
+#        if: matrix.target == 'macos'
+#        with:
+#          path: |
+#            macos/Pods
+#          key: ${{ runner.os }}-pods-${{ hashFiles('macos/Podfile.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pods-
 
-      - name: Cache Pods (build ios)
-        uses: actions/cache@v3
-        if: matrix.target == 'ios'
-        with:
-          path: |
-            ios/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-            
+#      - name: Cache Pods (build ios)
+#        uses: actions/cache@v3
+#        if: matrix.target == 'ios'
+#        with:
+#          path: |
+#            ios/Pods
+#          key: ${{ runner.os }}-pods-${{ hashFiles('ios/Podfile.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-pods-
 
       - name: Decode keystore
         if: matrix.target == 'android'
@@ -117,7 +108,7 @@ jobs:
 
       # 安装 Flutter
       - name: Flutter action
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@v2.12.0
         with:
           flutter-version: ${{ matrix.flutter_version }}
           channel: ${{ matrix.flutter_channel }}
@@ -141,10 +132,15 @@ jobs:
 #          grep cronet_http pubspec.yaml
 #          git stash
 
-      - name: ios enable impeller
-        if: matrix.target == 'ios' && matrix.suffix == '-impeller'
+      - name: ios disable impeller
+        if: matrix.target == 'ios' && matrix.suffix == '-canvas'
         run: |
-          sed -i '' '/FLTEnableImpeller/{N;d;}' ios/Runner/Info.plist
+          sed -i '' '/FLTEnableImpeller/{n; s/true/false/;}' ios/Runner/Info.plist
+
+      - name: ios update dependencies
+        if: matrix.target == 'ios'
+        run: |
+          sed -i '' 's/flutter_inappwebview: .*/flutter_inappwebview: ^6.1.5/' pubspec.yaml
 
       - name: Flutter pub get
         run: |
@@ -241,7 +237,7 @@ jobs:
       - name: Upload to release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "/tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios*/*.ipa,/tmp/artifacts/release-mac/*.zip,/tmp/artifacts/release-windows/*.zip"
+          artifacts: "/tmp/artifacts/release-apk/*.apk,/tmp/artifacts/release-ios*/*.ipa,/tmp/artifacts/release-*/*.zip"
           tag: ${{ github.ref_name }}
           bodyFile: changelog/v${{ env.app_version }}.md
           prerelease: contains(github.ref, 'pre')
@@ -256,6 +252,6 @@ jobs:
 #          --header 'Content-Type: application/x-www-form-urlencoded' \
 #          -d parse_mode=markdown \
 #          -d chat_id=${{ secrets.TELEGRAM_CHANNEL_ID }} \
-#          --data-urlencode text="[FEhViewer_${{ github.ref_name }}](https://github.com/honjow/FEhViewer/releases/tag/${{ github.ref_name }})
+#          --data-urlencode text="[Eros-FE_${{ github.ref_name }}](https://github.com/honjow/FEhViewer/releases/tag/${{ github.ref_name }})
 #          $changelog" \
 #          -d disable_web_page_preview=true

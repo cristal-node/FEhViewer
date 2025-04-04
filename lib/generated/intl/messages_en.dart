@@ -69,7 +69,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "allow_media_scan":
             MessageLookupByLibrary.simpleMessage("Allow media scan"),
         "always": MessageLookupByLibrary.simpleMessage("Always"),
-        "app_title": MessageLookupByLibrary.simpleMessage("FEhViewer"),
+        "app_title": MessageLookupByLibrary.simpleMessage("Eros-FE"),
         "ask_me": MessageLookupByLibrary.simpleMessage("Ask for Me"),
         "auth_biometricHint":
             MessageLookupByLibrary.simpleMessage("Verify Identity"),
@@ -121,8 +121,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Date or Offset"),
         "default_avatar_style":
             MessageLookupByLibrary.simpleMessage("Default Avatar Style"),
-        "default_favorites":
-            MessageLookupByLibrary.simpleMessage("Default Favorites"),
         "delete": MessageLookupByLibrary.simpleMessage("Delete"),
         "delete_task": MessageLookupByLibrary.simpleMessage("Delete Task"),
         "delete_task_and_content":
@@ -160,6 +158,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "enter_date_or_offset_or_gid":
             MessageLookupByLibrary.simpleMessage("Enter date or offset or gid"),
         "expand": MessageLookupByLibrary.simpleMessage("Expand"),
+        "experimental_feature":
+            MessageLookupByLibrary.simpleMessage("Experimental feature"),
         "export": MessageLookupByLibrary.simpleMessage("Export"),
         "export_app_data":
             MessageLookupByLibrary.simpleMessage("Export App Data"),
@@ -197,6 +197,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Hide Thumbnails"),
         "hide_top_bar_on_scroll":
             MessageLookupByLibrary.simpleMessage("Hide top bar on scroll"),
+        "high_resolution_images_limited": MessageLookupByLibrary.simpleMessage(
+            "High Resolution Images Limited"),
         "horizontal_thumbnails":
             MessageLookupByLibrary.simpleMessage("Horizontal Thumbnails"),
         "host": MessageLookupByLibrary.simpleMessage("Host"),
@@ -249,8 +251,6 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Local Favorites"),
         "login": MessageLookupByLibrary.simpleMessage("Sign"),
         "login_web": MessageLookupByLibrary.simpleMessage("Sign in on the Web"),
-        "manually_sel_favorites":
-            MessageLookupByLibrary.simpleMessage("Manually select favorites"),
         "max_history": MessageLookupByLibrary.simpleMessage("Maximum History"),
         "min": MessageLookupByLibrary.simpleMessage("min"),
         "model": m1,
@@ -275,6 +275,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "off": MessageLookupByLibrary.simpleMessage("Off"),
         "ok": MessageLookupByLibrary.simpleMessage("OK"),
         "on": MessageLookupByLibrary.simpleMessage("On"),
+        "one_step_favorite":
+            MessageLookupByLibrary.simpleMessage("One Step Favorite"),
+        "one_step_favorite_desc": MessageLookupByLibrary.simpleMessage(
+            "Quickly add gallery to favorite, short press to save to the last selected favorite, long press to display the favorite dialog."),
         "open_supported_links":
             MessageLookupByLibrary.simpleMessage("Open supported links"),
         "open_supported_links_summary": MessageLookupByLibrary.simpleMessage(
@@ -299,6 +303,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "page_range": MessageLookupByLibrary.simpleMessage("Page range"),
         "page_range_error":
             MessageLookupByLibrary.simpleMessage("Page range error"),
+        "page_view_type":
+            MessageLookupByLibrary.simpleMessage("Page View Type"),
         "passwd": MessageLookupByLibrary.simpleMessage("Password"),
         "paused": MessageLookupByLibrary.simpleMessage("Paused"),
         "phash_block_list":
@@ -331,6 +337,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "redirect_thumb_link_summary": MessageLookupByLibrary.simpleMessage(
             "Redirect Thumb Link To ehgt.org"),
         "redownload": MessageLookupByLibrary.simpleMessage("Redownload"),
+        "refresh_igneous":
+            MessageLookupByLibrary.simpleMessage("Refresh Igneous"),
         "regex": MessageLookupByLibrary.simpleMessage("Regex"),
         "regex_format_error":
             MessageLookupByLibrary.simpleMessage("Regex format error"),
@@ -409,6 +417,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "show_page_interval":
             MessageLookupByLibrary.simpleMessage("Show page interval"),
         "skip": MessageLookupByLibrary.simpleMessage("Skip"),
+        "slide_out_page":
+            MessageLookupByLibrary.simpleMessage("Slide Out Page"),
         "sync_group": MessageLookupByLibrary.simpleMessage("Sync group"),
         "sync_history": MessageLookupByLibrary.simpleMessage("Sync history"),
         "sync_quick_search":
@@ -587,8 +597,9 @@ class MessageLookup extends MessageLookupByLibrary {
             "Use original images instead of the resampled versions? Resampled images will still be used if you select a horizonal resolution different than \"Auto\" above and the image in question is wider, or if the original image is larger than 10 MiB (or 4 MiB for galleries older than one year)."),
         "uc_parody": MessageLookupByLibrary.simpleMessage("parody"),
         "uc_pixels": MessageLookupByLibrary.simpleMessage("pixels"),
-        "uc_pn_0": MessageLookupByLibrary.simpleMessage("No"),
-        "uc_pn_1": MessageLookupByLibrary.simpleMessage("Yes"),
+        "uc_pn_0": MessageLookupByLibrary.simpleMessage("None"),
+        "uc_pn_1": MessageLookupByLibrary.simpleMessage("Page Number Only"),
+        "uc_pn_2": MessageLookupByLibrary.simpleMessage("Page Number + Name"),
         "uc_profile": MessageLookupByLibrary.simpleMessage("Profile"),
         "uc_qb_0": MessageLookupByLibrary.simpleMessage("Nope"),
         "uc_qb_1": MessageLookupByLibrary.simpleMessage("Yup"),
@@ -611,7 +622,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "uc_selected": MessageLookupByLibrary.simpleMessage("Selected"),
         "uc_set_as_def": MessageLookupByLibrary.simpleMessage("Set as Default"),
         "uc_show_page_num":
-            MessageLookupByLibrary.simpleMessage("Show Page Numbers"),
+            MessageLookupByLibrary.simpleMessage("Thumbnail Labeling"),
         "uc_tag": MessageLookupByLibrary.simpleMessage("Gallery Tags"),
         "uc_tag_ft":
             MessageLookupByLibrary.simpleMessage("Tag Filtering Threshold"),
@@ -638,8 +649,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "uc_tl_0": MessageLookupByLibrary.simpleMessage("Default Title"),
         "uc_tl_1": MessageLookupByLibrary.simpleMessage(
             "Japanese Title (if available)"),
-        "uc_ts_0": MessageLookupByLibrary.simpleMessage("Normal"),
-        "uc_ts_1": MessageLookupByLibrary.simpleMessage("Large"),
+        "uc_ts_0": MessageLookupByLibrary.simpleMessage("Auto"),
+        "uc_ts_1": MessageLookupByLibrary.simpleMessage("Normal"),
+        "uc_ts_2": MessageLookupByLibrary.simpleMessage("Small"),
         "uc_uh_0":
             MessageLookupByLibrary.simpleMessage("Any client (Recommended)"),
         "uc_uh_0_s": MessageLookupByLibrary.simpleMessage("Any client"),

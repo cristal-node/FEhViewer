@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:fehviewer/common/controller/user_controller.dart';
-import 'package:fehviewer/component/exception/error.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/network/api.dart';
-import 'package:fehviewer/network/request.dart';
-import 'package:fehviewer/pages/login/view/login_cookie.dart';
+import 'package:eros_fe/common/controller/user_controller.dart';
+import 'package:eros_fe/component/exception/error.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/network/api.dart';
+import 'package:eros_fe/network/request.dart';
+import 'package:eros_fe/pages/login/view/login_cookie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -33,7 +33,7 @@ class LoginController extends GetxController {
   final TextEditingController hashController = TextEditingController();
 
   // igneous
-  final TextEditingController igneousController = TextEditingController();
+  // final TextEditingController igneousController = TextEditingController();
 
   final UserController userController = Get.find();
 
@@ -77,7 +77,7 @@ class LoginController extends GetxController {
     }
 
     if (user != null && user.cookie.isNotEmpty) {
-      userController.user(user.copyWith(username: usernameController.text));
+      userController.user(user.copyWith(username: usernameController.text.oN));
       Api.selEhProfile();
 
       asyncGetUserInfo(user.memberId!);
@@ -94,7 +94,7 @@ class LoginController extends GetxController {
 
     final memberId = idController.text.trim();
     final passHash = hashController.text.trim();
-    final igneous = igneousController.text.trim();
+    // final igneous = igneousController.text.trim();
 
     if (memberId.isEmpty || passHash.isEmpty) {
       showToast('ibp_member_id or ibp_pass_hash is empty');
@@ -109,7 +109,7 @@ class LoginController extends GetxController {
     final List<Cookie> cookies = <Cookie>[
       Cookie('ipb_member_id', memberId),
       Cookie('ipb_pass_hash', passHash),
-      if (igneous.isNotEmpty) Cookie('igneous', igneous),
+      // if (igneous.isNotEmpty) Cookie('igneous', igneous),
     ];
 
     // final PersistCookieJar cookieJar = await Api.cookieJar;
@@ -118,12 +118,12 @@ class LoginController extends GetxController {
     // cookieJar.saveFromResponse(Uri.parse(EHConst.EH_BASE_URL), cookies);
 
     final user = userController.user.value.copyWith(
-      username: '${memberId.substring(0, 1)}****',
-      memberId: memberId,
-      passHash: _getCookiesValue(cookies, 'ipb_pass_hash'),
-      igneous: _getCookiesValue(cookies, 'igneous'),
-      hathPerks: _getCookiesValue(cookies, 'hath_perks'),
-      sk: _getCookiesValue(cookies, 'sk'),
+      username: '${memberId.substring(0, 1)}****'.oN,
+      memberId: memberId.oN,
+      passHash: _getCookiesValue(cookies, 'ipb_pass_hash')?.oN,
+      igneous: _getCookiesValue(cookies, 'igneous')?.oN,
+      hathPerks: _getCookiesValue(cookies, 'hath_perks')?.oN,
+      sk: _getCookiesValue(cookies, 'sk')?.oN,
     );
 
     logger.d('user ${user.toJson()}');
@@ -173,15 +173,15 @@ class LoginController extends GetxController {
       }
 
       final user = userController.user.value.copyWith(
-        username: '${memberId.substring(0, 1)}****',
-        memberId: memberId,
-        passHash: _getCookiesValue(cookies, 'ipb_pass_hash'),
-        igneous: _getCookiesValue(cookies, 'igneous'),
-        hathPerks: _getCookiesValue(cookies, 'hath_perks'),
-        sk: _getCookiesValue(cookies, 'sk'),
+        username: '${memberId.substring(0, 1)}****'.oN,
+        memberId: memberId.oN,
+        passHash: _getCookiesValue(cookies, 'ipb_pass_hash')?.oN,
+        igneous: _getCookiesValue(cookies, 'igneous')?.oN,
+        hathPerks: _getCookiesValue(cookies, 'hath_perks')?.oN,
+        sk: _getCookiesValue(cookies, 'sk')?.oN,
       );
 
-      logger.d('user ${user.toJson()}');
+      logger.d('>>>>>>>>>>>>>>>> user ${user.toJson()}');
 
       userController.user(user);
 
@@ -200,7 +200,7 @@ class LoginController extends GetxController {
       return;
     }
     // 异步获取昵称和头像
-    logger.t('异步获取昵称和头像');
+    logger.d('异步获取昵称和头像');
     late User? info;
     try {
       info = await getUserInfo(memberId);
@@ -210,8 +210,8 @@ class LoginController extends GetxController {
     }
 
     userController.user(userController.user.value.copyWith(
-      nickName: info?.nickName,
-      avatarUrl: info?.avatarUrl,
+      nickName: info?.nickName?.oN,
+      avatarUrl: info?.avatarUrl?.oN,
     ));
     userController.update();
   }
@@ -219,35 +219,35 @@ class LoginController extends GetxController {
   Future<void> readCookieFromClipboard() async {
     final kMatchMenberId = RegExp(r'^\d+$');
     final kMatchPassHash = RegExp(r'^[\da-f]{32}$');
-    final kMatchIgneous = RegExp(r'^[\da-f]+$');
+    // final kMatchIgneous = RegExp(r'^[\da-f]+$');
 
-    final String _clipText =
+    final String clipText =
         (await Clipboard.getData(Clipboard.kTextPlain))?.text ?? '';
     // logger.d('Clipboard:\n' + _clipText);
-    if (!_clipText.contains('{')) {
-      final textArray = _clipText.split(RegExp(r'[\s:;&=]'));
+    if (!clipText.contains('{')) {
+      final textArray = clipText.split(RegExp(r'[\s:;&=]'));
       logger.d('textArray:$textArray');
-      for (final _text in textArray) {
-        if (kMatchMenberId.hasMatch(_text)) {
-          logger.d('id:$_text');
-          idController.text = _text;
+      for (final text in textArray) {
+        if (kMatchMenberId.hasMatch(text)) {
+          logger.d('id:$text');
+          idController.text = text;
           continue;
         }
-        if (kMatchPassHash.hasMatch(_text)) {
-          logger.d('passHash:$_text');
-          hashController.text = _text;
+        if (kMatchPassHash.hasMatch(text)) {
+          logger.d('passHash:$text');
+          hashController.text = text;
           continue;
         }
-        if (kMatchIgneous.hasMatch(_text)) {
-          logger.d('igneous:$_text');
-          igneousController.text = _text;
-        }
+        // if (kMatchIgneous.hasMatch(text)) {
+        //   logger.d('igneous:$text');
+        //   igneousController.text = text;
+        // }
       }
       return;
     }
 
     try {
-      final jsonObj = jsonDecode(_clipText);
+      final jsonObj = jsonDecode(clipText);
       final cookieList = jsonObj as List;
       final cookieMap = <String, String>{};
       for (final cookie in cookieList) {
@@ -258,7 +258,7 @@ class LoginController extends GetxController {
       }
       idController.text = cookieMap['ipb_member_id'] ?? '';
       hashController.text = cookieMap['ipb_pass_hash'] ?? '';
-      igneousController.text = cookieMap['igneous'] ?? '';
+      // igneousController.text = cookieMap['igneous'] ?? '';
     } catch (e) {
       logger.e('$e');
     }

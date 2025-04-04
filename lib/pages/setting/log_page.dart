@@ -1,7 +1,7 @@
-import 'package:fehviewer/common/controller/log_controller.dart';
-import 'package:fehviewer/common/service/layout_service.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/setting/log_view_page.dart';
+import 'package:eros_fe/common/controller/log_controller.dart';
+import 'package:eros_fe/common/service/layout_service.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/setting/log_view_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart' as path;
@@ -19,24 +19,26 @@ class LogPage extends GetView<LogService> {
           // 清除按钮
           padding: const EdgeInsets.all(0),
           minSize: 40,
+          onPressed: controller.removeAll,
           child: const Icon(
             CupertinoIcons.trash,
             size: 24,
           ),
-          onPressed: controller.removeAll,
         ),
       ),
-      child: CustomScrollView(slivers: [
-        SliverSafeArea(
-          bottom: false,
-          sliver:
-              CupertinoSliverRefreshControl(onRefresh: controller.refreshFiles),
-        ),
-        const SliverSafeArea(
-          top: false,
-          sliver: LogListView(),
-        ),
-      ]),
+      child: CustomScrollView(
+        slivers: [
+          SliverSafeArea(
+            bottom: false,
+            sliver: CupertinoSliverRefreshControl(
+                onRefresh: controller.refreshFiles),
+          ),
+          const SliverSafeArea(
+            top: false,
+            sliver: LogListView(),
+          ),
+        ],
+      ),
     );
   }
 }

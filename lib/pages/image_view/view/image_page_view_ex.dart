@@ -1,18 +1,18 @@
 import 'dart:math';
 
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/image_view/common.dart';
-import 'package:fehviewer/pages/image_view/controller/view_controller.dart';
-import 'package:fehviewer/pages/image_view/controller/view_state.dart';
-import 'package:fehviewer/pages/image_view/view/view_widget.dart';
-import 'package:fehviewer/widget/preload_photo_view_gallery.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/image_view/common.dart';
+import 'package:eros_fe/pages/image_view/controller/view_controller.dart';
+import 'package:eros_fe/pages/image_view/controller/view_state.dart';
+import 'package:eros_fe/pages/image_view/view/view_widget.dart';
+import 'package:eros_fe/widget/preload_photo_view_gallery.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 class ImagePhotoView extends GetView<ViewExtController> {
-  const ImagePhotoView({Key? key, this.reverse = false}) : super(key: key);
+  const ImagePhotoView({super.key, this.reverse = false});
   final bool reverse;
 
   ViewExtState get vState => controller.vState;

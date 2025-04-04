@@ -1,7 +1,7 @@
 import 'dart:ui' as ui show Codec;
 
+import 'package:eros_fe/utils/logger.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:fehviewer/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_storage/shared_storage.dart' as ss;
@@ -11,12 +11,11 @@ import 'saf_image_provider.dart';
 class ExtendedSafImageProvider extends SafUriImage
     with ExtendedImageProvider<SafUriImage> {
   const ExtendedSafImageProvider(
-    Uri uri, {
-    double scale = 1.0,
+    super.uri, {
+    super.scale,
     this.cacheRawData = false,
     this.imageCacheName,
-  })  : assert(!kIsWeb, 'not support on web'),
-        super(uri, scale: scale);
+  }) : assert(!kIsWeb, 'not support on web');
 
   /// Whether cache raw data if you need to get raw data directly.
   /// For example, we need raw image data to edit,

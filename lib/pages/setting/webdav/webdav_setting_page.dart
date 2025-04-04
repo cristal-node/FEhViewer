@@ -1,6 +1,6 @@
-import 'package:fehviewer/common/controller/webdav_controller.dart';
-import 'package:fehviewer/common/service/layout_service.dart';
-import 'package:fehviewer/fehviewer.dart';
+import 'package:eros_fe/common/controller/webdav_controller.dart';
+import 'package:eros_fe/common/service/layout_service.dart';
+import 'package:eros_fe/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -86,7 +86,7 @@ class WebDavSettingView extends GetView<WebdavController> {
                                 onPressed: () async {
                                   // 登出WebDAV
                                   Global.profile = Global.profile.copyWith(
-                                      webdav: const WebdavProfile(url: ''));
+                                      webdav: const WebdavProfile(url: '').oN);
                                   Global.saveProfile();
                                   controller.initClient();
                                   controller.closeClient();

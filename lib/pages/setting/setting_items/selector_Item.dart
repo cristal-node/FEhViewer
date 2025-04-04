@@ -1,4 +1,4 @@
-import 'package:fehviewer/fehviewer.dart';
+import 'package:eros_fe/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -109,7 +109,7 @@ class _SelectorItemState<T> extends State<SelectorItem<T>> {
 
 class SelectorCupertinoListTile<T> extends StatefulWidget {
   const SelectorCupertinoListTile({
-    Key? key,
+    super.key,
     required this.title,
     this.actionTitle,
     required this.actionMap,
@@ -117,7 +117,7 @@ class SelectorCupertinoListTile<T> extends StatefulWidget {
     required this.initVal,
     this.onValueChanged,
     this.actionWidgetMap,
-  }) : super(key: key);
+  });
   final String title;
   final String? actionTitle;
   final Map<T, String> actionMap;

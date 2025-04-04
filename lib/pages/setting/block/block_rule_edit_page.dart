@@ -1,7 +1,7 @@
-import 'package:fehviewer/common/controller/block_controller.dart';
-import 'package:fehviewer/common/service/layout_service.dart';
-import 'package:fehviewer/component/setting_base.dart';
-import 'package:fehviewer/fehviewer.dart';
+import 'package:eros_fe/common/controller/block_controller.dart';
+import 'package:eros_fe/common/service/layout_service.dart';
+import 'package:eros_fe/component/setting_base.dart';
+import 'package:eros_fe/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -11,12 +11,12 @@ class BlockRuleEditPage extends GetView<BlockController> {
 
   @override
   Widget build(BuildContext context) {
-    final String _title = L10n.of(context).edit_block_rule;
+    final String title = L10n.of(context).edit_block_rule;
 
-    final BlockRule? _blockRuleFromArg =
+    final BlockRule? blockRuleFromArg =
         Get.arguments is BlockRule ? Get.arguments as BlockRule : null;
 
-    BlockRule _blockRule = _blockRuleFromArg ??
+    BlockRule blockRule = blockRuleFromArg ??
         BlockRule(
           ruleText: '',
           blockType: controller.latestBlockType?.name ?? BlockType.title.name,
@@ -24,30 +24,30 @@ class BlockRuleEditPage extends GetView<BlockController> {
           enableRegex: controller.latestEnableRegex ?? false,
         );
 
-    controller.blockRuleTextEditingController.text = _blockRule.ruleText ?? '';
-    controller.currentEnableRegex = _blockRule.enableRegex ?? false;
+    controller.blockRuleTextEditingController.text = blockRule.ruleText ?? '';
+    controller.currentEnableRegex = blockRule.enableRegex ?? false;
 
     return CupertinoPageScaffold(
       backgroundColor: CupertinoColors.systemGroupedBackground,
       navigationBar: CupertinoNavigationBar(
-        middle: Text(_title),
+        middle: Text(title),
         trailing: CupertinoButton(
           padding: const EdgeInsets.all(0),
           minSize: 40,
-          child: const Icon(
-            CupertinoIcons.check_mark_circled,
-            size: 28,
-          ),
           onPressed: controller.isRegexFormatError
               ? null
               : () async {
                   FocusScope.of(context).requestFocus(FocusNode());
-                  logger.d('_blockRule ${_blockRule.toJson()}');
+                  logger.d('blockRule ${blockRule.toJson()}');
                   Get.back<BlockRule>(
                     id: isLayoutLarge ? 2 : null,
-                    result: _blockRule,
+                    result: blockRule,
                   );
                 },
+          child: const Icon(
+            CupertinoIcons.check_mark_circled,
+            size: 28,
+          ),
         ),
       ),
       child: CustomScrollView(slivers: [
@@ -60,9 +60,9 @@ class BlockRuleEditPage extends GetView<BlockController> {
                   title: Text(L10n.of(context).enable),
                   trailing: StatefulBuilder(builder: (context, setState) {
                     return CupertinoSwitch(
-                      value: _blockRule.enabled ?? true,
+                      value: blockRule.enabled ?? true,
                       onChanged: (val) {
-                        _blockRule = _blockRule.copyWith(enabled: val);
+                        blockRule = blockRule.copyWith(enabled: val.oN);
                         setState(() {});
                       },
                     );
@@ -74,9 +74,9 @@ class BlockRuleEditPage extends GetView<BlockController> {
                   title: Text(L10n.of(context).regex),
                   trailing: StatefulBuilder(builder: (context, setState) {
                     return CupertinoSwitch(
-                      value: _blockRule.enableRegex ?? false,
+                      value: blockRule.enableRegex ?? false,
                       onChanged: (val) {
-                        _blockRule = _blockRule.copyWith(enableRegex: val);
+                        blockRule = blockRule.copyWith(enableRegex: val.oN);
                         controller.currentEnableRegex = val;
                         setState(() {});
                       },
@@ -85,10 +85,10 @@ class BlockRuleEditPage extends GetView<BlockController> {
                 ),
                 _BlockTypeSelector(
                   initValue: BlockType.values
-                      .byName(_blockRule.blockType ?? BlockType.title.name),
+                      .byName(blockRule.blockType ?? BlockType.title.name),
                   onChanged: (BlockType value) {
                     controller.latestBlockType = value;
-                    _blockRule = _blockRule.copyWith(blockType: value.name);
+                    blockRule = blockRule.copyWith(blockType: value.name.oN);
                   },
                 ),
               ]),
@@ -115,8 +115,8 @@ class BlockRuleEditPage extends GetView<BlockController> {
                     keyboardType: TextInputType.text,
                     onChanged: (value) {
                       logger.t('value $value');
-                      _blockRule = _blockRule.copyWith(
-                          ruleText: value.replaceAll('\n', ' '));
+                      blockRule = blockRule.copyWith(
+                          ruleText: value.replaceAll('\n', ' ').oN);
                     },
                   ),
                 ],

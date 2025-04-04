@@ -1,6 +1,6 @@
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/tab/controller/favorite/favorite_sublist_controller.dart';
-import 'package:fehviewer/pages/tab/controller/favorite/favorite_tabbar_controller.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/tab/controller/favorite/favorite_sublist_controller.dart';
+import 'package:eros_fe/pages/tab/controller/favorite/favorite_tabbar_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -24,7 +24,7 @@ class _FavoriteSubPageState extends State<FavoriteSubPage>
     with AutomaticKeepAliveClientMixin {
   late final FavoriteSubListController _favoriteSubListController;
   final EhTabController ehTabController = EhTabController();
-  final controller = Get.find<FavoriteTabberController>();
+  final controller = Get.find<FavoriteTabBarController>();
 
   @override
   void initState() {
@@ -120,7 +120,8 @@ class _FavoriteSubPageState extends State<FavoriteSubPage>
               _favoriteSubListController.heroTag,
               next: logic.next,
               lastComplete: _favoriteSubListController.lastComplete,
-              key: _favoriteSubListController.sliverAnimatedListKey,
+              // key: _favoriteSubListController.sliverAnimatedListKey,
+              keepPosition: _favoriteSubListController.keepPosition,
             );
           }
 

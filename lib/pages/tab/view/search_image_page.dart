@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:blur/blur.dart';
+import 'package:eros_fe/pages/tab/view/list/tab_base.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:fehviewer/pages/tab/view/list/tab_base.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
-import '../../../fehviewer.dart';
+import '../../../index.dart';
 import '../controller/search_image_controller.dart';
 import '../controller/search_page_controller.dart';
 import 'gallery_base.dart';
@@ -106,7 +106,7 @@ class SearchImagePage extends GetView<SearchImageController> {
               lastComplete: controller.lastComplete,
               // centerKey: centerKey,
               key: controller.sliverAnimatedListKey,
-              lastTopitemIndex: controller.lastTopitemIndex,
+              lastTopItemIndex: controller.lastTopitemIndex,
             );
           }
 
@@ -178,7 +178,7 @@ class ImagePersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
     final paddingTop = context.mediaQueryPadding.top;
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: _kDefaultNavBarBorder,
       ),
       padding: EdgeInsets.only(top: paddingTop),
@@ -221,7 +221,7 @@ class ImagePersistentHeaderDelegate extends SliverPersistentHeaderDelegate {
             ),
           ),
           Container(
-            constraints: BoxConstraints(maxHeight: 80),
+            constraints: const BoxConstraints(maxHeight: 80),
             child: CupertinoButton(
               padding: const EdgeInsets.all(0.0),
               child: Container(

@@ -1,14 +1,14 @@
-import 'package:fehviewer/common/controller/block_controller.dart';
-import 'package:fehviewer/common/service/ehsetting_service.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/item/controller/galleryitem_controller.dart';
-import 'package:fehviewer/pages/item/gallery_item.dart';
-import 'package:fehviewer/pages/item/gallery_item_debug_simple.dart';
-import 'package:fehviewer/pages/item/gallery_item_placeholder.dart';
-import 'package:fehviewer/pages/item/gallery_item_simple.dart';
-import 'package:fehviewer/pages/item/gallery_item_simple_placeholder.dart';
-import 'package:fehviewer/pages/tab/controller/enum.dart';
-import 'package:fehviewer/pages/tab/controller/search_page_controller.dart';
+import 'package:eros_fe/common/controller/block_controller.dart';
+import 'package:eros_fe/common/service/ehsetting_service.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/item/controller/galleryitem_controller.dart';
+import 'package:eros_fe/pages/item/gallery_item.dart';
+import 'package:eros_fe/pages/item/gallery_item_debug_simple.dart';
+import 'package:eros_fe/pages/item/gallery_item_placeholder.dart';
+import 'package:eros_fe/pages/item/gallery_item_simple.dart';
+import 'package:eros_fe/pages/item/gallery_item_simple_placeholder.dart';
+import 'package:eros_fe/pages/tab/controller/enum.dart';
+import 'package:eros_fe/pages/tab/controller/search_page_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -339,25 +339,25 @@ Widget getGallerySliverList(
   VoidCallback? lastComplete,
   Key? key,
   Key? centerKey,
-  int? lastTopitemIndex,
+  int? lastTopItemIndex,
   Rx<ListModeEnum>? listMode,
   bool keepPosition = false,
 }) {
   final EhSettingService ehSettingService = Get.find();
   final _key = key ?? ValueKey(galleryProviders.hashCode);
 
-  final BlockController _blockController = Get.find();
+  final BlockController blockController = Get.find();
 
   galleryProviders = galleryProviders?.where((GalleryProvider element) {
-    return !_blockController.matchRule(
+    return !blockController.matchRule(
           blockType: BlockType.title,
           text: element.englishTitle,
         ) &&
-        !_blockController.matchRule(
+        !blockController.matchRule(
           blockType: BlockType.title,
           text: element.japaneseTitle,
         ) &&
-        !_blockController.matchRule(
+        !blockController.matchRule(
           blockType: BlockType.uploader,
           text: element.uploader,
         );
@@ -379,7 +379,7 @@ Widget getGallerySliverList(
           next: next,
           lastComplete: lastComplete,
           centerKey: centerKey,
-          lastTopItemIndex: lastTopitemIndex,
+          lastTopItemIndex: lastTopItemIndex,
           keepPosition: keepPosition,
         );
       case ListModeEnum.waterfall:
@@ -389,7 +389,7 @@ Widget getGallerySliverList(
           next: next,
           lastComplete: lastComplete,
           centerKey: centerKey,
-          lastTopItemIndex: lastTopitemIndex,
+          lastTopItemIndex: lastTopItemIndex,
         );
       case ListModeEnum.waterfallLarge:
         return EhWaterfallFlow(
@@ -399,7 +399,7 @@ Widget getGallerySliverList(
           lastComplete: lastComplete,
           large: true,
           centerKey: centerKey,
-          lastTopItemIndex: lastTopitemIndex,
+          lastTopItemIndex: lastTopItemIndex,
         );
       case ListModeEnum.simpleList:
         return buildGallerySliverListSimpleView(
@@ -408,7 +408,7 @@ Widget getGallerySliverList(
           next: next,
           lastComplete: lastComplete,
           centerKey: centerKey,
-          lastTopItemIndex: lastTopitemIndex,
+          lastTopItemIndex: lastTopItemIndex,
           keepPosition: keepPosition,
         );
       case ListModeEnum.grid:
@@ -418,7 +418,7 @@ Widget getGallerySliverList(
           next: next,
           lastComplete: lastComplete,
           centerKey: centerKey,
-          lastTopItemIndex: lastTopitemIndex,
+          lastTopItemIndex: lastTopItemIndex,
         );
       case ListModeEnum.debugSimple:
         return buildDebugSimple(
@@ -427,7 +427,7 @@ Widget getGallerySliverList(
           next: next,
           lastComplete: lastComplete,
           centerKey: centerKey,
-          lastTopItemIndex: lastTopitemIndex,
+          lastTopItemIndex: lastTopItemIndex,
         );
       case ListModeEnum.global:
         return const SliverFillRemaining(

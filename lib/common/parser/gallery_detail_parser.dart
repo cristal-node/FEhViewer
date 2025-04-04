@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:fehviewer/common/controller/tag_trans_controller.dart';
-import 'package:fehviewer/models/base/eh_models.dart';
-import 'package:fehviewer/utils/chapter.dart';
+import 'package:eros_fe/common/controller/tag_trans_controller.dart';
+import 'package:eros_fe/models/base/eh_models.dart';
+import 'package:eros_fe/utils/chapter.dart';
 import 'package:get/get.dart' hide Node;
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' show parse;
@@ -139,7 +139,7 @@ List<GalleryComment> parseGalleryComment(Document document) {
       );
 
       _galleryComment.add(galleryComment.copyWith(
-        textList: galleryComment.getTextList(),
+        textList: galleryComment.getTextList().oN,
       ));
     } catch (e, stack) {
       logger.e('解析评论异常\n' + e.toString() + '\n' + stack.toString());
@@ -373,14 +373,12 @@ List<GalleryImage> parseGalleryImageFromHtml(String response) {
 
 /// 缩略图处理
 List<GalleryImage> parseGalleryImage(Document document) {
-  // 大图 #gdt > div.gdtl  小图 #gdt > div.gdtm
-  final List<Element> picLsit = document.querySelectorAll('#gdt > div.gdtm');
-
   final List<GalleryImage> galleryImages = [];
 
-  if (picLsit.isNotEmpty) {
-    // 小图的处理
-    for (final Element pic in picLsit) {
+  // 小图 #gdt > div.gdtm
+  List<Element> picList = document.querySelectorAll('#gdt > div.gdtm');
+  if (picList.isNotEmpty) {
+    for (final Element pic in picList) {
       final String picHref = pic.querySelector('a')?.attributes['href'] ?? '';
       final String style = pic.querySelector('div')?.attributes['style'] ?? '';
       final String picSrcUrl =
@@ -400,15 +398,18 @@ List<GalleryImage> parseGalleryImage(Document document) {
         largeThumb: false,
         href: picHref,
         thumbUrl: picSrcUrl,
-        thumbHeight: double.parse(height),
-        thumbWidth: double.parse(width),
-        offSet: double.parse(offSet),
+        thumbHeight: double.tryParse(height) ?? 0,
+        thumbWidth: double.tryParse(width) ?? 0,
+        offSet: double.tryParse(offSet) ?? 0,
       ));
     }
-  } else {
-    final List<Element> picLsit = document.querySelectorAll('#gdt > div.gdtl');
-    // 大图的处理
-    for (final Element pic in picLsit) {
+    return galleryImages;
+  }
+
+  // 大图 #gdt > div.gdtl
+  picList = document.querySelectorAll('#gdt > div.gdtl');
+  if (picList.isNotEmpty) {
+    for (final Element pic in picList) {
       final String picHref = pic.querySelector('a')?.attributes['href'] ?? '';
       final Element? imgElem = pic.querySelector('img');
       final String picSer = imgElem?.attributes['alt']?.trim() ?? '';
@@ -424,11 +425,55 @@ List<GalleryImage> parseGalleryImage(Document document) {
         largeThumb: true,
         href: picHref,
         thumbUrl: picSrcUrl,
-        oriWidth: double.parse(width),
-        oriHeight: double.parse(height),
+        oriWidth: double.tryParse(width) ?? 0,
+        oriHeight: double.tryParse(height) ?? 0,
       ));
     }
+    return galleryImages;
   }
 
+  // 里站 #gdt > a
+  // 新版缩略图dom, 统一了大小缩略图, 小图不再需要单独的分割处理
+  picList = document.querySelectorAll('#gdt > a');
+  if (picList.isNotEmpty) {
+    for (final Element pic in picList) {
+      final String picHref = pic.attributes['href'] ?? '';
+
+      // 对 label 不为空设置的处理
+      final divElm = pic.querySelector('div');
+      final childrenElms = divElm?.children;
+      // logger.d('>>>> childrenElms count: ${childrenElms?.length}');
+      final hasChildren = childrenElms?.isNotEmpty ?? false;
+      final destDivElm = hasChildren ? childrenElms![0] : divElm;
+      final String style = destDivElm?.attributes['style'] ?? '';
+      // logger.d('>>>> style: $style');
+
+      final String picSrcUrl =
+          RegExp(r'url\((.+)\)').firstMatch(style)?.group(1) ?? '';
+      final String height =
+          RegExp(r'height:(\d+)?px').firstMatch(style)?.group(1) ?? '0';
+      final String width =
+          RegExp(r'width:(\d+)?px').firstMatch(style)?.group(1) ?? '0';
+      final String offSet =
+          RegExp(r'\) -(\d+)?px ').firstMatch(style)?.group(1) ?? '0';
+
+      final String title = destDivElm?.attributes['title'] ?? '';
+      final String picSer =
+          RegExp(r'Page (\d+):').firstMatch(title)?.group(1) ?? '';
+
+      galleryImages.add(GalleryImage(
+        ser: int.parse(picSer),
+        largeThumb: false,
+        href: picHref,
+        thumbUrl: picSrcUrl,
+        thumbHeight: double.tryParse(height) ?? 0,
+        thumbWidth: double.tryParse(width) ?? 0,
+        offSet: double.tryParse(offSet) ?? 0,
+      ));
+    }
+    return galleryImages;
+  }
+
+  logger.e('No gallery images found');
   return galleryImages;
 }

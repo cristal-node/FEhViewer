@@ -8,14 +8,14 @@ import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:dio_cache_interceptor_file_store/dio_cache_interceptor_file_store.dart';
 import 'package:dio_cache_interceptor_hive_store/dio_cache_interceptor_hive_store.dart';
+import 'package:eros_fe/common/controller/download_controller.dart';
+import 'package:eros_fe/common/service/ehsetting_service.dart';
+import 'package:eros_fe/component/exception/error.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/network/request.dart';
+import 'package:eros_fe/pages/setting/controller/eh_mysettings_controller.dart';
+import 'package:eros_fe/store/db/entity/tag_translat.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:fehviewer/common/controller/download_controller.dart';
-import 'package:fehviewer/common/service/ehsetting_service.dart';
-import 'package:fehviewer/component/exception/error.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/network/request.dart';
-import 'package:fehviewer/pages/setting/controller/eh_mysettings_controller.dart';
-import 'package:fehviewer/store/db/entity/tag_translat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart' hide Response, FormData;
 import 'package:html_unescape/html_unescape.dart';
@@ -98,95 +98,99 @@ class Api {
     }
 
     // 通过api获取画廊详细信息
-    final List<List<String>> _gidlist = <List<String>>[];
+    final List<List<String>> gidlist = <List<String>>[];
 
-    galleryProviders.forEach((GalleryProvider galleryProvider) {
-      _gidlist.add([galleryProvider.gid!, galleryProvider.token!]);
-    });
+    for (final galleryProvider in galleryProviders) {
+      if (galleryProvider.gid == null || galleryProvider.token == null) {
+        continue;
+      }
+      if (galleryProvider.gid!.isEmpty || galleryProvider.token!.isEmpty) {
+        continue;
+      }
+      gidlist.add([galleryProvider.gid!, galleryProvider.token!]);
+    }
 
     // 25个一组分割
-    List _group = EHUtils.splitList(_gidlist, 25);
+    List group = EHUtils.splitList(gidlist, 25);
 
-    final rultList = <dynamic>[];
+    final resultList = <dynamic>[];
 
     // 查询 合并结果
-    for (int i = 0; i < _group.length; i++) {
-      Map reqMap = {'gidlist': _group[i], 'method': 'gdata'};
+    for (int i = 0; i < group.length; i++) {
+      Map reqMap = {'gidlist': group[i], 'method': 'gdata'};
       final String reqJsonStr = jsonEncode(reqMap);
+      logger.d('reqJsonStr $reqJsonStr');
+      final result = await postEhApi(reqJsonStr);
 
-      final rult = await postEhApi(reqJsonStr);
+      logger.d('result $result');
 
-      final jsonObj = jsonDecode(rult.toString());
+      final jsonObj = jsonDecode(result.toString());
       final tempList = jsonObj['gmetadata'] as List<dynamic>;
-      rultList.addAll(tempList);
+      resultList.addAll(tempList);
     }
 
     final HtmlUnescape unescape = HtmlUnescape();
 
     for (int i = 0; i < galleryProviders.length; i++) {
       // 标题
-      final _englishTitle = unescape.convert(rultList[i]['title'] as String);
+      final englishTitle = unescape.convert('${resultList[i]['title']}');
 
       // 日语标题
-      final _japaneseTitle =
-          unescape.convert(rultList[i]['title_jpn'] as String);
+      final japaneseTitle = unescape.convert('${resultList[i]['title_jpn']}');
 
       // 详细评分
-      final rating = rultList[i]['rating'] as String?;
-      final _rating = rating != null
-          ? double.parse(rating)
+      final ratingStr = resultList[i]['rating'] as String?;
+      final rating = ratingStr != null
+          ? double.parse(ratingStr)
           : galleryProviders[i].ratingFallBack;
 
       // 封面图片
-      final String thumb = rultList[i]['thumb'] as String;
-      final _imgUrlL = thumb;
+      final String thumb = resultList[i]['thumb'] as String;
+      final imgUrlL = thumb;
 
       // 文件数量
-      final _filecount = rultList[i]['filecount'] as String?;
-
-      // logger.d('_filecount $_filecount');
+      final fileCount = resultList[i]['filecount'] as String?;
 
       // 上传者
-      final _uploader = rultList[i]['uploader'] as String?;
-      final _category = rultList[i]['category'] as String?;
+      final uploader = resultList[i]['uploader'] as String?;
+      final category = resultList[i]['category'] as String?;
 
       // 标签
-      final List<dynamic> tags = rultList[i]['tags'] as List<dynamic>;
-      final _tagsFromApi = tags;
+      final List<dynamic> tags = resultList[i]['tags'] as List<dynamic>;
+      final tagsFromApi = tags;
 
       // 大小
-      final _filesize = rultList[i]['filesize'] as int?;
+      final filesize = resultList[i]['filesize'] as int?;
 
       // 种子数量
-      final _torrentcount = rultList[i]['torrentcount'] as String?;
+      final torrentcount = resultList[i]['torrentcount'] as String?;
 
       // 种子列表
-      final List<dynamic> torrents = rultList[i]['torrents'] as List<dynamic>;
+      final List<dynamic> torrents = resultList[i]['torrents'] as List<dynamic>;
       final _torrents = <GalleryTorrent>[];
-      torrents.forEach((dynamic element) {
-        // final Map<String, dynamic> e = element as Map<String, dynamic>;
+      for (final element in torrents) {
         _torrents.add(GalleryTorrent.fromJson(element as Map<String, dynamic>));
-      });
+      }
 
       /// 判断获取语言标识
-      String _translated = '';
+      String translated = '';
       if (tags.isNotEmpty) {
-        _translated = EHUtils.getLanguage(tags[0] as String);
+        translated = EHUtils.getLanguage(tags[0] as String);
       }
 
       galleryProviders[i] = galleryProviders[i].copyWith(
-        englishTitle: _englishTitle,
-        japaneseTitle: _japaneseTitle,
-        rating: _rating,
-        imgUrlL: _imgUrlL,
-        filecount: _filecount,
-        uploader: _uploader,
-        category: _category,
-        tagsFromApi: _tagsFromApi,
-        filesize: _filesize,
-        torrentcount: _torrentcount,
-        torrents: _torrents,
-        translated: _translated,
+        englishTitle: englishTitle.oN,
+        japaneseTitle: japaneseTitle.oN,
+        rating: rating?.oN,
+        imgUrlL: imgUrlL.oN,
+        filecount: fileCount?.oN,
+        uploader: uploader?.oN,
+        category: category?.oN,
+        tagsFromApi: tagsFromApi.oN,
+        filesize: filesize?.oN,
+        torrentcount: torrentcount?.oN,
+        torrents: _torrents.oN,
+        translated: translated.oN,
       );
     }
 
@@ -343,7 +347,7 @@ class Api {
   /// 选用feh单独的profile 没有就新建
   static Future<bool?> _selEhProfile() async {
     // 不能带_
-    const kProfileName = 'FEhViewer';
+    const kProfileName = 'Eros-FE';
 
     final uconfig = await getEhSettings(refresh: true);
 
@@ -389,15 +393,15 @@ class Api {
   }) async {
     final RegExp urlRex =
         RegExp(r'(http?s://e([-x])hentai.org)?/g/(\d+)/(\w+)/?$');
-    // logger.t(galleryProvider.url);
+    logger.d('>> galleryProvider.url ${galleryProvider.url}');
     final RegExpMatch? urlRult = urlRex.firstMatch(galleryProvider.url ?? '');
     // logger.t(urlRult.groupCount);
 
-    final String gid = urlRult?.group(3) ?? '';
-    final String token = urlRult?.group(4) ?? '';
+    final gid = urlRult?.group(3);
+    final token = urlRult?.group(4);
 
     final GalleryProvider tempProvider =
-        galleryProvider.copyWith(gid: gid, token: token);
+        galleryProvider.copyWith(gid: gid?.oN, token: token?.oN);
 
     final List<GalleryProvider> reqGalleryItems = <GalleryProvider>[
       tempProvider

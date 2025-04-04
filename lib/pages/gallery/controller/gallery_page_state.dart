@@ -1,10 +1,10 @@
-import 'package:fehviewer/common/controller/download_controller.dart';
-import 'package:fehviewer/common/service/ehsetting_service.dart';
-import 'package:fehviewer/network/api.dart';
-import 'package:fehviewer/pages/gallery/gallery_repository.dart';
+import 'package:eros_fe/common/controller/download_controller.dart';
+import 'package:eros_fe/common/service/ehsetting_service.dart';
+import 'package:eros_fe/network/api.dart';
+import 'package:eros_fe/pages/gallery/gallery_repository.dart';
 import 'package:get/get.dart';
 
-import '../../../fehviewer.dart';
+import '../../../index.dart';
 import '../../item/controller/galleryitem_controller.dart';
 
 class GalleryPageState {
@@ -75,7 +75,7 @@ class GalleryPageState {
 
   /// 是否已经存在本地收藏中
   set localFav(bool value) {
-    galleryProvider = galleryProvider?.copyWith(localFav: value);
+    galleryProvider = galleryProvider?.copyWith(localFav: value.oN);
   }
 
   bool get localFav => galleryProvider?.localFav ?? false;

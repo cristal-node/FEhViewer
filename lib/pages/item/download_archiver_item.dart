@@ -1,13 +1,13 @@
 import 'dart:io';
 
-import 'package:fehviewer/common/controller/gallerycache_controller.dart';
-import 'package:fehviewer/common/controller/webdav_controller.dart';
-import 'package:fehviewer/common/service/theme_service.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/network/api.dart';
-import 'package:fehviewer/pages/tab/controller/download_view_controller.dart';
-import 'package:fehviewer/store/archive_async.dart';
-import 'package:fehviewer/utils/saf_helper.dart';
+import 'package:eros_fe/common/controller/gallerycache_controller.dart';
+import 'package:eros_fe/common/controller/webdav_controller.dart';
+import 'package:eros_fe/common/service/theme_service.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/network/api.dart';
+import 'package:eros_fe/pages/tab/controller/download_view_controller.dart';
+import 'package:eros_fe/store/archive_async.dart';
+import 'package:eros_fe/utils/saf_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -24,7 +24,7 @@ final DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm');
 
 class DownloadArchiverItem extends GetView<DownloadViewController> {
   DownloadArchiverItem({
-    Key? key,
+    super.key,
     required this.index,
     required this.archiverTaskInfo,
   })  : title = archiverTaskInfo.title ?? '',
@@ -33,7 +33,8 @@ class DownloadArchiverItem extends GetView<DownloadViewController> {
         coverUrl = archiverTaskInfo.imgUrl,
         galleryUrl = archiverTaskInfo.galleryUrl,
         galleryGid = archiverTaskInfo.gid,
-        filePath = (archiverTaskInfo.savedDir?.isContentUri ?? false)
+        filePath = (archiverTaskInfo.savedDir == null ||
+                (archiverTaskInfo.savedDir?.isContentUri ?? false))
             ? archiverTaskInfo.safUri ?? ''
             : path.join(
                 archiverTaskInfo.savedDir ?? '', archiverTaskInfo.fileName),
@@ -41,8 +42,7 @@ class DownloadArchiverItem extends GetView<DownloadViewController> {
             ? DateTime.fromMillisecondsSinceEpoch(
                 archiverTaskInfo.timeCreated ?? 0)
             : null,
-        resolution = archiverTaskInfo.resolution,
-        super(key: key);
+        resolution = archiverTaskInfo.resolution;
 
   final String title;
   final int progress;
@@ -209,8 +209,12 @@ class DownloadArchiverItem extends GetView<DownloadViewController> {
   }
 
   Future<void> _onTap(BuildContext context) async {
+    logger.d('<<>>>>>>> archiverTaskInfo: ${archiverTaskInfo.toJson()}');
+
     logger
-        .d('gid: $galleryGid\npath:\n$filePath\n${filePath.realArchiverPath}');
+        .d('<<>>>>>>> archiverTaskInfo.savedDir: ${archiverTaskInfo.savedDir}');
+    logger.d(
+        '<<>>>>>>> gid: $galleryGid\npath: \nfilePath: $filePath\nrealArchiverPath: ${filePath.realArchiverPath}');
     if (galleryGid == null) {
       return;
     }
@@ -264,7 +268,7 @@ class DownloadArchiverItem extends GetView<DownloadViewController> {
 
   Widget _buildCover() {
     return GestureDetector(
-      child: Container(
+      child: SizedBox(
         width: 74,
         child: coverUrl != null && coverUrl!.isNotEmpty
             ? DownloadItemCoverImage(

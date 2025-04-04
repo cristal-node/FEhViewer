@@ -1,13 +1,13 @@
-import 'package:fehviewer/common/service/controller_tag_service.dart';
-import 'package:fehviewer/common/service/layout_service.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/network/api.dart';
-import 'package:fehviewer/pages/gallery/comm.dart';
-import 'package:fehviewer/pages/gallery/controller/gallery_page_controller.dart';
-import 'package:fehviewer/pages/gallery/controller/gallery_page_state.dart';
-import 'package:fehviewer/pages/gallery/view/const.dart';
-import 'package:fehviewer/pages/gallery/view/gallery_widget.dart';
-import 'package:fehviewer/pages/gallery/view/sliver/slivers.dart';
+import 'package:eros_fe/common/service/controller_tag_service.dart';
+import 'package:eros_fe/common/service/layout_service.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/network/api.dart';
+import 'package:eros_fe/pages/gallery/comm.dart';
+import 'package:eros_fe/pages/gallery/controller/gallery_page_controller.dart';
+import 'package:eros_fe/pages/gallery/controller/gallery_page_state.dart';
+import 'package:eros_fe/pages/gallery/view/const.dart';
+import 'package:eros_fe/pages/gallery/view/gallery_widget.dart';
+import 'package:eros_fe/pages/gallery/view/sliver/slivers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -41,7 +41,14 @@ class _GallerySliverPageState extends State<GallerySliverPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _controller = Get.put(GalleryPageController(), tag: _tag);
+    // _controller = Get.put(GalleryPageController(), tag: _tag);
+
+    Get.lazyPut<GalleryPageController>(
+      () => GalleryPageController(),
+      tag: _tag,
+      fenix: true,
+    );
+    _controller = Get.find(tag: _tag);
 
     _controller.scrollController = PrimaryScrollController.of(context);
     _controller.scrollController
@@ -53,7 +60,7 @@ class _GallerySliverPageState extends State<GallerySliverPage> {
     final dynamic tabTag = pageState.galleryRepository?.tabTag;
     final GalleryProvider? galleryProvider = pageState.galleryProvider;
 
-    final _slivers = <Widget>[
+    final sliversW = <Widget>[
       // 导航栏
       buildCupertinoSliverNavigationBar(context, galleryProvider),
       // 下拉刷新
@@ -230,7 +237,7 @@ class _GallerySliverPageState extends State<GallerySliverPage> {
     Widget body = CustomScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
       controller: GetPlatform.isDesktop ? _controller.scrollController : null,
-      slivers: _slivers,
+      slivers: sliversW,
     );
 
     body = SizeCacheWidget(

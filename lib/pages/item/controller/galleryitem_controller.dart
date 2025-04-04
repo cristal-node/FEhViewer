@@ -1,14 +1,14 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
-import 'package:fehviewer/common/controller/history_controller.dart';
-import 'package:fehviewer/common/service/ehsetting_service.dart';
-import 'package:fehviewer/common/service/theme_service.dart';
-import 'package:fehviewer/component/setting_base.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/controller/fav_controller.dart';
-import 'package:fehviewer/pages/item/item_base.dart';
-import 'package:fehviewer/pages/tab/controller/tabhome_controller.dart';
+import 'package:eros_fe/common/controller/history_controller.dart';
+import 'package:eros_fe/common/service/ehsetting_service.dart';
+import 'package:eros_fe/common/service/theme_service.dart';
+import 'package:eros_fe/component/setting_base.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/controller/fav_controller.dart';
+import 'package:eros_fe/pages/item/item_base.dart';
+import 'package:eros_fe/pages/tab/controller/tabhome_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
@@ -75,16 +75,16 @@ class GalleryItemController extends GetxController {
   /// 设置收藏夹
   void setFavTitleAndFavcat({String favTitle = '', String? favcat}) {
     logger.t('设置收藏夹, 原 isFav :[$isFav]');
-    galleryProvider.copyWith(favTitle: favTitle);
+    galleryProvider.copyWith(favTitle: favTitle.oN);
     isFav = favTitle.isNotEmpty;
     logger.t('设置收藏夹, 当前 isFav :[$isFav]');
     if (favcat != null || (favcat?.isNotEmpty ?? false)) {
       favCat = favcat!;
-      galleryProvider.copyWith(favcat: favcat);
+      galleryProvider.copyWith(favcat: favcat.oN);
       logger.t('item set favcat [$favcat]');
     } else {
       favCat = '';
-      galleryProvider.copyWith(favcat: '', favTitle: '');
+      galleryProvider.copyWith(favcat: ''.oN, favTitle: ''.oN);
     }
   }
 
@@ -128,7 +128,7 @@ class GalleryItemController extends GetxController {
   }
 
   set localFav(bool value) {
-    galleryProvider.copyWith(localFav: localFav);
+    galleryProvider.copyWith(localFav: localFav.oN);
     update();
   }
 
@@ -136,7 +136,7 @@ class GalleryItemController extends GetxController {
 
   void firstPutImage(List<GalleryImage> galleryImage) {
     if (galleryImage.isNotEmpty) {
-      galleryProvider.copyWith(galleryImages: galleryImage);
+      galleryProvider.copyWith(galleryImages: galleryImage.oN);
     }
 
     firstPageImage =

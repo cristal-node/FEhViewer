@@ -1,4 +1,4 @@
-import 'package:fehviewer/models/base/eh_models.dart';
+import 'package:eros_fe/models/base/eh_models.dart';
 import 'package:get/get.dart';
 
 import '../global.dart';
@@ -43,7 +43,7 @@ class LayoutServices extends GetxService {
     debounce<double>(
       _sideProportion,
       (double val) {
-        _ehLayout = _ehLayout.copyWith(sideProportion: val);
+        _ehLayout = _ehLayout.copyWith(sideProportion: val.oN);
         hiveHelper.setEhLayout(_ehLayout);
       },
       time: const Duration(milliseconds: 3000),

@@ -1,15 +1,15 @@
-import 'package:fehviewer/common/controller/download_controller.dart';
-import 'package:fehviewer/common/service/layout_service.dart';
-import 'package:fehviewer/common/service/theme_service.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/gallery/controller/gallery_page_controller.dart';
-import 'package:fehviewer/pages/gallery/controller/gallery_page_state.dart';
-import 'package:fehviewer/pages/gallery/view/archiver_dialog.dart';
-import 'package:fehviewer/pages/gallery/view/gallery_widget.dart';
-import 'package:fehviewer/pages/gallery/view/rate_dialog.dart';
-import 'package:fehviewer/pages/gallery/view/thumb_box.dart';
-import 'package:fehviewer/pages/gallery/view/torrent_dialog.dart';
-import 'package:fehviewer/pages/tab/view/gallery_base.dart';
+import 'package:eros_fe/common/controller/download_controller.dart';
+import 'package:eros_fe/common/service/layout_service.dart';
+import 'package:eros_fe/common/service/theme_service.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/gallery/controller/gallery_page_controller.dart';
+import 'package:eros_fe/pages/gallery/controller/gallery_page_state.dart';
+import 'package:eros_fe/pages/gallery/view/archiver_dialog.dart';
+import 'package:eros_fe/pages/gallery/view/gallery_widget.dart';
+import 'package:eros_fe/pages/gallery/view/rate_dialog.dart';
+import 'package:eros_fe/pages/gallery/view/thumb_box.dart';
+import 'package:eros_fe/pages/gallery/view/torrent_dialog.dart';
+import 'package:eros_fe/pages/tab/view/gallery_base.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -294,7 +294,7 @@ class ThumbHorizontalList extends StatelessWidget {
             galleryImageList: images,
             index: index,
             gid: gid,
-            onLoadComplet: () {
+            onLoadComplete: () {
               final thumbUrl = images[index].thumbUrl ?? '';
             },
             referer: referer,
@@ -309,11 +309,11 @@ class ThumbHorizontalList extends StatelessWidget {
 
 class ThumbSliverGrid extends StatelessWidget {
   const ThumbSliverGrid({
-    Key? key,
+    super.key,
     required this.images,
     required this.gid,
     this.referer,
-  }) : super(key: key);
+  });
   final List<GalleryImage> images;
   final String gid;
   final String? referer;
@@ -333,7 +333,7 @@ class ThumbSliverGrid extends StatelessWidget {
             galleryImageList: images,
             index: index,
             gid: gid,
-            onLoadComplet: () {
+            onLoadComplete: () {
               final thumbUrl = images[index].thumbUrl ?? '';
             },
             referer: referer,

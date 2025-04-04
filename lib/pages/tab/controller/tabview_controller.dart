@@ -1,13 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
-import 'package:fehviewer/common/controller/tag_controller.dart';
-import 'package:fehviewer/common/service/ehsetting_service.dart';
-import 'package:fehviewer/common/service/theme_service.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/network/app_dio/pdio.dart';
-import 'package:fehviewer/pages/tab/controller/tabhome_controller.dart';
-import 'package:fehviewer/pages/tab/fetch_list.dart';
-import 'package:fehviewer/utils/app_cupertino_localizations_delegate.dart';
+import 'package:eros_fe/common/controller/tag_controller.dart';
+import 'package:eros_fe/common/service/ehsetting_service.dart';
+import 'package:eros_fe/common/service/theme_service.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/network/app_dio/pdio.dart';
+import 'package:eros_fe/pages/tab/controller/tabhome_controller.dart';
+import 'package:eros_fe/pages/tab/fetch_list.dart';
+import 'package:eros_fe/utils/app_cupertino_localizations_delegate.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -117,7 +117,7 @@ abstract class TabViewController extends GetxController {
 
   // 请求一批画廊数据
   Future<GalleryList?> fetchData({bool refresh = false}) async {
-    logger.d('super fetchData ....');
+    // logger.d('super fetchData ....');
     cancelToken = CancelToken();
     return null;
   }
@@ -386,10 +386,10 @@ abstract class TabViewController extends GetxController {
     change(state, status: RxStatus.success());
     logger.d('prevGid: $prevGid, prevPage $prevPage,  afterJump: $afterJump');
     if ((prevGid.isNotEmpty || prevPage >= 0) && afterJump) {
-      logger.t('loadPrevious');
+      logger.d('>>>>> loadPrevious');
       await loadPrevious();
     } else {
-      logger.t('reloadData');
+      logger.d('>>>>> reloadData');
       await reloadData();
     }
   }

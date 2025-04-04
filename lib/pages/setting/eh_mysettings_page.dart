@@ -1,12 +1,12 @@
-import 'package:fehviewer/common/service/layout_service.dart';
-import 'package:fehviewer/component/setting_base.dart';
-import 'package:fehviewer/const/theme_colors.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/setting/const.dart';
-import 'package:fehviewer/pages/setting/controller/eh_mysettings_controller.dart';
-import 'package:fehviewer/pages/setting/setting_items/excluded_language.dart';
-import 'package:fehviewer/pages/setting/setting_items/selector_Item.dart';
-import 'package:fehviewer/pages/setting/webview/web_mysetting_in.dart';
+import 'package:eros_fe/common/service/layout_service.dart';
+import 'package:eros_fe/component/setting_base.dart';
+import 'package:eros_fe/const/theme_colors.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/setting/const.dart';
+import 'package:eros_fe/pages/setting/controller/eh_mysettings_controller.dart';
+import 'package:eros_fe/pages/setting/setting_items/excluded_language.dart';
+import 'package:eros_fe/pages/setting/setting_items/selector_Item.dart';
+import 'package:eros_fe/pages/setting/webview/web_mysetting_in.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -19,7 +19,7 @@ part 'eh_mysettings_items.dart';
 const kFavList = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 class EhMySettingsPage extends GetView<EhMySettingsController> {
-  const EhMySettingsPage({Key? key}) : super(key: key);
+  const EhMySettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class EhMySettingsPage extends GetView<EhMySettingsController> {
                     size: 22,
                   ),
                   onPressed: () async {
-                    Get.to(() => InWebMySetting());
+                    Get.to(() => const InWebMySetting());
                   },
                 ),
                 CupertinoButton(
@@ -199,7 +199,7 @@ class _ListViewEhMySettingsState extends State<ListViewEhMySettings> {
           hasLeading: true,
           children: [
             ...kFavList.map((e) {
-              final String _title = controller.ehSetting.favMap['$e'] ?? '';
+              final String favTitle = controller.ehSetting.favMap['$e'] ?? '';
               // logger.d('favMap: $e $_title');
               return CupertinoTextInputListTile(
                 leading: Icon(
@@ -207,10 +207,10 @@ class _ListViewEhMySettingsState extends State<ListViewEhMySettings> {
                   color: ThemeColors.favColor['$e'],
                 ),
                 // textAlign: TextAlign.left,
-                initValue: _title,
+                initValue: favTitle,
                 onChanged: (val) => controller.ehSetting.setFavname('$e', val),
               );
-            }).toList(),
+            }),
           ],
         );
       }),

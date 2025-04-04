@@ -4,9 +4,9 @@ import 'dart:typed_data';
 import 'package:clock/clock.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:fehviewer/common/service/ehsetting_service.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/image_view/controller/view_controller.dart';
+import 'package:eros_fe/common/service/ehsetting_service.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/image_view/controller/view_controller.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_cache_manager/src/web/mime_converter.dart';
 import 'package:get/get.dart' hide Response;
@@ -16,6 +16,7 @@ import '../../network/app_dio/dio_http_cli.dart';
 import '../../network/app_dio/http_response.dart';
 import '../../network/app_dio/http_transformer.dart';
 
+/// 实现 Dio 的 FileService， 用于 Flutter Cache Manager
 class DioFileService extends FileService {
   DioFileService({this.ser});
   final int? ser;
@@ -25,7 +26,7 @@ class DioFileService extends FileService {
     String url, {
     Map<String, String>? headers,
   }) async {
-    logger.t('DioFileService url $url');
+    // logger.d('DioFileService url $url');
     if (ser == null) {
       return await loadDio(url, headers: headers);
     } else {

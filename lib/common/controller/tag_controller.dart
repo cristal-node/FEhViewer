@@ -1,5 +1,5 @@
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/pages/setting/controller/eh_mytags_controller.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/pages/setting/controller/eh_mytags_controller.dart';
 import 'package:get/get.dart';
 
 class TagController extends GetxController {
@@ -38,7 +38,7 @@ class TagController extends GetxController {
         (element) => element.title.trim() == tag.title.trim());
 
     return tag.copyWith(
-        color: _tag?.color, backgrondColor: _tag?.backgrondColor);
+        color: _tag?.color.oN, backgrondColor: _tag?.backgrondColor.oN);
   }
 
   bool needHide(List<SimpleTag> simpleTags) {

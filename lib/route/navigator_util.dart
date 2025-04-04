@@ -1,18 +1,18 @@
 import 'package:archive_async/archive_async.dart';
 import 'package:collection/collection.dart';
-import 'package:fehviewer/common/service/controller_tag_service.dart';
-import 'package:fehviewer/common/service/layout_service.dart';
-import 'package:fehviewer/fehviewer.dart';
-import 'package:fehviewer/network/api.dart';
-import 'package:fehviewer/network/request.dart';
-import 'package:fehviewer/pages/gallery/comm.dart';
-import 'package:fehviewer/pages/gallery/controller/gallery_page_controller.dart';
-import 'package:fehviewer/pages/gallery/gallery_repository.dart';
-import 'package:fehviewer/pages/image_view/common.dart';
-import 'package:fehviewer/pages/image_view/view/view_page.dart';
-import 'package:fehviewer/pages/tab/controller/search_page_controller.dart';
-import 'package:fehviewer/pages/tab/view/list/tab_base.dart';
-import 'package:fehviewer/route/first_observer.dart';
+import 'package:eros_fe/common/service/controller_tag_service.dart';
+import 'package:eros_fe/common/service/layout_service.dart';
+import 'package:eros_fe/index.dart';
+import 'package:eros_fe/network/api.dart';
+import 'package:eros_fe/network/request.dart';
+import 'package:eros_fe/pages/gallery/comm.dart';
+import 'package:eros_fe/pages/gallery/controller/gallery_page_controller.dart';
+import 'package:eros_fe/pages/gallery/gallery_repository.dart';
+import 'package:eros_fe/pages/image_view/common.dart';
+import 'package:eros_fe/pages/image_view/view/view_page.dart';
+import 'package:eros_fe/pages/tab/controller/search_page_controller.dart';
+import 'package:eros_fe/pages/tab/view/list/tab_base.dart';
+import 'package:eros_fe/route/first_observer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:get/get.dart';
 
@@ -118,7 +118,7 @@ class NavigatorUtil {
         SecondNavigatorObserver().history.lastOrNull?.settings.name;
     final topMainRoute =
         MainNavigatorObserver().history.lastOrNull?.settings.name;
-    late final String? _gid;
+    late final String? gid;
 
     logger.t('topMainRoute $topMainRoute');
 
@@ -132,26 +132,35 @@ class NavigatorUtil {
           RegExp(r'https?://e[-x]hentai.org/s/[0-9a-z]+/\d+-\d+/?');
 
       if (regGalleryUrl.hasMatch(url)) {
-        // url为画廊链接
-        Get.replace(GalleryRepository(url: url.linkRedirect));
         final matcher = regGalleryUrl.firstMatch(url);
-        _gid = matcher?[1];
+        gid = matcher?[1];
+        // url为画廊链接
+        // Get.replace(GalleryRepository(url: url.linkRedirect));
+        Get.lazyReplace(
+          () => GalleryRepository(url: url.linkRedirect),
+          tag: gid,
+          fenix: true,
+        );
       } else if (regGalleryPageUrl.hasMatch(url)) {
         // url为画廊某一页的链接
-        final _image = await fetchImageInfoByApi(url.linkRedirect);
+        final image = await fetchImageInfoByApi(url.linkRedirect);
 
-        if (_image == null) {
+        if (image == null) {
           return;
         }
 
-        final ser = _image.ser;
-        final _galleryUrl =
-            '${Api.getBaseUrl()}/g/${_image.gid}/${_image.token}';
-        logger.d('jump to $_galleryUrl $ser');
+        final ser = image.ser;
+        final galleryUrl = '${Api.getBaseUrl()}/g/${image.gid}/${image.token}';
+        logger.d('jump to $galleryUrl $ser');
 
-        _gid = _image.gid ?? '0';
+        gid = image.gid ?? '0';
 
-        Get.replace(GalleryRepository(url: _galleryUrl, jumpSer: ser));
+        // Get.replace(GalleryRepository(url: _galleryUrl, jumpSer: ser));
+        Get.lazyReplace(
+          () => GalleryRepository(url: galleryUrl, jumpSer: ser),
+          tag: gid,
+          fenix: true,
+        );
       }
 
       // if (GetPlatform.isAndroid) {
@@ -161,7 +170,7 @@ class NavigatorUtil {
       // }
 
       if (forceReplace || (replace && topMainRoute == EHRoutes.root)) {
-        Get.find<ControllerTagService>().pushPageCtrl(gid: _gid);
+        Get.find<ControllerTagService>().pushPageCtrl(gid: gid);
         await Get.offNamed(
           EHRoutes.galleryPage,
           preventDuplicates: false,
@@ -173,13 +182,13 @@ class NavigatorUtil {
           logger.d('topSecondRoute == EHRoutes.galleryPage');
           if (Get.isRegistered<GalleryPageController>(tag: pageCtrlTag) &&
               Get.find<GalleryPageController>(tag: pageCtrlTag).gState.gid ==
-                  _gid) {
+                  gid) {
             logger.d('same gallery');
             return;
           }
         }
 
-        Get.find<ControllerTagService>().pushPageCtrl(gid: _gid);
+        Get.find<ControllerTagService>().pushPageCtrl(gid: gid);
         await Get.toNamed(
           EHRoutes.galleryPage,
           id: isLayoutLarge ? 2 : null,
@@ -191,14 +200,14 @@ class NavigatorUtil {
     } else {
       // item点击跳转方式
       logger.t('goGalleryPage fromItem tabTag=$tabTag');
-      _gid = galleryProvider?.gid;
+      gid = galleryProvider?.gid;
 
       Global.analytics?.logSelectItem(
         itemListName: 'GalleryList',
         itemListId: tabTag.toString(),
         items: [
           AnalyticsEventItem(
-            itemId: _gid,
+            itemId: gid,
             itemCategory: galleryProvider?.category,
             itemName: galleryProvider?.englishTitle,
             itemVariant: galleryProvider?.japaneseTitle,
@@ -207,20 +216,27 @@ class NavigatorUtil {
         ],
       );
 
-      Get.replace(GalleryRepository(item: galleryProvider, tabTag: tabTag));
+      // Get.replace(GalleryRepository(item: galleryProvider, tabTag: tabTag));
+      Get.lazyReplace(
+        () => GalleryRepository(item: galleryProvider, tabTag: tabTag),
+        tag: gid,
+        fenix: true,
+      );
 
-      //命名路由
+      // 不同显示模式下的跳转方式
       if (isLayoutLarge) {
-        Get.find<ControllerTagService>().pushPageCtrl(gid: _gid);
-
+        //  大屏幕模式
+        // pushPageCtrl 前获取当前的tag
+        final curTag = pageCtrlTag;
+        Get.find<ControllerTagService>().pushPageCtrl(gid: gid);
         logger.t('topSecondRoute: $topSecondRoute');
+        // 如果当前已经打开了画廊页面
         if (topSecondRoute == EHRoutes.galleryPage) {
           logger.d('topSecondRoute == EHRoutes.galleryPage');
-          final curTag = pageCtrlTag;
-          logger.t(
+          logger.d(
               'curTag $curTag  isReg:${Get.isRegistered<GalleryPageController>(tag: curTag)}');
           if (Get.isRegistered<GalleryPageController>(tag: curTag) &&
-              Get.find<GalleryPageController>(tag: curTag).gState.gid == _gid) {
+              Get.find<GalleryPageController>(tag: curTag).gState.gid == gid) {
             logger.d('same gallery');
             Get.find<ControllerTagService>().popPageCtrl();
             return;
@@ -246,7 +262,8 @@ class NavigatorUtil {
           );
         }
       } else {
-        Get.find<ControllerTagService>().pushPageCtrl(gid: _gid);
+        // 一般模式
+        Get.find<ControllerTagService>().pushPageCtrl(gid: gid);
         await Get.toNamed(
           EHRoutes.galleryPage,
           preventDuplicates: false,

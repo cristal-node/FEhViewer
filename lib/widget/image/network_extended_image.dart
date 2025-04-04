@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eros_fe/common/controller/image_block_controller.dart';
+import 'package:eros_fe/index.dart';
 import 'package:extended_image/extended_image.dart';
-import 'package:fehviewer/common/controller/image_block_controller.dart';
-import 'package:fehviewer/fehviewer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 
 class NetworkExtendedImage extends StatefulWidget {
   const NetworkExtendedImage({
-    Key? key,
+    super.key,
     required this.url,
     this.height,
     this.width,
@@ -26,7 +26,8 @@ class NetworkExtendedImage extends StatefulWidget {
     this.onLoadCompleted,
     this.checkPHashHide = false,
     this.checkQRCodeHide = false,
-  }) : super(key: key);
+    this.sourceRect,
+  });
   final String url;
   final double? height;
   final double? width;
@@ -43,8 +44,10 @@ class NetworkExtendedImage extends StatefulWidget {
   final bool checkPHashHide;
   final bool checkQRCodeHide;
 
+  final Rect? sourceRect;
+
   @override
-  _NetworkExtendedImageState createState() => _NetworkExtendedImageState();
+  State<NetworkExtendedImage> createState() => _NetworkExtendedImageState();
 }
 
 class _NetworkExtendedImageState extends State<NetworkExtendedImage>
@@ -119,7 +122,7 @@ class _NetworkExtendedImageState extends State<NetworkExtendedImage>
             logger.t(
                 'widget.checkPHashHide   widget.checkQRCodeHide ${widget.checkPHashHide}  ${widget.checkQRCodeHide}');
             if (widget.checkPHashHide || widget.checkQRCodeHide) {
-              Future<bool> _future() async {
+              Future<bool> checkFuture() async {
                 if (!widget.checkQRCodeHide) {
                   return await imageHideController
                       .checkPHashHide(widget.url.handleUrl);
@@ -134,7 +137,7 @@ class _NetworkExtendedImageState extends State<NetworkExtendedImage>
               }
 
               return FutureBuilder<bool>(
-                  future: _future(),
+                  future: checkFuture(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       final showCustomWidget = snapshot.data ?? false;
@@ -176,25 +179,25 @@ class _NetworkExtendedImageState extends State<NetworkExtendedImage>
 
 class ExtendedImageRect extends StatefulWidget {
   const ExtendedImageRect({
-    Key? key,
+    super.key,
     required this.url,
     this.sourceRect,
     this.height,
     this.width,
     this.fit,
-    this.onLoadComplet,
+    this.onLoadComplete,
     this.httpHeaders,
-  }) : super(key: key);
+  });
   final String url;
   final Rect? sourceRect;
   final double? height;
   final double? width;
   final BoxFit? fit;
-  final VoidCallback? onLoadComplet;
+  final VoidCallback? onLoadComplete;
   final Map<String, String>? httpHeaders;
 
   @override
-  _ExtendedImageRectState createState() => _ExtendedImageRectState();
+  State<ExtendedImageRect> createState() => _ExtendedImageRectState();
 }
 
 class _ExtendedImageRectState extends State<ExtendedImageRect> {
@@ -216,26 +219,33 @@ class _ExtendedImageRectState extends State<ExtendedImageRect> {
 
   Future<ImageInfo> getImageInfo(ImageProvider imageProvider) {
     Completer<ImageInfo> completer = Completer();
-    imageProvider.resolve(ImageConfiguration()).addListener(
+    imageProvider.resolve(const ImageConfiguration()).addListener(
       ImageStreamListener(
         (ImageInfo info, bool _) {
-          completer.complete(info);
+          if (!completer.isCompleted) {
+            completer.complete(info);
+          }
         },
       ),
     );
     return completer.future;
   }
 
+  late Future<ImageInfo> imgFuture;
+
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
         cacheManager: imageCacheManager(ser: null),
         imageBuilder: (BuildContext context, ImageProvider imageProvider) {
+          imgFuture = getImageInfo(imageProvider);
           return FutureBuilder(
-              future: getImageInfo(imageProvider),
+              future: imgFuture,
               builder:
                   (BuildContext context, AsyncSnapshot<ImageInfo> snapshot) {
-                if (snapshot.data != null) {
+                final imageInfo = snapshot.data;
+                if (imageInfo != null) {
+                  logger.t('url: ${widget.url} imageInfo: $imageInfo');
                   return ExtendedRawImage(
                     image: snapshot.data!.image,
                     width: widget.sourceRect?.width,
@@ -276,11 +286,23 @@ class _ExtendedImageRectState extends State<ExtendedImageRect> {
           String url,
           dynamic error,
         ) {
-          return Container(
-            alignment: Alignment.center,
-            child: const Icon(
-              Icons.error,
-              color: Colors.red,
+          logger.e('error: ${error.runtimeType}, $error');
+          return GestureDetector(
+            behavior: HitTestBehavior.deferToChild,
+            onTap: () {
+              logger.d('reload');
+              setState(() {
+                imgFuture = getImageInfo(
+                  CachedNetworkImageProvider(widget.url, headers: _httpHeaders),
+                );
+              });
+            },
+            child: Container(
+              alignment: Alignment.center,
+              child: const Icon(
+                Icons.error,
+                color: Colors.red,
+              ),
             ),
           );
         });
