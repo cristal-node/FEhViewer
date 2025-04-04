@@ -18,10 +18,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:oktoast/oktoast.dart';
+import 'package:screen_protector/screen_protector.dart';
 import 'package:sentry_flutter/sentry_flutter.dart';
 
 import 'firebase_options_sample.dart' as fo;
@@ -151,8 +151,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
         await _autoLockController.checkLock();
 
-        // resumed 时清除 FLAG_SECURE ,避免无法截屏
-        FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+        if (Platform.isAndroid) {
+          await ScreenProtector.protectDataLeakageOff();
+        }
 
         if (context.mounted) {
           _ehSettingService.chkClipboardLink(context);
@@ -164,7 +165,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       },
       onInactive: () {
         _handleTransition('inactive');
-        // 添加 FLAG_SECURE
         _ehSettingService.applyBlurredInRecentTasks();
       },
       onPause: () => _handleTransition('pause'),

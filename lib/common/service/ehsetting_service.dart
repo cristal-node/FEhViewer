@@ -17,10 +17,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_boring_avatars/flutter_boring_avatars.dart';
-import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
+import 'package:screen_protector/screen_protector.dart';
 
 import 'controller_tag_service.dart';
 import 'locale_service.dart';
@@ -897,10 +897,11 @@ class EhSettingService extends ProfileService {
 
   void applyBlurredInRecentTasks() {
     if (Platform.isAndroid) {
+      blurredInRecentTasks ? await ScreenProtector.protectDataLeakageOn()
+        : await ScreenProtector.protectDataLeakageOff();
+    } else if (Platform.isIOS) {
       if (blurredInRecentTasks) {
-        FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
-      } else {
-        FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+        await ScreenProtector.protectDataLeakageWithBlur();
       }
     }
   }
