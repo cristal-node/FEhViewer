@@ -76,7 +76,7 @@ dependencies:
       url: https://github.com/honjow/flutter_downloader.git
       ref: dev
   copy_with_extension: ^5.0.0
-  package_info: ^2.0.0
+  package_info_plus: ^8.3.0
   pretty_dio_logger: ^1.2.0-beta-1
   #translator: ^0.1.7
   google_translator:
