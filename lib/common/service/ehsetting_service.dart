@@ -895,7 +895,7 @@ class EhSettingService extends ProfileService {
     _initBlockConfig();
   }
 
-  void applyBlurredInRecentTasks() {
+  Future<void> applyBlurredInRecentTasks() async {
     if (Platform.isAndroid) {
       if (blurredInRecentTasks) {
         await ScreenProtector.protectDataLeakageOn();
