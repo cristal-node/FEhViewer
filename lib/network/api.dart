@@ -17,9 +17,9 @@ import 'package:eros_fe/pages/setting/controller/eh_mysettings_controller.dart';
 import 'package:eros_fe/store/db/entity/tag_translat.dart';
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:gal/gal.dart';
 import 'package:get/get.dart' hide Response, FormData;
 import 'package:html_unescape/html_unescape.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:mime/mime.dart';
 import 'package:path/path.dart' as path;
 import 'package:share_plus/share_plus.dart';
@@ -661,7 +661,7 @@ class Api {
       throw EhError(error: 'File not found');
     }
 
-    final result = await ImageGallerySaver.saveFile(file.path);
+    final result = await Gal.putImage(file.path, album: 'Ehentai');
     logger.d('${result.runtimeType} $result');
 
     if (result == null || result == '') {
