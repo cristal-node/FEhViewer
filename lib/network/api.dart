@@ -661,12 +661,8 @@ class Api {
       throw EhError(error: 'File not found');
     }
 
-    final result = await Gal.putImage(file.path, album: 'Ehentai');
-    logger.d('${result.runtimeType} $result');
-
-    if (result == null || result == '') {
-      throw EhError(error: 'Save image fail');
-    }
+    await Gal.putImage(file.path, album: 'Ehentai');
+    logger.d('saved image: ${file.path}');
   }
 
   static Future<void> shareLocalImage(
